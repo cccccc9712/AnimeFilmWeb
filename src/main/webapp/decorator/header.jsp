@@ -59,10 +59,25 @@
                                 <i class="icon ion-ios-search"></i>
                             </button>
 
-                            <a href="SignIn.jsp" class="header__sign-in">
-                                <i class="icon ion-ios-log-in"></i>
-                                <span>sign in</span>
-                            </a>
+                            <c:choose>
+                                <c:when test="${sessionScope.userSession != null}">
+                                    <li class="dropdown header__nav-item">
+                                        <a class="dropdown-toggle header__nav-link" style="margin-left: 40px" href="#" role="button" id="dropdownUser" data-toggle="dropdown"><i class="fa-solid fa-user" style="color: #ffffff;margin-right: 10px"></i>${sessionScope.userSession.getUserName()}</a>
+
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownUser">
+                                            <li><a href="#">View profile</a></li>
+                                            <li><a href="#">My favourite</a></li>
+                                            <li><a href="/logout">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="SignIn.jsp" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>sign in</span>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         <!-- end header auth -->
 
