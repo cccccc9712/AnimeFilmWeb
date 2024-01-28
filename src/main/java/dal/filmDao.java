@@ -46,6 +46,34 @@ public class filmDao extends DBContext {
         return films;
     }
 
+    public List<filmDtos> getNewFilms() {
+        List<filmDtos> newfilms = new ArrayList<>();
+        String sql = "SELECT TOP (4) * FROM Film ORDER BY filmID DESC";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+
+                newfilms.add(film);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return newfilms;
+    }
+
     private List<Category> getCategoriesForFilm(int filmID) {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT c.CategoryName FROM Category c JOIN FilmCategory fc ON c.CategoryID = fc.CategoryID WHERE fc.filmID = ?";
@@ -128,7 +156,7 @@ public class filmDao extends DBContext {
 
     public static void main(String[] args) {
         filmDao d = new filmDao();
-        List<filmDtos> films = d.getAllFilms();
+        List<filmDtos> films = d.getNewFilms();
         for (filmDtos f : films){
             System.out.println(f);
         }

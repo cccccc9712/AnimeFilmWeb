@@ -7,7 +7,7 @@
                 <div class="col-12">
                     <div class="header__content">
                         <!-- header logo -->
-                        <a href="index.jsp" class="">
+                        <a href="home" class="">
                             <img style="width: auto; height: 90px; border-radius: 10px" src="img/LOgo%20(1).png" alt="">
                         </a>
                         <!-- end header logo -->
