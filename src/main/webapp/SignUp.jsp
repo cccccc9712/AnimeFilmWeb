@@ -12,7 +12,7 @@
                 <div class="sign__content">
                     <!-- registration form -->
                     <form action="#" class="sign__form">
-                        <a href="index.jsp" class="sign__logo">
+                        <a href="home" class="sign__logo">
                             <img src="img/LOgo%20(1).png" alt="">
                         </a>
 

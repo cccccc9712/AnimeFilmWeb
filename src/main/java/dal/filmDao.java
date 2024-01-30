@@ -154,11 +154,80 @@ public class filmDao extends DBContext {
         return episodes;
     }
 
+    public filmDtos getFilmById(int filmId) {
+        filmDtos film = null;
+        String sql = "SELECT * FROM Film WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return film;
+    }
+    public filmDtos getFilmByName(String filmName) {
+        filmDtos film = null;
+        String sql = "SELECT * FROM Film WHERE filmName = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, filmName);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return film;
+    }
+
     public static void main(String[] args) {
         filmDao d = new filmDao();
-        List<filmDtos> films = d.getNewFilms();
-        for (filmDtos f : films){
-            System.out.println(f);
-        }
+        filmDtos films = d.getFilmByName("Demon Slayer: Kimetsu no Yaiba");
+            System.out.println(films.toString());
     }
 }

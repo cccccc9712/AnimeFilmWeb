@@ -12,7 +12,7 @@
                 <div class="sign__content">
                     <!-- authorization form -->
                     <form action="login" method="post" class="sign__form">
-                        <a href="index.jsp" class="sign__logo">
+                        <a href="home" class="sign__logo">
                             <img style="width: auto;" src="img/LOgo%20(1).png" alt="">
                         </a>
 

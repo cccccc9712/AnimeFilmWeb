@@ -40,7 +40,7 @@ public class loginControl extends HttpServlet {
         } else {
             HttpSession session = req.getSession();
             session.setAttribute("userSession", user);
-            resp.sendRedirect("index.jsp");
+            resp.sendRedirect("home");
         }}else {
             req.setAttribute("failedLoginMessage", "Please input to sign in!");
             req.getRequestDispatcher("SignIn.jsp").forward(req, resp);

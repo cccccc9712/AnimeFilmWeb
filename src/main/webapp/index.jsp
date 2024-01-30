@@ -30,14 +30,14 @@
                     <div class="item">
                         <!-- card -->
                         <div class="card card--big">
-                            <div class="card__cover">
-                                <img style="height: 400px; width: 255px" src="${newFilm.imageLink}" alt="${newFilm.filmName}">
-                                <a href="#" class="card__play">
+                            <div style="height: 330px; width: 210px" class="card__cover">
+                                <img id="newFilm" src="${newFilm.imageLink}" alt="${newFilm.filmName}">
+                                <a href="detail?filmName=${newFilm.filmName}" class="card__play">
                                     <i class="icon ion-ios-play"></i>
                                 </a>
                             </div>
                             <div class="card__content">
-                                <h3 class="card__title"><a href="SeriesDetailed.jsp">${newFilm.filmName}</a></h3>
+                                <h3 class="card__title"><a href="detail?filmName=${newFilm.filmName}">${newFilm.filmName}</a></h3>
                                 <span class="card__category">
                     <c:forEach items="${newFilm.categories}" var="category">
                         <a href="#">${category.categoryName}</a>
@@ -51,68 +51,6 @@
                         <!-- end card -->
                     </div>
                     </c:forEach>
-
-<%--                    <div class="item">--%>
-<%--                        <!-- card -->--%>
-<%--                        <div class="card card--big">--%>
-<%--                            <div class="card__cover">--%>
-<%--                                <img src="img/covers/cover2.jpg" alt="">--%>
-<%--                                <a href="#" class="card__play">--%>
-<%--                                    <i class="icon ion-ios-play"></i>--%>
-<%--                                </a>--%>
-<%--                            </div>--%>
-<%--                            <div class="card__content">--%>
-<%--                                <h3 class="card__title"><a href="#">Benched</a></h3>--%>
-<%--                                <span class="card__category">--%>
-<%--										<a href="#">Comedy</a>--%>
-<%--									</span>--%>
-<%--                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <!-- end card -->--%>
-<%--                    </div>--%>
-
-<%--                    <div class="item">--%>
-<%--                        <!-- card -->--%>
-<%--                        <div class="card card--big">--%>
-<%--                            <div class="card__cover">--%>
-<%--                                <img src="img/covers/cover3.jpg" alt="">--%>
-<%--                                <a href="#" class="card__play">--%>
-<%--                                    <i class="icon ion-ios-play"></i>--%>
-<%--                                </a>--%>
-<%--                            </div>--%>
-<%--                            <div class="card__content">--%>
-<%--                                <h3 class="card__title"><a href="#">Whitney</a></h3>--%>
-<%--                                <span class="card__category">--%>
-<%--										<a href="#">Romance</a>--%>
-<%--										<a href="#">Drama</a>--%>
-<%--									</span>--%>
-<%--                                <span class="card__rate"><i class="icon ion-ios-star"></i>6.3</span>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <!-- end card -->--%>
-<%--                    </div>--%>
-
-<%--                    <div class="item">--%>
-<%--                        <!-- card -->--%>
-<%--                        <div class="card card--big">--%>
-<%--                            <div class="card__cover">--%>
-<%--                                <img src="img/covers/cover4.jpg" alt="">--%>
-<%--                                <a href="#" class="card__play">--%>
-<%--                                    <i class="icon ion-ios-play"></i>--%>
-<%--                                </a>--%>
-<%--                            </div>--%>
-<%--                            <div class="card__content">--%>
-<%--                                <h3 class="card__title"><a href="#">Blindspotting</a></h3>--%>
-<%--                                <span class="card__category">--%>
-<%--										<a href="#">Comedy</a>--%>
-<%--										<a href="#">Drama</a>--%>
-<%--									</span>--%>
-<%--                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.9</span>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                        <!-- end card -->--%>
-<%--                    </div>--%>
                 </div>
             </div>
         </div>
@@ -194,8 +132,6 @@
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
                 <div class="row">
-                    <%--                    <% filmDao filmDao = new filmDao(); %>--%>
-                    <%--                    <% List<filmDtos> films = filmDao.getAllFilms(); %>--%>
                     <!-- card -->
                     <c:forEach items="${films}" var="film">
                         <div class="col-6 col-sm-12 col-lg-6">
@@ -203,7 +139,7 @@
                                 <div class="row">
                                     <div class="col-12 col-sm-4">
                                         <div class="card__cover">
-                                            <img src="${film.imageLink}" alt="${film.filmName}">
+                                            <img style="" src="${film.imageLink}" alt="${film.filmName}">
                                             <a href="#" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
@@ -212,7 +148,7 @@
 
                                     <div class="col-12 col-sm-8">
                                         <div class="card__content">
-                                            <h3 class="card__title"><a style="padding-top: 5px;" href="#">${film.filmName}</a></h3>
+                                            <h3 style="padding-top: 5px" class="card__title"><a href="#">${film.filmName}</a></h3>
 
                                             <span class="card__category">
                             <c:forEach items="${film.categories}" var="category">
