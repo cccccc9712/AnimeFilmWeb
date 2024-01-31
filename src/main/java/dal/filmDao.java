@@ -17,7 +17,6 @@ public class filmDao extends DBContext {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
-    // Phương thức chính để lấy danh sách filmDtos
     public List<filmDtos> getAllFilms() {
         List<filmDtos> films = new ArrayList<>();
         String sql = "SELECT * FROM Film";
@@ -31,6 +30,7 @@ public class filmDao extends DBContext {
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
 
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
@@ -59,6 +59,7 @@ public class filmDao extends DBContext {
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
 
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
@@ -168,6 +169,7 @@ public class filmDao extends DBContext {
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
 
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
@@ -203,6 +205,7 @@ public class filmDao extends DBContext {
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
 
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
@@ -227,7 +230,7 @@ public class filmDao extends DBContext {
 
     public static void main(String[] args) {
         filmDao d = new filmDao();
-        filmDtos films = d.getFilmByName("Demon Slayer: Kimetsu no Yaiba");
-            System.out.println(films.toString());
+        filmDtos films = d.getFilmById(1);
+        System.out.println(films.toString());
     }
 }

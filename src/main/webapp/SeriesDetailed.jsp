@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
+<%
+    filmDtos film = (filmDtos) request.getAttribute("film");
+%>
 <!DOCTYPE html>
 <html lang="en">
 <%@include file="decorator/head.jsp" %>
@@ -17,10 +20,11 @@
 
     <!-- details content -->
     <div class="container">
+
         <div class="row">
             <!-- title -->
             <div class="col-12">
-                <h1 class="details__title">I Dream in Another Language</h1>
+                <h1 class="details__title">${film.filmName}</h1>
             </div>
             <!-- end title -->
 
@@ -31,7 +35,7 @@
                         <!-- card cover -->
                         <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3">
                             <div class="card__cover">
-                                <img src="img/covers/cover.jpg" alt="">
+                                <img src="${film.imageLink}" alt="${film.filmName}">
                             </div>
                         </div>
                         <!-- end card cover -->
@@ -43,28 +47,22 @@
                                     <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
 
                                     <ul class="card__list">
-                                        <li>HD</li>
-                                        <li>16+</li>
+                                            <c:forEach items="${film.tags}" var="tag">
+                                                <li href="#">${tag.tagName}</li>
+                                            </c:forEach>
                                     </ul>
                                 </div>
 
                                 <ul class="card__meta">
-                                    <li><span>Genre:</span> <a href="#">Action</a>
-                                        <a href="#">Triler</a></li>
-                                    <li><span>Release year:</span> 2017</li>
-                                    <li><span>Running time:</span> 120 min</li>
-                                    <li><span>Country:</span> <a href="#">USA</a></li>
+                                    <li><span>Genre:</span>
+                                        <c:forEach items="${film.categories}" var="category">
+                                            <a href="#">${category.categoryName}</a>
+                                        </c:forEach>
+                                    </li>
                                 </ul>
 
                                 <div class="card__description card__description--details">
-                                    It is a long established fact that a reader will be distracted by the readable
-                                    content of a page when looking at its layout. The point of using Lorem Ipsum is that
-                                    it has a more-or-less normal distribution of letters, as opposed to using 'Content
-                                    here, content here', making it look like readable English. Many desktop publishing
-                                    packages and web page editors now use Lorem Ipsum as their default model text, and a
-                                    search for 'lorem ipsum' will uncover many web sites still in their infancy. Various
-                                    versions have evolved over the years, sometimes by accident, sometimes on purpose
-                                    (injected humour and the like).
+                                    ${film.description}
                                 </div>
                             </div>
                         </div>
@@ -76,30 +74,40 @@
 
             <!-- player -->
             <div class="col-12 col-xl-6">
-                <video controls crossorigin playsinline
-                       poster="../../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">
-                    <!-- Video files -->
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                            type="video/mp4" size="576">
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"
-                            type="video/mp4" size="720">
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"
-                            type="video/mp4" size="1080">
-                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1440p.mp4"
-                            type="video/mp4" size="1440">
-
-                    <!-- Caption files -->
-                    <track kind="captions" label="English" srclang="en"
-                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"
-                           default>
-                    <track kind="captions" label="Français" srclang="fr"
-                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-
-                    <!-- Fallback for browsers that don't support the <video> element -->
-                    <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"
-                       download>Download</a>
-                </video>
+                <iframe width="560" height="315"
+                        src="${film.trailerLink}"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
             </div>
+
+        <%--            <div class="col-12 col-xl-6">--%>
+<%--                <video controls crossorigin playsinline--%>
+<%--                       poster="../../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">--%>
+<%--                    <!-- Video files -->--%>
+<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"--%>
+<%--                            type="video/mp4" size="576">--%>
+<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"--%>
+<%--                            type="video/mp4" size="720">--%>
+<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"--%>
+<%--                            type="video/mp4" size="1080">--%>
+<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1440p.mp4"--%>
+<%--                            type="video/mp4" size="1440">--%>
+
+<%--                    <!-- Caption files -->--%>
+<%--                    <track kind="captions" label="English" srclang="en"--%>
+<%--                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"--%>
+<%--                           default>--%>
+<%--                    <track kind="captions" label="Français" srclang="fr"--%>
+<%--                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">--%>
+
+<%--                    <!-- Fallback for browsers that don't support the <video> element -->--%>
+<%--                    <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"--%>
+<%--                       download>Download</a>--%>
+<%--                </video>--%>
+<%--            </div>--%>
+
             <!-- end player -->
 
             <!-- accordion -->

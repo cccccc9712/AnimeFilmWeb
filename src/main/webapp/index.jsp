@@ -39,10 +39,10 @@
                             <div class="card__content">
                                 <h3 class="card__title"><a href="detail?filmName=${newFilm.filmName}">${newFilm.filmName}</a></h3>
                                 <span class="card__category">
-                    <c:forEach items="${newFilm.categories}" var="category">
-                        <a href="#">${category.categoryName}</a>
-                    </c:forEach>
-                </span>
+                                    <c:forEach items="${newFilm.categories}" var="category">
+                                        <a href="#">${category.categoryName}</a>
+                                    </c:forEach>
+                                </span>
                                 <span class="card__rate">
                                                      <i class="icon ion-ios-eye"></i>${newFilm.viewCount}
                                                 </span>

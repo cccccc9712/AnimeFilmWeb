@@ -12,6 +12,7 @@ public class filmDtos {
     private String filmName;
     private String description;
     private String imageLink;
+    private String trailerLink;
     private long viewCount;
     private List<Category> categories;
     private List<Tag> tags;
@@ -21,16 +22,25 @@ public class filmDtos {
     public filmDtos() {
     }
 
-    public filmDtos(int filmID, String filmName, String description, String imageLink, long viewCount, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
+    public filmDtos(int filmID, String filmName, String description, String imageLink, String trailerLink, long viewCount, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
         this.filmID = filmID;
         this.filmName = filmName;
         this.description = description;
         this.imageLink = imageLink;
+        this.trailerLink = trailerLink;
         this.viewCount = viewCount;
         this.categories = categories;
         this.tags = tags;
         this.seasons = seasons;
         this.episodes = episodes;
+    }
+
+    public String getTrailerLink() {
+        return trailerLink;
+    }
+
+    public void setTrailerLink(String trailerLink) {
+        this.trailerLink = trailerLink;
     }
 
     public int getFilmID() {
@@ -112,6 +122,7 @@ public class filmDtos {
                 ", filmName='" + filmName + '\'' +
                 ", description='" + description + '\'' +
                 ", imageLink='" + imageLink + '\'' +
+                ", trailerLink='" + trailerLink + '\'' +
                 ", viewCount=" + viewCount +
                 ", categories=" + categories +
                 ", tags=" + tags +
