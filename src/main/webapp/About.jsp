@@ -18,7 +18,7 @@
 
                     <!-- breadcrumb -->
                     <ul class="breadcrumb">
-                        <li class="breadcrumb__item"><a href="index.jsp">Home</a></li>
+                        <li class="breadcrumb__item"><a href="home">Home</a></li>
                         <li class="breadcrumb__item breadcrumb__item--active">About Us</li>
                     </ul>
                     <!-- end breadcrumb -->

@@ -9,19 +9,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "homeControl", urlPatterns = "/home")
-public class homeControl  extends HttpServlet {
+@WebServlet(name = "categoryControl", urlPatterns = "/category")
+public class categoryControl extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         filmDao fd = new filmDao();
-        List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
-        List<filmDtos> newFilms = fd.getNewFilms();
-        req.setAttribute("films", trendingFilms);
-        req.setAttribute("newFilms", newFilms);
-        req.getRequestDispatcher("index.jsp").forward(req, resp);
+        List<filmDtos> films = fd.getAllFilms();
+        req.setAttribute("films", films);
+        req.getRequestDispatcher("Catagories.jsp").forward(req, resp);
     }
 }

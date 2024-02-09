@@ -20,8 +20,8 @@
 
                             <!-- dropdown -->
                             <li class="header__nav-item">
-                                <a class="dropdown-toggle header__nav-link" href="Catagories.jsp" role="button"
-                                    >Categories</a>
+                                <a class="dropdown-toggle header__nav-link" href="category" role="button"
+                                    >All films</a>
 
 <%--                                <ul class="dropdown-menu header__dropdown-menu"--%>
 <%--                                    aria-labelledby="dropdownMenuCatalog">--%>

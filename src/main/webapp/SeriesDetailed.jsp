@@ -44,7 +44,7 @@
                         <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9">
                             <div class="card__content">
                                 <div class="card__wrap">
-                                    <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
+                                    <span class="card__rate"><i class="icon ion-ios-star"></i>${film.ratingValue}</span>
 
                                     <ul class="card__list">
                                             <c:forEach items="${film.tags}" var="tag">
@@ -81,271 +81,50 @@
                         allowfullscreen>
                 </iframe>
             </div>
-
-        <%--            <div class="col-12 col-xl-6">--%>
-<%--                <video controls crossorigin playsinline--%>
-<%--                       poster="../../../cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg" id="player">--%>
-<%--                    <!-- Video files -->--%>
-<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"--%>
-<%--                            type="video/mp4" size="576">--%>
-<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4"--%>
-<%--                            type="video/mp4" size="720">--%>
-<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4"--%>
-<%--                            type="video/mp4" size="1080">--%>
-<%--                    <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1440p.mp4"--%>
-<%--                            type="video/mp4" size="1440">--%>
-
-<%--                    <!-- Caption files -->--%>
-<%--                    <track kind="captions" label="English" srclang="en"--%>
-<%--                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"--%>
-<%--                           default>--%>
-<%--                    <track kind="captions" label="Français" srclang="fr"--%>
-<%--                           src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">--%>
-
-<%--                    <!-- Fallback for browsers that don't support the <video> element -->--%>
-<%--                    <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4"--%>
-<%--                       download>Download</a>--%>
-<%--                </video>--%>
-<%--            </div>--%>
-
-            <!-- end player -->
+            <!-- End player -->
 
             <!-- accordion -->
             <div class="col-12 col-xl-6">
                 <div class="accordion" id="accordion">
-                    <div class="accordion__card">
-                        <div class="card-header" id="headingOne">
-                            <button type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
-                                    aria-controls="collapseOne">
-                                <span>Season: 1</span>
-                                <span>22 Episodes from Nov, 2004 until May, 2005</span>
-                            </button>
-                        </div>
+                    <c:forEach items="${film.seasons}" var="season" varStatus="seasonStatus">
+                        <div data-film-id="${film.filmID}" class="accordion__card">
+                            <div class="card-header" id="heading${seasonStatus.index}">
+                                <button type="button" data-toggle="collapse" data-target="#collapse${seasonStatus.index}" aria-expanded="true" aria-controls="collapse${seasonStatus.index}">
+                                    <span>${season.seasonName}</span>
+                                    <!-- Add number of episodes and dates if available -->
+                                </button>
+                            </div>
 
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
-                             data-parent="#accordion">
-                            <div class="card-body">
-                                <table class="accordion__list">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Air Date</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Pilot</td>
-                                        <td>Tuesday, November 16th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Paternity</td>
-                                        <td>Tuesday, November 23rd, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>3</th>
-                                        <td>Occam's Razor</td>
-                                        <td>Tuesday, November 30th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>4</th>
-                                        <td>Maternity</td>
-                                        <td>Tuesday, December 7th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>5</th>
-                                        <td>Damned If You Do</td>
-                                        <td>Tuesday, December 14th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>6</th>
-                                        <td>The Socratic Method</td>
-                                        <td>Tuesday, December 21st, 2004</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                            <div id="collapse${seasonStatus.index}" class="collapse ${seasonStatus.index == 0 ? 'show' : ''}" aria-labelledby="heading${seasonStatus.index}" data-parent="#accordion">
+                                <div class="card-body">
+                                    <table class="accordion__list">
+                                        <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Title</th>
+                                            <th>Release Date</th> <!-- Add if available -->
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:forEach items="${film.episodes}" var="episode" varStatus="episodeStatus">
+                                            <tr data-episode-id="${episode.epId}" style="cursor: pointer;">
+                                                <td>${episodeStatus.index + 1}</td>
+                                                <td>${episode.epTittle}</td>
+                                                <td>${episode.epDate}</td>
+                                                <!-- Add air date if available -->
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="accordion__card">
-                        <div class="card-header" id="headingTwo">
-                            <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo"
-                                    aria-expanded="false" aria-controls="collapseTwo">
-                                <span>Season: 2</span>
-                                <span>24 Episodes from Sep, 2005 until May, 2006</span>
-                            </button>
-                        </div>
-
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                            <div class="card-body">
-                                <table class="accordion__list">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Air Date</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Pilot</td>
-                                        <td>Tuesday, November 16th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Paternity</td>
-                                        <td>Tuesday, November 23rd, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>3</th>
-                                        <td>Occam's Razor</td>
-                                        <td>Tuesday, November 30th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>4</th>
-                                        <td>Maternity</td>
-                                        <td>Tuesday, December 7th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>5</th>
-                                        <td>Damned If You Do</td>
-                                        <td>Tuesday, December 14th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>6</th>
-                                        <td>The Socratic Method</td>
-                                        <td>Tuesday, December 21st, 2004</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion__card">
-                        <div class="card-header" id="headingThree">
-                            <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseThree"
-                                    aria-expanded="false" aria-controls="collapseThree">
-                                <span>Season: 3</span>
-                                <span>24 Episodes from Sep, 2006 until May, 2007</span>
-                            </button>
-                        </div>
-
-                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
-                             data-parent="#accordion">
-                            <div class="card-body">
-                                <table class="accordion__list">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Air Date</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Pilot</td>
-                                        <td>Tuesday, November 16th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Paternity</td>
-                                        <td>Tuesday, November 23rd, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>3</th>
-                                        <td>Occam's Razor</td>
-                                        <td>Tuesday, November 30th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>4</th>
-                                        <td>Maternity</td>
-                                        <td>Tuesday, December 7th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>5</th>
-                                        <td>Damned If You Do</td>
-                                        <td>Tuesday, December 14th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>6</th>
-                                        <td>The Socratic Method</td>
-                                        <td>Tuesday, December 21st, 2004</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="accordion__card">
-                        <div class="card-header" id="headingFour">
-                            <button class="collapsed" type="button" data-toggle="collapse" data-target="#collapseFour"
-                                    aria-expanded="false" aria-controls="collapseFour">
-                                <span>Season: 4</span>
-                                <span>16 Episodes from Sep, 2007 until May, 2008</span>
-                            </button>
-                        </div>
-
-                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
-                            <div class="card-body">
-                                <table class="accordion__list">
-                                    <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Title</th>
-                                        <th>Air Date</th>
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    <tr>
-                                        <th>1</th>
-                                        <td>Pilot</td>
-                                        <td>Tuesday, November 16th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>2</th>
-                                        <td>Paternity</td>
-                                        <td>Tuesday, November 23rd, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>3</th>
-                                        <td>Occam's Razor</td>
-                                        <td>Tuesday, November 30th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>4</th>
-                                        <td>Maternity</td>
-                                        <td>Tuesday, December 7th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>5</th>
-                                        <td>Damned If You Do</td>
-                                        <td>Tuesday, December 14th, 2004</td>
-                                    </tr>
-                                    <tr>
-                                        <th>6</th>
-                                        <td>The Socratic Method</td>
-                                        <td>Tuesday, December 21st, 2004</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
                 </div>
             </div>
             <!-- end accordion -->
 
+            <!-- availables -->
             <div class="col-12">
                 <div class="details__wrap">
                     <!-- availables -->
@@ -1006,5 +785,18 @@
             }
         });
     }
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lấy tất cả các hàng trong bảng có attribute data-episode-id
+        var rows = document.querySelectorAll('tr[data-episode-id]');
+
+        rows.forEach(function(row) {
+            row.addEventListener('click', function() {
+                var episodeId = this.getAttribute('data-episode-id');
+                var filmId = this.closest('.accordion__card').getAttribute('data-film-id');
+                // Chuyển hướng đến trang với episodeId
+                window.location.href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
+            });
+        });
+    });
 </script>
 </html>

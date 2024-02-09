@@ -6,8 +6,8 @@
             <div class="col-12 col-md-3">
                 <h6 class="footer__title">Download Our App</h6>
                 <ul class="footer__app">
-                    <li><a href="#"><img src="/img/Download_on_the_App_Store_Badge.svg" alt=""></a></li>
-                    <li><a href="#"><img src="/img/google-play-badge.png" alt=""></a></li>
+                    <li><a href="#"><img src="./img/Download_on_the_App_Store_Badge.svg" alt=""></a></li>
+                    <li><a href="#"><img src="./img/google-play-badge.png" alt=""></a></li>
                 </ul>
             </div>
             <!-- end footer list -->
@@ -16,7 +16,7 @@
             <div class="col-6 col-sm-4 col-md-3">
                 <h6 class="footer__title">Resources</h6>
                 <ul class="footer__list">
-                    <li><a href="./index.jsp">Home</a></li>
+                    <li><a href="home">Home</a></li>
                     <li><a href="./About.jsp">About Us</a></li>
                     <li><a href="./pricing.jsp">Pricing Plan</a></li>
                 </ul>

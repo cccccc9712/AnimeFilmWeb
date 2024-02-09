@@ -27,29 +27,31 @@
             <div class="col-12">
                 <div class="owl-carousel home__carousel">
                     <c:forEach items="${newFilms}" var="newFilm">
-                    <div class="item">
-                        <!-- card -->
-                        <div class="card card--big">
-                            <div style="height: 330px; width: 210px" class="card__cover">
-                                <img id="newFilm" src="${newFilm.imageLink}" alt="${newFilm.filmName}">
-                                <a href="detail?filmName=${newFilm.filmName}" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="detail?filmName=${newFilm.filmName}">${newFilm.filmName}</a></h3>
-                                <span class="card__category">
+                        <div class="item">
+                            <!-- card -->
+                            <div class="card card--big">
+                                <div style="" class="card__cover">
+                                    <img id="newFilm" src="${newFilm.imageLink}" alt="${newFilm.filmName}">
+                                    <a href="detail?filmName=${newFilm.filmName}" class="card__play">
+                                        <i class="icon ion-ios-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title"><a
+                                            href="detail?filmName=${newFilm.filmName}">${newFilm.filmName}</a></h3>
+                                    <span class="card__category">
                                     <c:forEach items="${newFilm.categories}" var="category">
                                         <a href="#">${category.categoryName}</a>
                                     </c:forEach>
                                 </span>
-                                <span class="card__rate">
-                                                     <i class="icon ion-ios-eye"></i>${newFilm.viewCount}
+                                    <span class="card__rate">
+                                                     <i class="icon ion-ios-star"></i>${newFilm.ratingValue}
+                                        <i style="margin-left: 10px" class="icon ion-ios-eye"></i>${newFilm.viewCount}
                                                 </span>
+                                </div>
                             </div>
+                            <!-- end card -->
                         </div>
-                        <!-- end card -->
-                    </div>
                     </c:forEach>
                 </div>
             </div>
@@ -72,23 +74,19 @@
                     <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab"
-                               aria-controls="tab-1" aria-selected="true">NEW RELEASES</a>
+                               aria-controls="tab-1" aria-selected="true">Trending</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2"
-                               aria-selected="false">Trending</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3"
                                aria-selected="false">Favourite</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4"
+                            <a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3"
                                aria-selected="false">Just Watched</a>
                         </li>
+
                     </ul>
                     <!-- end content tabs nav -->
 
@@ -140,7 +138,7 @@
                                     <div class="col-12 col-sm-4">
                                         <div class="card__cover">
                                             <img style="" src="${film.imageLink}" alt="${film.filmName}">
-                                            <a href="#" class="card__play">
+                                            <a href="detail?filmName=${film.filmName}" class="card__play">
                                                 <i class="icon ion-ios-play"></i>
                                             </a>
                                         </div>
@@ -148,18 +146,18 @@
 
                                     <div class="col-12 col-sm-8">
                                         <div class="card__content">
-                                            <h3 style="padding-top: 5px" class="card__title"><a href="#">${film.filmName}</a></h3>
+                                            <h3 style="padding-top: 5px" class="card__title"><a
+                                                    href="detail?filmName=${film.filmName}">${film.filmName}</a></h3>
 
                                             <span class="card__category">
                             <c:forEach items="${film.categories}" var="category">
                                 <a href="#">${category.categoryName}</a>
                             </c:forEach>
                         </span>
-
-
                                             <div class="card__wrap">
                                                 <span class="card__rate">
-                                                     <i class="icon ion-ios-eye"></i>${film.viewCount}
+                                                     <i class="icon ion-ios-star"></i>${film.ratingValue}
+                                                     <i  style="margin-left: 10px" class="icon ion-ios-eye"></i>${film.viewCount}
                                                 </span>
                                                 <ul class="card__list">
                                                     <c:forEach items="${film.tags}" var="tag">
@@ -167,7 +165,6 @@
                                                     </c:forEach>
                                                 </ul>
                                             </div>
-
                                             <div class="card__description">
                                                 <p>${film.description}</p>
                                             </div>
@@ -177,52 +174,6 @@
                             </div>
                         </div>
                     </c:forEach>
-
-                    <!-- end card -->
-                    <%--                    <!-- card -->--%>
-                    <%--                    <div class="col-6 col-sm-12 col-lg-6">--%>
-                    <%--                        <div class="card card--list">--%>
-                    <%--                            <div class="row">--%>
-                    <%--                                <div class="col-12 col-sm-4">--%>
-                    <%--                                    <div class="card__cover">--%>
-                    <%--                                        <img src="img/covers/cover6.jpg" alt="">--%>
-                    <%--                                        <a href="#" class="card__play">--%>
-                    <%--                                            <i class="icon ion-ios-play"></i>--%>
-                    <%--                                        </a>--%>
-                    <%--                                    </div>--%>
-                    <%--                                </div>--%>
-
-                    <%--                                <div class="col-12 col-sm-8">--%>
-                    <%--                                    <div class="card__content">--%>
-                    <%--                                        <h3 class="card__title"><a href="#">Benched</a></h3>--%>
-                    <%--                                        <span class="card__category">--%>
-                    <%--												<a href="#">Comedy</a>--%>
-                    <%--											</span>--%>
-
-                    <%--                                        <div class="card__wrap">--%>
-                    <%--                                            <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>--%>
-
-                    <%--                                            <ul class="card__list">--%>
-                    <%--                                                <li>HD</li>--%>
-                    <%--                                                <li>16+</li>--%>
-                    <%--                                            </ul>--%>
-                    <%--                                        </div>--%>
-
-                    <%--                                        <div class="card__description">--%>
-                    <%--                                            <p>All the Lorem Ipsum generators on the Internet tend to repeat--%>
-                    <%--                                                predefined chunks as necessary, making this the first true generator--%>
-                    <%--                                                on the Internet. It uses a dictionary of over 200 Latin words,--%>
-                    <%--                                                combined with a handful of model sentence structures, to generate--%>
-                    <%--                                                Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is--%>
-                    <%--                                                therefore always free from repetition, injected humour, or--%>
-                    <%--                                                non-characteristic words etc.</p>--%>
-                    <%--                                        </div>--%>
-                    <%--                                    </div>--%>
-                    <%--                                </div>--%>
-                    <%--                            </div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </div>--%>
-                    <!-- end card -->
                 </div>
             </div>
 

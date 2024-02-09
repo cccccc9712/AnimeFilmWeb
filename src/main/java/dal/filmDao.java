@@ -19,7 +19,22 @@ public class filmDao extends DBContext {
 
     public List<filmDtos> getAllFilms() {
         List<filmDtos> films = new ArrayList<>();
-        String sql = "SELECT * FROM Film";
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                ")\n" +
+                "SELECT\n" +
+                "    f.*,\n" +
+                "    ra.averageRating\n" +
+                "FROM\n" +
+                "    Film f\n" +
+                "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "ORDER BY f.filmID DESC;\n"; // Câu lệnh đã được chỉnh sửa để sắp xếp theo filmID giảm dần
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -32,6 +47,7 @@ public class filmDao extends DBContext {
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
 
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
@@ -47,33 +63,49 @@ public class filmDao extends DBContext {
     }
 
     public List<filmDtos> getNewFilms() {
-        List<filmDtos> newfilms = new ArrayList<>();
-        String sql = "SELECT TOP (4) * FROM Film ORDER BY filmID DESC";
+        List<filmDtos> newFilms = new ArrayList<>();
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                ")\n" +
+                "SELECT TOP (5) f.*, ra.averageRating\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "ORDER BY f.filmID DESC;";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
                 filmDtos film = new filmDtos();
+                // Thiết lập thông tin film
                 film.setFilmID(rs.getInt("filmID"));
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
 
+                // Lấy thông tin liên quan
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
                 film.setSeasons(getSeasonsForFilm(film.getFilmID()));
                 film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
 
-                newfilms.add(film);
+                newFilms.add(film);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return newfilms;
+        return newFilms;
     }
+
 
     private List<Category> getCategoriesForFilm(int filmID) {
         List<Category> categories = new ArrayList<>();
@@ -138,14 +170,16 @@ public class filmDao extends DBContext {
 
     private List<Episode> getEpisodesForFilm(int filmID) {
         List<Episode> episodes = new ArrayList<>();
-        String sql = "SELECT e.title, e.episodeLink FROM Episode e JOIN Season s ON e.seasonID = s.seasonID JOIN Film f ON s.filmID = f.filmID WHERE f.filmID = ?";
+        String sql = "SELECT e.episodeID, e.title, e.episodeLink, e.releaseDate FROM Episode e JOIN Season s ON e.seasonID = s.seasonID JOIN Film f ON s.filmID = f.filmID WHERE f.filmID = ?";
         try (PreparedStatement psLocal = conn.prepareStatement(sql)) {
             psLocal.setInt(1, filmID);
             try (ResultSet rsLocal = psLocal.executeQuery()) {
                 while (rsLocal.next()) {
                     Episode episode = new Episode();
+                    episode.setEpId(rsLocal.getInt("episodeID"));
                     episode.setEpTittle(rsLocal.getString("title"));
                     episode.setEpLink(rsLocal.getString("episodeLink"));
+                    episode.setEpDate(rsLocal.getDate("releaseDate"));
                     episodes.add(episode);
                 }
             }
@@ -155,9 +189,22 @@ public class filmDao extends DBContext {
         return episodes;
     }
 
+
     public filmDtos getFilmById(int filmId) {
         filmDtos film = null;
-        String sql = "SELECT * FROM Film WHERE filmID = ?";
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                ")\n" +
+                "SELECT f.*, ra.averageRating\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "WHERE f.filmID = ?;";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -165,13 +212,16 @@ public class filmDao extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 film = new filmDtos();
+                // Set film details
                 film.setFilmID(rs.getInt("filmID"));
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
 
+                // Get related data
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
                 film.setSeasons(getSeasonsForFilm(film.getFilmID()));
@@ -191,9 +241,22 @@ public class filmDao extends DBContext {
         }
         return film;
     }
+
     public filmDtos getFilmByName(String filmName) {
         filmDtos film = null;
-        String sql = "SELECT * FROM Film WHERE filmName = ?";
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                ")\n" +
+                "SELECT f.*, ra.averageRating\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "WHERE f.filmName = ?;";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -201,13 +264,16 @@ public class filmDao extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 film = new filmDtos();
+                // Set film details
                 film.setFilmID(rs.getInt("filmID"));
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
 
+                // Get related data
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
                 film.setSeasons(getSeasonsForFilm(film.getFilmID()));
@@ -228,9 +294,70 @@ public class filmDao extends DBContext {
         return film;
     }
 
-    public static void main(String[] args) {
-        filmDao d = new filmDao();
-        filmDtos films = d.getFilmById(1);
-        System.out.println(films.toString());
+    public List<filmDtos> getFilmWithHighestViewCount() {
+        filmDtos film = null;
+        List<filmDtos> filmDtosList = new ArrayList<>();
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                "),\n" +
+                "HighestViewCount AS (\n" +
+                "    SELECT TOP 8\n" +
+                "        f.*,\n" +
+                "        ra.averageRating\n" +
+                "    FROM Film f\n" +
+                "    LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "    ORDER BY f.viewCount DESC\n" +
+                ")\n" +
+                "SELECT *\n" +
+                "FROM HighestViewCount;\n";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
+
+                // Get related data
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+                filmDtosList.add(film);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return filmDtosList;
     }
+
+    public static void main(String[] args) {
+        filmDao fd = new filmDao();
+        List<filmDtos> f = fd.getFilmWithHighestViewCount();
+        for (filmDtos fdt : f){
+            System.out.println(fdt.toString());
+        }
+    }
+
 }

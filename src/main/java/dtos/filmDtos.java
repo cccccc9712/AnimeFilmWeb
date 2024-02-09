@@ -14,6 +14,8 @@ public class filmDtos {
     private String imageLink;
     private String trailerLink;
     private long viewCount;
+    private float ratingValue;
+
     private List<Category> categories;
     private List<Tag> tags;
     private List<Season> seasons;
@@ -22,17 +24,26 @@ public class filmDtos {
     public filmDtos() {
     }
 
-    public filmDtos(int filmID, String filmName, String description, String imageLink, String trailerLink, long viewCount, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
+    public filmDtos(int filmID, String filmName, String description, String imageLink, String trailerLink, long viewCount, float ratingValue, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
         this.filmID = filmID;
         this.filmName = filmName;
         this.description = description;
         this.imageLink = imageLink;
         this.trailerLink = trailerLink;
         this.viewCount = viewCount;
+        this.ratingValue = ratingValue;
         this.categories = categories;
         this.tags = tags;
         this.seasons = seasons;
         this.episodes = episodes;
+    }
+
+    public float getRatingValue() {
+        return ratingValue;
+    }
+
+    public void setRatingValue(float ratingValue) {
+        this.ratingValue = ratingValue;
     }
 
     public String getTrailerLink() {
@@ -124,6 +135,7 @@ public class filmDtos {
                 ", imageLink='" + imageLink + '\'' +
                 ", trailerLink='" + trailerLink + '\'' +
                 ", viewCount=" + viewCount +
+                ", ratingValue=" + ratingValue +
                 ", categories=" + categories +
                 ", tags=" + tags +
                 ", seasons=" + seasons +
