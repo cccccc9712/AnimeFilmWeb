@@ -25,7 +25,7 @@
 
 <%--                                <ul class="dropdown-menu header__dropdown-menu"--%>
 <%--                                    aria-labelledby="dropdownMenuCatalog">--%>
-<%--                                    <li><a href="Catagories.jsp">Catalog List</a></li>--%>
+<%--                                    <li><a href="Categories.jsp">Catalog List</a></li>--%>
 <%--                                </ul>--%>
                             </li>
                             <!-- end dropdown -->

@@ -187,22 +187,14 @@
       </c:forEach>
       <!-- end card -->
 
-
-      <!-- end card -->
-
       <!-- paginator -->
       <div class="col-12">
         <ul class="paginator paginator--list">
-          <li class="paginator__item paginator__item--prev">
-            <a href="#"><i class="icon ion-ios-arrow-back"></i></a>
-          </li>
-          <li class="paginator__item"><a href="#">1</a></li>
-          <li class="paginator__item paginator__item--active"><a href="#">2</a></li>
-          <li class="paginator__item"><a href="#">3</a></li>
-          <li class="paginator__item"><a href="#">4</a></li>
-          <li class="paginator__item paginator__item--next">
-            <a href="#"><i class="icon ion-ios-arrow-forward"></i></a>
-          </li>
+          <c:forEach begin="1" end="${noOfPages}" var="i">
+            <li class="paginator__item ${currentPage == i ? 'paginator__item--active' : ''}">
+              <a href="category?page=${i}">${i}</a>
+            </li>
+          </c:forEach>
         </ul>
       </div>
       <!-- end paginator -->
