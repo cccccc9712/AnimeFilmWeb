@@ -30,5 +30,5 @@
         <meta name="description" content="">
         <meta name="keywords" content="">
         <meta name="author" content="Dmitry Volkov">
-        <title>HeniX – Online Anime Movies, Anime TV Shows</title>
+        <title>ReelAnime – Online Anime Movies, Anime TV Shows</title>
     </head>

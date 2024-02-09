@@ -53,7 +53,7 @@
             <!-- footer copyright -->
             <div class="col-12">
                 <div class="footer__copyright">
-                    <small><a target="_blank" href="https://github.com/cccccc9712">@cccccc9712 - TruongManhThang - HiatenX</a></small>
+                    <small><a target="_blank" href="https://github.com/cccccc9712">@cccccc9712 - TruongManhThang - ReelAnime</a></small>
 
                     <ul>
                         <li><a href="#">Terms of Use</a></li>

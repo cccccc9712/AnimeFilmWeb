@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="col-12">
-                <h1 class="home__title"><b>NEW ANIME</b> OF THIS SEASON</h1>
+                <h1 class="home__title"><b>NEW ANIME</b> ON REELANIME</h1>
 
                 <button class="home__nav home__nav--prev" type="button">
                     <i class="icon ion-ios-arrow-round-back"></i>
@@ -1095,17 +1095,10 @@
 </section>
 <!-- end expected premiere -->
 
-<!-- partners -->
-
-<!-- end section text -->
-
-<!-- partner -->
-
-<!-- end partner -->
-<!-- end partners -->
-
+<%-- Decorator --%>
 <%@include file="decorator/footer.jsp" %>
 <%@include file="decorator/script.jsp" %>
+<%-- End Decorator --%>
 </body>
 
 </html>

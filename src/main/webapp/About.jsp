@@ -35,15 +35,15 @@
         <div class="row">
             <!-- section title -->
             <div class="col-12">
-                <h2 class="section__title"><b>HENIX</b> – Best Place for Movies</h2>
+                <h2 class="section__title"><b>ReelAnime</b> – Best Place for Otakus</h2>
             </div>
             <!-- end section title -->
 
             <!-- section text -->
             <div class="col-12">
-                <p class="section__text">It is a long <b>established</b> fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using.</p>
+                <p style="padding-bottom: 5px" class="section__text">ReelAnime is your ultimate destination for exploring the vibrant world of anime films. With a rich library that spans classic hits to the latest releases, our platform is designed to cater to both die-hard anime enthusiasts and newcomers alike. Dive into a meticulously curated selection of anime movies, ranging from epic adventures and romantic tales to mind-bending sci-fi and heartwarming dramas. ReelAnime offers an immersive viewing experience with high-quality streaming, user-friendly navigation, and in-depth reviews to guide your selections. Join our community to discover, watch, and discuss the anime films that move, inspire, and excite you. Your next anime obsession awaits!</p>
 
-                <p class="section__text section__text--last-with-margin">'Content here, content here', making it look like <a href="#">readable</a> English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
+                <p class="section__text section__text--last-with-margin"></p>
             </div>
             <!-- end section text -->
 
@@ -145,7 +145,7 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="how">
                     <span class="how__number">03</span>
-                    <h3 class="how__title">Enjoy MovieGo</h3>
+                    <h3 class="how__title">Enjoy ReelAnime</h3>
                     <p class="how__text">It has never been an issue to find an old movie or TV show on the internet. However, this is not the case with the new releases.</p>
                 </div>
             </div>

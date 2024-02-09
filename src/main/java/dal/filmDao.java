@@ -400,12 +400,118 @@ public class filmDao extends DBContext {
         return films;
     }
 
+//    public List<filmDtos> getFilmsByCategory(String categoryName) {
+//        List<filmDtos> films = new ArrayList<>();
+//        String sql = "SELECT f.* FROM Film f "
+//                + "INNER JOIN FilmCategory fc ON f.filmID = fc.filmID "
+//                + "INNER JOIN Category c ON fc.CategoryID = c.CategoryID "
+//                + "WHERE c.CategoryName = ?";
+//        try {
+//            conn = new DBContext().getConnection();
+//            ps = conn.prepareStatement(sql);
+//            ps.setString(1, categoryName);
+//            rs = ps.executeQuery();
+//            while (rs.next()) {
+//                filmDtos film = new filmDtos();
+//                film.setFilmID(rs.getInt("filmID"));
+//                film.setFilmName(rs.getString("filmName"));
+//                film.setDescription(rs.getString("description"));
+//                film.setImageLink(rs.getString("imageLink"));
+//                film.setTrailerLink(rs.getString("trailerLink"));
+//                film.setViewCount(rs.getLong("viewCount"));
+//                // Lấy thông tin liên quan như thể loại, tag, mùa, tập,...
+//                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+//                film.setTags(getTagsForFilm(film.getFilmID()));
+//                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+//                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+//
+//                films.add(film);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            // Close resources
+//            try {
+//                if (rs != null) rs.close();
+//                if (ps != null) ps.close();
+//                if (conn != null) conn.close();
+//            } catch (SQLException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//        return films;
+//    }
+
+    public int getTotalFilmsByCategory(String category) {
+        String query = "SELECT COUNT(*) FROM Film f JOIN FilmCategory fc ON f.filmID = fc.filmID JOIN Category c ON fc.CategoryID = c.CategoryID WHERE c.CategoryName = ?";
+        try {
+             conn = new DBContext().getConnection();
+             ps = conn.prepareStatement(query);
+            ps.setString(1, category);
+            ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    public List<filmDtos> getFilmsByCategory(String categoryName, int page, int filmsPerPage) {
+        List<filmDtos> films = new ArrayList<>();
+        String query = "WITH Film_CTE AS (" +
+                "SELECT ROW_NUMBER() OVER (ORDER BY f.filmID DESC) AS RowNum, f.* " +
+                "FROM Film f JOIN FilmCategory fc ON f.filmID = fc.filmID " +
+                "JOIN Category c ON fc.CategoryID = c.CategoryID " +
+                "WHERE c.CategoryName = ?" +
+                ")" +
+                "SELECT * FROM Film_CTE " +
+                "WHERE RowNum BETWEEN ? AND ?";
+        try {
+            int startRow = (page - 1) * filmsPerPage + 1;
+            int endRow = startRow + filmsPerPage - 1;
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, categoryName);
+            ps.setInt(2, startRow);
+            ps.setInt(3, endRow);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+                films.add(film);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return films;
+    }
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        List<filmDtos> films = fd.getFilmsPerPage(1, 6);
-        for (filmDtos a : films){
-            System.out.println(a.getFilmName());
-        }
+//        List<filmDtos> films = fd.getFilmsByCategory("Action/Adventure", 1,6);
+//        for (filmDtos a : films){
+//            System.out.println(a.getFilmName());
+//        }
+        int total = fd.getTotalFilmsByCategory("Action/Adventure");
+        System.out.println(total);
     }
 
 }
