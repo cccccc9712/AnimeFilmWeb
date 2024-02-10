@@ -41,7 +41,7 @@
                                             href="detail?filmName=${newFilm.filmName}">${newFilm.filmName}</a></h3>
                                     <span class="card__category">
                                     <c:forEach items="${newFilm.categories}" var="category">
-                                        <a href="#">${category.categoryName}</a>
+                                        <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                                     </c:forEach>
                                 </span>
                                     <span class="card__rate">
@@ -151,7 +151,7 @@
 
                                             <span class="card__category">
                             <c:forEach items="${film.categories}" var="category">
-                                <a href="#">${category.categoryName}</a>
+                                <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                             </c:forEach>
                         </span>
                                             <div class="card__wrap">
