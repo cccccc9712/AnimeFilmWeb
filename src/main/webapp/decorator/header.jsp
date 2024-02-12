@@ -14,9 +14,6 @@
 
                         <!-- header nav -->
                         <ul class="header__nav">
-                            <!-- dropdown -->
-
-                            <!-- end dropdown -->
 
                             <!-- dropdown -->
                             <li class="header__nav-item">
@@ -50,6 +47,7 @@
 <%--                                </ul>--%>
 <%--                            </li>--%>
                             <!-- end dropdown -->
+
                         </ul>
                         <!-- end header nav -->
 
@@ -95,14 +93,14 @@
     </div>
 
     <!-- header search -->
-    <form action="#" class="header__search">
-        <div class="container">
+    <form action="category" method="GET" class="header__search">
+    <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="header__search-content">
-                        <input type="text" placeholder="Search for a movie, TV Series that you are looking for">
+                        <input type="text" placeholder="Search for an anime, movies that you are looking for" name="searchQuery">
 
-                        <button type="button">search</button>
+                        <button type="submit">search</button>
                     </div>
                 </div>
             </div>

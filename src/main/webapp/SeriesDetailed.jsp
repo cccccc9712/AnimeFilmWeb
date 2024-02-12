@@ -39,7 +39,6 @@
                             </div>
                         </div>
                         <!-- end card cover -->
-
                         <!-- card content -->
                         <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9">
                             <div class="card__content">
@@ -56,7 +55,7 @@
                                 <ul class="card__meta">
                                     <li><span>Genre:</span>
                                         <c:forEach items="${film.categories}" var="category">
-                                            <a href="#">${category.categoryName}</a>
+                                            <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                                         </c:forEach>
                                     </li>
                                 </ul>
@@ -86,7 +85,7 @@
             <!-- accordion -->
             <div class="col-12 col-xl-6">
                 <div class="accordion" id="accordion">
-                    <c:forEach items="${film.seasons}" var="season" varStatus="seasonStatus">
+                    <c:forEach items="${season}" var="season" varStatus="seasonStatus">
                         <div data-film-id="${film.filmID}" class="accordion__card">
                             <div class="card-header" id="heading${seasonStatus.index}">
                                 <button type="button" data-toggle="collapse" data-target="#collapse${seasonStatus.index}" aria-expanded="true" aria-controls="collapse${seasonStatus.index}">
@@ -106,7 +105,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <c:forEach items="${film.episodes}" var="episode" varStatus="episodeStatus">
+                                        <c:forEach items="${season.episodes}" var="episode" varStatus="episodeStatus">
                                             <tr data-episode-id="${episode.epId}" style="cursor: pointer;">
                                                 <td>${episodeStatus.index + 1}</td>
                                                 <td>${episode.epTittle}</td>

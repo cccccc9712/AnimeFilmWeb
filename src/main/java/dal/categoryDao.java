@@ -31,9 +31,6 @@ public class categoryDao extends DBContext{
         return categories;
     }
 
-
-
-
     public static void main(String[] args) {
     categoryDao d = new categoryDao();
     List<Category> ct = d.getCategories();

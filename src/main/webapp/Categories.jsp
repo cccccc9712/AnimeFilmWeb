@@ -120,15 +120,33 @@
       <!-- end card -->
 
       <!-- paginator -->
+      <c:if test="${not empty films and films.size() > 0}">
       <div class="col-12">
         <ul class="paginator paginator--list">
           <c:forEach begin="1" end="${noOfPages}" var="i">
             <li class="paginator__item ${currentPage == i ? 'paginator__item--active' : ''}">
-              <a href="category?page=${i}&categoryName=${currentCategory}">${i}</a>
+              <c:choose>
+                <c:when test="${not empty currentSearch}">
+                  <a href="category?page=${i}&searchQuery=${currentSearch}">${i}</a>
+                </c:when>
+                <c:when test="${not empty currentCategory}">
+                  <a href="category?page=${i}&categoryName=${currentCategory}">${i}</a>
+                </c:when>
+                <c:otherwise>
+                  <a href="category?page=${i}">${i}</a>
+                </c:otherwise>
+              </c:choose>
             </li>
           </c:forEach>
         </ul>
+
       </div>
+      </c:if>
+      <c:if test="${empty films or films.size() == 0}">
+        <div class="col-12">
+          <h2 class="section__title">No search based on your search.</h2>
+        </div>
+      </c:if>
       <!-- end paginator -->
     </div>
   </div>

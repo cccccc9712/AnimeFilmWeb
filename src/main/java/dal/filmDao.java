@@ -442,6 +442,80 @@ public class filmDao extends DBContext {
 //        return films;
 //    }
 
+    public List<filmDtos> searchFilms(String searchQuery, int page, int filmsPerPage) {
+        List<filmDtos> films = new ArrayList<>();
+        // Câu truy vấn SQL để tìm kiếm phim dựa trên từ khóa
+        String sql = "WITH FilteredFilms AS (\n" +
+                "SELECT f.*, ra.averageRating, ROW_NUMBER() OVER (ORDER BY f.filmID DESC) AS RowNum\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN (SELECT filmID, AVG(ratingValue) AS averageRating FROM Ratings GROUP BY filmID) ra ON f.filmID = ra.filmID\n" +
+                "WHERE f.filmName LIKE ? OR f.description LIKE ?\n" +
+                "),\n" +
+                "PagedFilms AS (\n" +
+                "SELECT * FROM FilteredFilms\n" +
+                "WHERE RowNum BETWEEN ? AND ?\n" +
+                ")\n" +
+                "SELECT * FROM PagedFilms;";
+        try {
+            int startRow = (page - 1) * filmsPerPage + 1;
+            int endRow = startRow + filmsPerPage - 1;
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + searchQuery + "%");
+            ps.setString(2, "%" + searchQuery + "%");
+            ps.setInt(3, startRow);
+            ps.setInt(4, endRow);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
+                // Lấy thông tin liên quan
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+                films.add(film);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng tất cả tài nguyên JDBC
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return films;
+    }
+
+    public int getTotalFilmsBySearchQuery(String searchQuery) {
+        int total = 0;
+        String sql = "SELECT COUNT(*) as Total FROM Film WHERE filmName LIKE ? OR description LIKE ?\n";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%"+searchQuery+"%");
+            ps.setString(2, "%"+searchQuery+"%");
+            ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    total = rs.getInt("Total");
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+
     public int getTotalFilmsByCategory(String category) {
         String query = "SELECT COUNT(*) FROM Film f JOIN FilmCategory fc ON f.filmID = fc.filmID JOIN Category c ON fc.CategoryID = c.CategoryID WHERE c.CategoryName = ?";
         try {
@@ -504,13 +578,10 @@ public class filmDao extends DBContext {
         }
         return films;
     }
+
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-//        List<filmDtos> films = fd.getFilmsByCategory("Action/Adventure", 1,6);
-//        for (filmDtos a : films){
-//            System.out.println(a.getFilmName());
-//        }
-        int total = fd.getTotalFilmsByCategory("Action/Adventure");
+        int total = fd.getTotalFilmsBySearchQuery("nar");
         System.out.println(total);
     }
 
