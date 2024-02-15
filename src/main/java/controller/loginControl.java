@@ -1,6 +1,6 @@
 package controller;
 
-import dal.Dao;
+import dal.userDao;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,8 +31,20 @@ public class loginControl extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         String mail = req.getParameter("mail");
         String password = req.getParameter("pass");
-        if (!mail.isBlank() || !password.isBlank()){
-        Dao dao = new Dao();
+
+        if (!validateEmail(mail)) {
+            req.setAttribute("failedLoginMessage", "Wrong email format!");
+            req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
+            return;
+        }
+
+        if (mail.isBlank() || password.isBlank()) {
+            req.setAttribute("failedLoginMessage", "Please input to sign in!");
+            req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
+            return;
+        }
+
+        userDao dao = new userDao();
         User user = dao.login(mail, password);
         if (user == null) {
             req.setAttribute("failedLoginMessage", "Wrong Gmail or Password!");
@@ -41,10 +53,11 @@ public class loginControl extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("userSession", user);
             resp.sendRedirect("home");
-        }}else {
-            req.setAttribute("failedLoginMessage", "Please input to sign in!");
-            req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
         }
+    }
 
+    public static boolean validateEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
     }
 }
