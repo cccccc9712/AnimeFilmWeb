@@ -90,7 +90,6 @@
                             <div class="card-header" id="heading${seasonStatus.index}">
                                 <button type="button" data-toggle="collapse" data-target="#collapse${seasonStatus.index}" aria-expanded="true" aria-controls="collapse${seasonStatus.index}">
                                     <span>${season.seasonName}</span>
-                                    <!-- Add number of episodes and dates if available -->
                                 </button>
                             </div>
 
@@ -101,7 +100,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Title</th>
-                                            <th>Release Date</th> <!-- Add if available -->
+                                            <th>Release Date</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -110,7 +109,6 @@
                                                 <td>${episodeStatus.index + 1}</td>
                                                 <td>${episode.epTittle}</td>
                                                 <td>${episode.epDate}</td>
-                                                <!-- Add air date if available -->
                                             </tr>
                                         </c:forEach>
                                         </tbody>
@@ -745,7 +743,6 @@
 
 </body>
 <script>
-
     var selectedStarIndex = -1;
 
     function highlightStars(star) {
@@ -785,14 +782,12 @@
         });
     }
     document.addEventListener("DOMContentLoaded", function() {
-        // Lấy tất cả các hàng trong bảng có attribute data-episode-id
         var rows = document.querySelectorAll('tr[data-episode-id]');
 
         rows.forEach(function(row) {
             row.addEventListener('click', function() {
                 var episodeId = this.getAttribute('data-episode-id');
                 var filmId = this.closest('.accordion__card').getAttribute('data-film-id');
-                // Chuyển hướng đến trang với episodeId
                 window.location.href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
             });
         });

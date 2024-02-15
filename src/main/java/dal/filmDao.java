@@ -1,6 +1,7 @@
 package dal;
 
 import dtos.filmDtos;
+import dtos.newestEpisodeDto;
 import entity.Category;
 import entity.Tag;
 import entity.Season;
@@ -132,6 +133,7 @@ public class filmDao extends DBContext {
         }
         return categories;
     }
+
     private List<Tag> getTagsForFilm(int filmID) {
         List<Tag> tags = new ArrayList<>();
         String sql = "SELECT t.tagName FROM Tag t JOIN FilmTag ft ON t.tagID = ft.tagID WHERE ft.filmID = ?";
@@ -352,16 +354,16 @@ public class filmDao extends DBContext {
         return filmDtosList;
     }
 
-    public int getTotalFilms(){
+    public int getTotalFilms() {
         String query = "select COUNT(*) from Film";
-        try{
+        try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 return rs.getInt(1);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
@@ -503,12 +505,12 @@ public class filmDao extends DBContext {
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, "%"+searchQuery+"%");
-            ps.setString(2, "%"+searchQuery+"%");
+            ps.setString(1, "%" + searchQuery + "%");
+            ps.setString(2, "%" + searchQuery + "%");
             ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    total = rs.getInt("Total");
-                }
+            if (rs.next()) {
+                total = rs.getInt("Total");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -519,18 +521,19 @@ public class filmDao extends DBContext {
     public int getTotalFilmsByCategory(String category) {
         String query = "SELECT COUNT(*) FROM Film f JOIN FilmCategory fc ON f.filmID = fc.filmID JOIN Category c ON fc.CategoryID = c.CategoryID WHERE c.CategoryName = ?";
         try {
-             conn = new DBContext().getConnection();
-             ps = conn.prepareStatement(query);
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
             ps.setString(1, category);
             ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
     }
+
     public List<filmDtos> getFilmsByCategory(String categoryName, int page, int filmsPerPage) {
         List<filmDtos> films = new ArrayList<>();
         String query = "WITH Film_CTE AS (" +
@@ -579,10 +582,48 @@ public class filmDao extends DBContext {
         return films;
     }
 
+    public List<newestEpisodeDto> getLatestEpisodes() {
+        List<newestEpisodeDto> episodes = new ArrayList<>();
+        String sql = "SELECT TOP 12 e.episodeID, e.title, e.episodeLink, e.releaseDate, f.filmID, f.filmName, f.description, f.imageLink, f.trailerLink, f.viewCount, s.seasonName "
+                + "FROM Episode e "
+                + "JOIN Season s ON e.seasonID = s.seasonID "
+                + "JOIN Film f ON s.filmID = f.filmID "
+                + "ORDER BY e.releaseDate DESC";
+        try {
+             conn = new DBContext().getConnection();
+             ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                newestEpisodeDto episode = new newestEpisodeDto();
+                episode.setEpId(rs.getInt("episodeID"));
+                episode.setEpTittle(rs.getString("title"));
+                episode.setEpLink(rs.getString("episodeLink"));
+                episode.setEpDate(rs.getDate("releaseDate"));
+                episode.setFilmId(rs.getInt("filmID"));
+                episode.setSeasonName(rs.getString("seasonName"));
+                episode.setFilmName(rs.getString("filmName"));
+                episode.setDescription(rs.getString("description"));
+                episode.setImageLink(rs.getString("imageLink"));
+                episode.setTrailerLink(rs.getString("trailerLink"));
+                episode.setViewCount(rs.getLong("viewCount"));
+                episode.setCategories(getCategoriesForFilm(episode.getFilmId()));
+                episode.setTags(getTagsForFilm(episode.getFilmId()));
+                episode.setSeasons(getSeasonsForFilm(episode.getFilmId()));
+                episodes.add(episode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return episodes;
+    }
+
+
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        int total = fd.getTotalFilmsBySearchQuery("nar");
-        System.out.println(total);
+        List<newestEpisodeDto> ned = fd.getLatestEpisodes();
+        for (newestEpisodeDto a : ned){
+            System.out.printf(a.toString());
+        }
     }
 
 }

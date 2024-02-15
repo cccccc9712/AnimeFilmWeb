@@ -22,7 +22,7 @@
         <link rel="stylesheet" href=".https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
             integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
             crossorigin="anonymous" referrerpolicy="no-referrer" /><!-- Favicons -->
-        <link rel="icon" type="image/png" href="./icon/favicon-32x32.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="./icon/OnePieceIcon.jpg" sizes="32x32">
         <link rel="apple-touch-icon" href="./icon/favicon-32x32.png">
         <link rel="apple-touch-icon" sizes="72x72" href="./icon/apple-touch-icon-72x72.png">
         <link rel="apple-touch-icon" sizes="114x114" href="./icon/apple-touch-icon-114x114.png">

@@ -2,6 +2,8 @@ package controller;
 
 import dal.filmDao;
 import dtos.filmDtos;
+import dtos.newestEpisodeDto;
+import entity.Episode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -20,6 +22,8 @@ public class homeControl  extends HttpServlet {
         filmDao fd = new filmDao();
         List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
         List<filmDtos> newFilms = fd.getNewFilms();
+        List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
+        req.setAttribute("latestEpisodes", latestEpisodes);
         req.setAttribute("films", trendingFilms);
         req.setAttribute("newFilms", newFilms);
         req.getRequestDispatcher("index.jsp").forward(req, resp);

@@ -49,7 +49,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <!-- Nếu không phải link YouTube, hiển thị video player -->
                         <video controls crossorigin playsinline poster="" id="player">
                             <!-- Video files -->
                             <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" size="576">
