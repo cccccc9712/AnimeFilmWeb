@@ -1,6 +1,7 @@
 package controller;
 
 import dal.userDao;
+import dtos.userDto;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -45,7 +46,7 @@ public class registerControl extends HttpServlet {
             if (!ud.checkEmailExists(email)) {
                 if (password.equals(cfPassword)) {
                     String username = generateUsername(email);
-                    boolean checked = ud.registerUser(new User(username, password, email, false));
+                    boolean checked = ud.registerUser(new userDto(username, password, email, false));
                     if (checked) {
                         resp.sendRedirect("SignIn.jsp");
                     } else {

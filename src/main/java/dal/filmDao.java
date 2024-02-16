@@ -371,7 +371,6 @@ public class filmDao extends DBContext {
 
     public List<filmDtos> getFilmsPerPage(int currentPage, int filmsPerPage) {
         List<filmDtos> films = new ArrayList<>();
-        // Cập nhật câu truy vấn cho SQL Server
         String query = "SELECT * FROM Film ORDER BY filmID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
         try {
             conn = new DBContext().getConnection();
@@ -401,48 +400,6 @@ public class filmDao extends DBContext {
         }
         return films;
     }
-
-//    public List<filmDtos> getFilmsByCategory(String categoryName) {
-//        List<filmDtos> films = new ArrayList<>();
-//        String sql = "SELECT f.* FROM Film f "
-//                + "INNER JOIN FilmCategory fc ON f.filmID = fc.filmID "
-//                + "INNER JOIN Category c ON fc.CategoryID = c.CategoryID "
-//                + "WHERE c.CategoryName = ?";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(sql);
-//            ps.setString(1, categoryName);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                filmDtos film = new filmDtos();
-//                film.setFilmID(rs.getInt("filmID"));
-//                film.setFilmName(rs.getString("filmName"));
-//                film.setDescription(rs.getString("description"));
-//                film.setImageLink(rs.getString("imageLink"));
-//                film.setTrailerLink(rs.getString("trailerLink"));
-//                film.setViewCount(rs.getLong("viewCount"));
-//                // Lấy thông tin liên quan như thể loại, tag, mùa, tập,...
-//                film.setCategories(getCategoriesForFilm(film.getFilmID()));
-//                film.setTags(getTagsForFilm(film.getFilmID()));
-//                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
-//                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
-//
-//                films.add(film);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            // Close resources
-//            try {
-//                if (rs != null) rs.close();
-//                if (ps != null) ps.close();
-//                if (conn != null) conn.close();
-//            } catch (SQLException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//        return films;
-//    }
 
     public List<filmDtos> searchFilms(String searchQuery, int page, int filmsPerPage) {
         List<filmDtos> films = new ArrayList<>();
@@ -487,7 +444,6 @@ public class filmDao extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Đóng tất cả tài nguyên JDBC
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
@@ -617,6 +573,58 @@ public class filmDao extends DBContext {
         return episodes;
     }
 
+    public boolean saveWatchedHistory(int userID, int filmID, int episodeID, java.sql.Date watchDate, java.sql.Time watchTime) {
+        String sql = "INSERT INTO WatchHistory (userID, filmID, episodeID, watchDate, watchTime) VALUES (?, ?, ?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ps.setInt(2, filmID);
+            ps.setInt(3, episodeID);
+            ps.setDate(4, watchDate);
+            ps.setTime(5, watchTime);
+
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<newestEpisodeDto> getWatchedEpisodesByUserId(int userId) {
+        List<newestEpisodeDto> watchedEpisodes = new ArrayList<>();
+        String sql = "SELECT Top 12 e.episodeID, e.title AS episodeTitle, e.episodeLink, s.seasonName, f.filmID, f.filmName, f.imageLink, f.viewCount, wh.watchDate, wh.watchTime " +
+                "FROM WatchHistory wh " +
+                "JOIN Episode e ON wh.episodeID = e.episodeID " +
+                "JOIN Season s ON e.seasonID = s.seasonID " +
+                "JOIN Film f ON s.filmID = f.filmID " +
+                "WHERE wh.userID = ? " +
+                "ORDER BY wh.watchDate DESC, wh.watchTime DESC;";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                newestEpisodeDto episode = new newestEpisodeDto();
+                episode.setEpId(rs.getInt("episodeID"));
+                episode.setEpTittle(rs.getString("episodeTitle"));
+                episode.setEpLink(rs.getString("episodeLink"));
+                episode.setSeasonName(rs.getString("seasonName"));
+                episode.setFilmId(rs.getInt("filmID"));
+                episode.setFilmName(rs.getString("filmName"));
+                episode.setImageLink(rs.getString("imageLink"));
+                episode.setViewCount(rs.getLong("viewCount"));
+                watchedEpisodes.add(episode);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return watchedEpisodes;
+    }
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();

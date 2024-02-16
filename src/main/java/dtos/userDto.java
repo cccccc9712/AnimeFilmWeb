@@ -1,29 +1,20 @@
-package entity;
+package dtos;
 
-public class User {
-    private int userId;
+public class userDto{
+
     private String userName;
     private String userPass;
     private String userGmail;
     private Boolean isAdmin;
 
-    public User(int userId, String userName, String userPass, String userGmail, Boolean isAdmin) {
-        this.userId = userId;
+    public userDto() {
+    }
+
+    public userDto(String userName, String userPass, String userGmail, Boolean isAdmin) {
         this.userName = userName;
         this.userPass = userPass;
         this.userGmail = userGmail;
         this.isAdmin = isAdmin;
-    }
-
-    public User() {
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getUserName() {
@@ -60,9 +51,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", userName='" + userName + '\'' +
+        return "userDto{" +
+                "userName='" + userName + '\'' +
                 ", userPass='" + userPass + '\'' +
                 ", userGmail='" + userGmail + '\'' +
                 ", isAdmin=" + isAdmin +

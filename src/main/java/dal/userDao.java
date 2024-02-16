@@ -1,5 +1,6 @@
 package dal;
 
+import dtos.userDto;
 import entity.User;
 
 import java.sql.PreparedStatement;
@@ -18,7 +19,8 @@ public class userDao extends DBContext{
             ps.setString(2, pass);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new User(rs.getString(2),
+                return new User(rs.getInt(1),
+                        rs.getString(2),
                         rs.getString(3),
                         rs.getString(4),
                         rs.getBoolean(5));
@@ -29,7 +31,7 @@ public class userDao extends DBContext{
         return null;
     }
 
-    public boolean registerUser(User user) {
+    public boolean registerUser(userDto user) {
         String sql = "INSERT INTO [User] (userName, userPass, gmail, isAdmin) VALUES (?, ?, ?, ?)";
         try {
             conn = new DBContext().getConnection();
@@ -52,6 +54,24 @@ public class userDao extends DBContext{
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean checkUserNameExists(String userName) {
+        String sql = "SELECT COUNT(*) FROM [User] WHERE userName = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, userName);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int count = rs.getInt(1);

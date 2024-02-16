@@ -27,7 +27,6 @@ public class loginControl extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
         resp.setContentType("text/html;charset=UTF-8");
         String mail = req.getParameter("mail");
         String password = req.getParameter("pass");
@@ -51,6 +50,7 @@ public class loginControl extends HttpServlet {
             req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
         } else {
             HttpSession session = req.getSession();
+            session.setAttribute("userId", user.getUserId());
             session.setAttribute("userSession", user);
             resp.sendRedirect("home");
         }

@@ -35,7 +35,7 @@
         <div class="row">
             <!-- section title -->
             <div class="col-12">
-                <h2 class="section__title"><b>ReelAnime</b> – Best Place for Otakus</h2>
+                <h2 class="section__title"><b>Henix</b> – Best Place for Otakus</h2>
             </div>
             <!-- end section title -->
 
@@ -145,7 +145,7 @@
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="how">
                     <span class="how__number">03</span>
-                    <h3 class="how__title">Enjoy ReelAnime</h3>
+                    <h3 class="how__title">Enjoy Henix</h3>
                     <p class="how__text">It has never been an issue to find an old movie or TV show on the internet. However, this is not the case with the new releases.</p>
                 </div>
             </div>

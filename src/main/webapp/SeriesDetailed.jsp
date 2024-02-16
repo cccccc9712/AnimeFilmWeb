@@ -1,7 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
+<%@ page import="entity.User" %>
 <%
     filmDtos film = (filmDtos) request.getAttribute("film");
+    User user = (User) session.getAttribute("userSession");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,6 +52,7 @@
                                                 <li href="#">${tag.tagName}</li>
                                             </c:forEach>
                                     </ul>
+                                    <button style="font-size:26px; margin-left: 20px"><i class="fa fa-bookmark-o"></i></button>
                                 </div>
 
                                 <ul class="card__meta">
@@ -781,6 +784,8 @@
             }
         });
     }
+
+
     document.addEventListener("DOMContentLoaded", function() {
         var rows = document.querySelectorAll('tr[data-episode-id]');
 
@@ -788,7 +793,9 @@
             row.addEventListener('click', function() {
                 var episodeId = this.getAttribute('data-episode-id');
                 var filmId = this.closest('.accordion__card').getAttribute('data-film-id');
-                window.location.href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
+                var href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
+
+                window.location.href = href;
             });
         });
     });

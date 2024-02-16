@@ -10,25 +10,44 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Time;
+import java.util.Date;
 
 @WebServlet(name = "watchingControl", urlPatterns = "/watching")
 public class watchingControl extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
+        HttpSession session = req.getSession();
         String episodeIdStr = req.getParameter("episodeId");
-        int filmId = Integer.parseInt(req.getParameter("filmId"));
-        if (episodeIdStr != null && !episodeIdStr.isEmpty()) {
+        String filmIdStr = req.getParameter("filmId");
+        Integer userId = (Integer) session.getAttribute("userId");
+        Date watchingDate = new Date();
+        Time watchingTime = new Time(System.currentTimeMillis());
+        filmDao fd = new filmDao();
+
+        if (episodeIdStr != null && !episodeIdStr.isEmpty() && filmIdStr != null && !filmIdStr.isEmpty()) {
             int episodeId = Integer.parseInt(episodeIdStr);
-            episodeDAO fd = new episodeDAO();
-            episodeDtos episode = fd.getEpisodeById(episodeId);
-            fd.increaseViewCount(filmId);
+            int filmId = Integer.parseInt(filmIdStr);
+            episodeDAO ed = new episodeDAO();
+            episodeDtos episode = ed.getEpisodeById(episodeId);
+            ed.increaseViewCount(filmId);
+
+            if (userId  != null) {
+                try {
+                    fd.saveWatchedHistory(userId, filmId, episodeId, new java.sql.Date(watchingDate.getTime()), watchingTime);
+                } catch (NumberFormatException e) {
+
+                }
+            }
+
             req.setAttribute("episode", episode);
             req.getRequestDispatcher("Watching.jsp").forward(req, resp);
         }
     }
+
 }

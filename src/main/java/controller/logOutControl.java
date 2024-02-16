@@ -26,7 +26,6 @@ public class logOutControl extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         super.service(req, resp);
     }
 }

@@ -9,6 +9,7 @@
             rel="stylesheet">
 
         <!-- CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="./css/bootstrap-reboot.min.css" type="text/css">
         <link rel="stylesheet" href="./css/bootstrap-grid.min.css" type="text/css">
         <link rel="stylesheet" href="./css/owl.carousel.min.css" type="text/css">
@@ -30,5 +31,5 @@
         <meta name="description" content="">
         <meta name="keywords" content="">
         <meta name="author" content="Dmitry Volkov">
-        <title>ReelAnime – Online Anime Movies, Anime TV Shows</title>
+        <title>Henix – Online Anime Movies, Anime TV Shows</title>
     </head>
