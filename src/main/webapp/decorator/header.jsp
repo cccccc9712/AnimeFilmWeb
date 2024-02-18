@@ -64,7 +64,6 @@
 
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownUser">
                                             <li><a href="#">View profile</a></li>
-                                            <li><a href="#">My favourite</a></li>
                                             <a href="${pageContext.request.contextPath}/logout">Logout</a>
                                         </ul>
                                     </li>

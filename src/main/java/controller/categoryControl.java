@@ -36,7 +36,7 @@ public class categoryControl extends HttpServlet {
 
         if (searchQuery != null && !searchQuery.isEmpty()) {
             films = fd.searchFilms(searchQuery, page, filmsPerPage);
-            totalFilms = fd.getTotalFilmsBySearchQuery(searchQuery); // Bạn cần thêm phương thức này vào filmDao
+            totalFilms = fd.getTotalFilmsBySearchQuery(searchQuery);
         } else if (category != null && !category.isEmpty()) {
             films = fd.getFilmsByCategory(category, page, filmsPerPage);
             totalFilms = fd.getTotalFilmsByCategory(category);
@@ -52,7 +52,7 @@ public class categoryControl extends HttpServlet {
         req.setAttribute("noOfPages", noOfPages);
         req.setAttribute("currentPage", page);
         req.setAttribute("currentSearch", searchQuery);
-        req.setAttribute("currentCategory", category); // Gửi danh mục hiện tại trở lại JSP để hiển thị
+        req.setAttribute("currentCategory", category);
         req.getRequestDispatcher("Categories.jsp").forward(req, resp);
     }
 

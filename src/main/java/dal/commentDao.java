@@ -1,0 +1,189 @@
+package dal;
+
+import dtos.commentDto;
+import entity.Comment;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class commentDao extends DBContext{
+
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    public boolean insertComment(int filmID, int userID, String commentText, Integer parentCommentID) {
+        String sql = "INSERT INTO Comments (filmID, userID, commentText, commentDate, parentCommentID) VALUES (?, ?, ?, GETDATE(), ?)";
+        try  {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            ps.setInt(2, userID);
+            ps.setString(3, commentText); // Không cần N? vì PreparedStatement xử lý
+            if (parentCommentID != null) {
+                ps.setInt(4, parentCommentID);
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public List<commentDto> getCommentsByFilmId(int filmID) {
+        List<commentDto> comments = new ArrayList<>();
+        String sql = "SELECT c.commentID, c.filmID, c.userID, c.commentText, c.commentDate, c.parentCommentID, u.userName " +
+                "FROM Comments c " +
+                "JOIN [User] u ON c.userID = u.userID " +
+                "WHERE c.filmID = ? AND c.parentCommentID IS NULL " + // Chỉ lấy comments chính
+                "ORDER BY c.commentDate DESC";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                commentDto comment = new commentDto(
+                        rs.getInt("commentID"),
+                        rs.getInt("filmID"),
+                        rs.getInt("userID"),
+                        rs.getString("commentText"),
+                        rs.getTimestamp("commentDate"),
+                        null, // parentCommentID luôn null vì đây là comment chính
+                        rs.getString("userName")
+                );
+                comments.add(comment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return comments;
+    }
+
+
+    public List<commentDto> getRepliesByCommentId(int commentID) {
+        List<commentDto> replies = new ArrayList<>();
+        String sql = "SELECT c.commentID, c.filmID, c.userID, c.commentText, c.commentDate, c.parentCommentID, u.userName " +
+                "FROM Comments c " +
+                "JOIN [User] u ON c.userID = u.userID " +
+                "WHERE c.parentCommentID = ? " + // Lấy replies dựa trên parentCommentID
+                "ORDER BY c.commentDate ASC"; // Sắp xếp replies theo thời gian
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, commentID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                commentDto reply = new commentDto(
+                        rs.getInt("commentID"),
+                        rs.getInt("filmID"),
+                        rs.getInt("userID"),
+                        rs.getString("commentText"),
+                        rs.getTimestamp("commentDate"),
+                        rs.getInt("parentCommentID"), // Đây là reply, nên có parentCommentID
+                        rs.getString("userName")
+                );
+                replies.add(reply);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return replies;
+    }
+
+    public List<commentDto> getCommentsPerPage(int filmID, int currentPage, int commentsPerPage) {
+        List<commentDto> comments = new ArrayList<>();
+        String query = "SELECT c.*, u.userName FROM Comments c JOIN [User] u ON c.userID = u.userID WHERE c.filmID = ? AND c.parentCommentID IS NULL ORDER BY c.commentDate DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            int offset = (currentPage - 1) * commentsPerPage;
+            ps.setInt(1, filmID);
+            ps.setInt(2, offset); // Đặt OFFSET
+            ps.setInt(3, commentsPerPage); // Đặt số lượng ROWS để FETCH
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                commentDto comment = new commentDto(
+                        rs.getInt("commentID"),
+                        rs.getInt("filmID"),
+                        rs.getInt("userID"),
+                        rs.getString("commentText"),
+                        rs.getTimestamp("commentDate"),
+                        null, // Giả sử bạn không lấy parentCommentID ở đây hoặc bạn có thể thêm nếu cần
+                        rs.getString("userName")
+                );
+                comments.add(comment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return comments;
+    }
+
+
+    public int getTotalCommentsForFilm(int filmID) {
+        int totalComments = 0;
+        String sql = "SELECT COUNT(*) AS total FROM Comments WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalComments = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return totalComments;
+    }
+
+    public static void main(String[] args) {
+        commentDao cmd = new commentDao();
+        List<commentDto> listCmt = cmd.getCommentsPerPage(20,1,6);
+        for (commentDto a : listCmt){
+            System.out.println(a);
+        }
+//        int total = cmd.getTotalCommentsForFilm(20);
+//        System.out.println(total);
+    }
+}

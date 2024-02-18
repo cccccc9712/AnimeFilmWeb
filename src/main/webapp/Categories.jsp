@@ -139,12 +139,11 @@
             </li>
           </c:forEach>
         </ul>
-
       </div>
       </c:if>
       <c:if test="${empty films or films.size() == 0}">
         <div class="col-12">
-          <h2 class="section__title">No search based on your search.</h2>
+          <h2 class="section__title">No result based on your search.</h2>
         </div>
       </c:if>
       <!-- end paginator -->

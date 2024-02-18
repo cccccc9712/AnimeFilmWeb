@@ -1,6 +1,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="maxPagesToShow" value="4" />
+<c:set var="currentPage" value="${currentPage}" />
+<c:set var="totalPages" value="${totalPages}" />
+
+<!-- Tính toán trang bắt đầu và kết thúc -->
+<c:set var="startPage" value="${currentPage - (maxPagesToShow / 2)}" />
+<c:set var="endPage" value="${currentPage + (maxPagesToShow / 2)}" />
+
+<!-- Điều chỉnh nếu bắt đầu hoặc kết thúc vượt quá giới hạn -->
+<c:if test="${startPage < 1}">
+    <c:set var="startPage" value="1" />
+    <c:set var="endPage" value="${maxPagesToShow}" />
+</c:if>
+<c:if test="${endPage > totalPages}">
+    <c:set var="endPage" value="${totalPages}" />
+    <c:set var="startPage" value="${totalPages - maxPagesToShow + 1}" />
+</c:if>
+
+<!-- Điều chỉnh lại nếu tổng số trang nhỏ hơn maxPagesToShow -->
+<c:if test="${totalPages < maxPagesToShow}">
+    <c:set var="startPage" value="1" />
+    <c:set var="endPage" value="${totalPages}" />
+</c:if>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
 <%@ page import="entity.User" %>
+<%@ page import="java.util.List" %>
 <%
     filmDtos film = (filmDtos) request.getAttribute("film");
     User user = (User) session.getAttribute("userSession");
@@ -48,11 +74,12 @@
                                     <span class="card__rate"><i class="icon ion-ios-star"></i>${film.ratingValue}</span>
 
                                     <ul class="card__list">
-                                            <c:forEach items="${film.tags}" var="tag">
-                                                <li href="#">${tag.tagName}</li>
-                                            </c:forEach>
+                                        <c:forEach items="${film.tags}" var="tag">
+                                            <li href="#">${tag.tagName}</li>
+                                        </c:forEach>
                                     </ul>
-                                    <button style="font-size:26px; margin-left: 20px"><i class="fa fa-bookmark-o"></i></button>
+                                    <button style="font-size:26px; margin-left: 20px"><i class="fa fa-bookmark-o"></i>
+                                    </button>
                                 </div>
 
                                 <ul class="card__meta">
@@ -91,12 +118,16 @@
                     <c:forEach items="${season}" var="season" varStatus="seasonStatus">
                         <div data-film-id="${film.filmID}" class="accordion__card">
                             <div class="card-header" id="heading${seasonStatus.index}">
-                                <button type="button" data-toggle="collapse" data-target="#collapse${seasonStatus.index}" aria-expanded="true" aria-controls="collapse${seasonStatus.index}">
+                                <button type="button" data-toggle="collapse"
+                                        data-target="#collapse${seasonStatus.index}" aria-expanded="true"
+                                        aria-controls="collapse${seasonStatus.index}">
                                     <span>${season.seasonName}</span>
                                 </button>
                             </div>
 
-                            <div id="collapse${seasonStatus.index}" class="collapse ${seasonStatus.index == 0 ? 'show' : ''}" aria-labelledby="heading${seasonStatus.index}" data-parent="#accordion">
+                            <div id="collapse${seasonStatus.index}"
+                                 class="collapse ${seasonStatus.index == 0 ? 'show' : ''}"
+                                 aria-labelledby="heading${seasonStatus.index}" data-parent="#accordion">
                                 <div class="card-body">
                                     <table class="accordion__list">
                                         <thead>
@@ -226,320 +257,132 @@
                             <div class="col-12">
                                 <div class="comments">
                                     <ul class="comments__list">
-                                        <li class="comments__item">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">John Doe</span>
-                                                <span class="comments__time">30.08.2018, 17:53</span>
-                                            </div>
-                                            <p class="comments__text">There are many variations of passages of Lorem
-                                                Ipsum available, but the majority have suffered alteration in some form,
-                                                by injected humour, or randomised words which don't look even slightly
-                                                believable. If you are going to use a passage of Lorem Ipsum, you need
-                                                to be sure there isn't anything embarrassing hidden in the middle of
-                                                text.</p>
-                                            <div class="comments__actions">
-<%--                                                <div class="comments__rate">--%>
-<%--                                                    <button type="button"><i class="icon ion-md-thumbs-up"></i>12--%>
-<%--                                                    </button>--%>
-
-<%--                                                    <button type="button">7<i class="icon ion-md-thumbs-down"></i>--%>
-<%--                                                    </button>--%>
-<%--                                                </div>--%>
-
-                                                <button type="button"><i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-<%--                                                <button type="button"><i class="icon ion-ios-quote"></i>Quote</button>--%>
-                                            </div>
-                                        </li>
-
-                                        <li class="comments__item comments__item--answer">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">John Doe</span>
-                                                <span class="comments__time">24.08.2018, 16:41</span>
-                                            </div>
-                                            <p class="comments__text">Lorem Ipsum is simply dummy text of the printing
-                                                and typesetting industry. Lorem Ipsum has been the industry's standard
-                                                dummy text ever since the 1500s, when an unknown printer took a galley
-                                                of type and scrambled it to make a type specimen book.</p>
-                                            <div class="comments__actions">
-<%--                                                <div class="comments__rate">--%>
-<%--                                                    <button type="button"><i class="icon ion-md-thumbs-up"></i>8--%>
-<%--                                                    </button>--%>
-
-<%--                                                    <button type="button">3<i class="icon ion-md-thumbs-down"></i>--%>
-<%--                                                    </button>--%>
-<%--                                                </div>--%>
-
-                                                <button type="button"><i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-<%--                                                <button type="button"><i class="icon ion-ios-quote"></i>Quote</button>--%>
-                                            </div>
-                                        </li>
-
-                                        <li class="comments__item comments__item--quote">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">John Doe</span>
-                                                <span class="comments__time">11.08.2018, 11:11</span>
-                                            </div>
-                                            <p class="comments__text"><span>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</span>It
-                                                has survived not only five centuries, but also the leap into electronic
-                                                typesetting, remaining essentially unchanged. It was popularised in the
-                                                1960s with the release of Letraset sheets containing Lorem Ipsum
-                                                passages, and more recently with desktop publishing software like Aldus
-                                                PageMaker including versions of Lorem Ipsum.</p>
-                                            <div class="comments__actions">
-<%--                                                <div class="comments__rate">--%>
-<%--                                                    <button type="button"><i class="icon ion-md-thumbs-up"></i>11--%>
-<%--                                                    </button>--%>
-
-<%--                                                    <button type="button">1<i class="icon ion-md-thumbs-down"></i>--%>
-<%--                                                    </button>--%>
-<%--                                                </div>--%>
-
-                                                <button type="button"><i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-<%--                                                <button type="button"><i class="icon ion-ios-quote"></i>Quote</button>--%>
-                                            </div>
-                                        </li>
-
-                                        <li class="comments__item">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">John Doe</span>
-                                                <span class="comments__time">07.08.2018, 14:33</span>
-                                            </div>
-                                            <p class="comments__text">There are many variations of passages of Lorem
-                                                Ipsum available, but the majority have suffered alteration in some form,
-                                                by injected humour, or randomised words which don't look even slightly
-                                                believable. If you are going to use a passage of Lorem Ipsum, you need
-                                                to be sure there isn't anything embarrassing hidden in the middle of
-                                                text.</p>
-                                            <div class="comments__actions">
-<%--                                                <div class="comments__rate">--%>
-<%--                                                    <button type="button"><i class="icon ion-md-thumbs-up"></i>99--%>
-<%--                                                    </button>--%>
-
-<%--                                                    <button type="button">35<i class="icon ion-md-thumbs-down"></i>--%>
-<%--                                                    </button>--%>
-<%--                                                </div>--%>
-
-                                                <button type="button"><i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-<%--                                                <button type="button"><i class="icon ion-ios-quote"></i>Quote</button>--%>
-                                            </div>
-                                        </li>
-
-                                        <li class="comments__item">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">John Doe</span>
-                                                <span class="comments__time">02.08.2018, 15:24</span>
-                                            </div>
-                                            <p class="comments__text">Many desktop publishing packages and web page
-                                                editors now use Lorem Ipsum as their default model text, and a search
-                                                for 'lorem ipsum' will uncover many web sites still in their infancy.
-                                                Various versions have evolved over the years, sometimes by accident,
-                                                sometimes on purpose (injected humour and the like).</p>
-                                            <div class="comments__actions">
-<%--                                                <div class="comments__rate">--%>
-<%--                                                    <button type="button"><i class="icon ion-md-thumbs-up"></i>74--%>
-<%--                                                    </button>--%>
-
-<%--                                                    <button type="button">13<i class="icon ion-md-thumbs-down"></i>--%>
-<%--                                                    </button>--%>
-<%--                                                </div>--%>
-
-                                                <button type="button"><i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-<%--                                                <button type="button"><i class="icon ion-ios-quote"></i>Quote</button>--%>
-                                            </div>
-                                        </li>
+                                        <c:forEach items="${cmt}" var="comment">
+                                            <li class="comments__item">
+                                                <div class="comments__autor">
+                                                    <img class="comments__avatar" src="img/user.png" alt="">
+                                                    <span class="comments__name">${comment.userName}</span>
+                                                    <span class="comments__time">${comment.commentDate}</span>
+                                                </div>
+                                                <p class="comments__text">${comment.commentText}</p>
+                                                <c:choose>
+                                                    <c:when test="${not empty sessionScope.userSession}">
+                                                        <div class="comments__actions">
+                                                            <button type="button" onclick="prepareReplyForm(${comment.commentID});">
+                                                                <i class="icon ion-ios-share-alt"></i>Reply
+                                                            </button>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="comments__actions">
+                                                            <button>Sign in to reply</button>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <!-- Nested replies should be here -->
+                                            </li>
+                                        </c:forEach>
                                     </ul>
-
-                                    <form style="padding-top: 0px" action="#" class="form">
-                                        <div style="float: left; height: 46px; padding: 0 10px;" class="rate">
-                                            <input type="radio" id="star1" name="rate" value="1"
-                                                   style="display: none;"/>
-                                            <label for="star1" title="text"
-                                                   style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                                   onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                                   onclick="fixStars(this)">&#9733;</label>
-                                            <input type="radio" id="star2" name="rate" value="2"
-                                                   style="display: none;"/>
-                                            <label for="star2" title="text"
-                                                   style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                                   onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                                   onclick="fixStars(this)">&#9733;</label>
-                                            <input type="radio" id="star3" name="rate" value="3"
-                                                   style="display: none;"/>
-                                            <label for="star3" title="text"
-                                                   style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                                   onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                                   onclick="fixStars(this)">&#9733;</label>
-                                            <input type="radio" id="star4" name="rate" value="4"
-                                                   style="display: none;"/>
-                                            <label for="star4" title="text"
-                                                   style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                                   onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                                   onclick="fixStars(this)">&#9733;</label>
-                                            <input type="radio" id="star5" name="rate" value="5"
-                                                   style="display: none;"/>
-                                            <label for="star5" title="text"
-                                                   style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                                   onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                                   onclick="fixStars(this)">&#9733;</label>
-                                        </div>
-                                        <textarea id="text" name="text" class="form__textarea"
-                                                  placeholder="Add comment"></textarea>
-                                        <button type="button" class="form__btn">Send</button>
-                                    </form>
-
-
                                 </div>
+
+                                <!-- Comments paginator -->
+                                <div class="col-12">
+                                    <ul class="paginator paginator--list">
+                                        <c:if test="${currentPage > 1}">
+                                            <li class="paginator__item paginator__item--prev">
+                                                <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i class="icon ion-ios-arrow-back"></i></a>
+                                            </li>
+                                        </c:if>
+
+                                        <!-- Dynamic pagination logic -->
+                                        <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}" />
+                                        <c:set var="endPage" value="${currentPage + 2 <= totalPages ? currentPage + 2 : totalPages}" />
+
+                                        <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                            <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
+                                                <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+
+                                        <c:if test="${currentPage < totalPages}">
+                                            <li class="paginator__item paginator__item--next">
+                                                <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i class="icon ion-ios-arrow-forward"></i></a>
+                                            </li>
+                                        </c:if>
+                                    </ul>
+                                </div>
+                                <!-- End paginator -->
+
+                                <c:choose>
+                                    <c:when test="${sessionScope.userSession != null}">
+                                        <form action="${pageContext.request.contextPath}/comment" method="post" class="form">
+                                            <textarea id="text" name="commentText" required placeholder="Add your comment here..." class="form__textarea"></textarea>
+                                            <input type="hidden" name="filmId" value="${film.filmID}"/>
+                                            <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                            <button type="submit" class="form__btn">Send</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <h1 style="color: white">Sign in to comment and rate!</h1>
+                                            <a href="SignIn.jsp" class="header__sign-in">
+                                                <i class="icon ion-ios-log-in"></i>
+                                                <span>sign in</span>
+                                            </a>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                            <!-- end comments -->
+                            <!-- End comments -->
+
                         </div>
                     </div>
+                    <c:if test="${sessionScope.userSession != null}">
+                    <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                        <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
+                              action="#" method="post">
+                            <div class="rate">
+                                <input type="radio" id="star1" name="rate" value="1"
+                                       style="display: none;"/>
+                                <label for="star1" title="text"
+                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                       onclick="fixStars(this)">&#9733;</label>
 
-                    <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab">
-                        <div class="row">
-                            <!-- reviews -->
-                            <div class="col-12">
-                                <div class="reviews">
-                                    <ul class="reviews__list">
-                                        <li class="reviews__item">
-                                            <div class="reviews__autor">
-                                                <img class="reviews__avatar" src="img/user.png" alt="">
-                                                <span class="reviews__name">Best Marvel movie in my opinion</span>
-                                                <span class="reviews__time">24.08.2018, 17:53 by John Doe</span>
+                                <input type="radio" id="star2" name="rate" value="2"
+                                       style="display: none;"/>
+                                <label for="star2" title="text"
+                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                       onclick="fixStars(this)">&#9733;</label>
 
-                                                <span class="reviews__rating"><i
-                                                        class="icon ion-ios-star"></i>8.4</span>
-                                            </div>
-                                            <p class="reviews__text">There are many variations of passages of Lorem
-                                                Ipsum available, but the majority have suffered alteration in some form,
-                                                by injected humour, or randomised words which don't look even slightly
-                                                believable. If you are going to use a passage of Lorem Ipsum, you need
-                                                to be sure there isn't anything embarrassing hidden in the middle of
-                                                text.</p>
-                                        </li>
+                                <input type="radio" id="star3" name="rate" value="3"
+                                       style="display: none;"/>
+                                <label for="star3" title="text"
+                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                       onclick="fixStars(this)">&#9733;</label>
 
-                                        <li class="reviews__item">
-                                            <div class="reviews__autor">
-                                                <img class="reviews__avatar" src="img/user.png" alt="">
-                                                <span class="reviews__name">Best Marvel movie in my opinion</span>
-                                                <span class="reviews__time">24.08.2018, 17:53 by John Doe</span>
+                                <input type="radio" id="star4" name="rate" value="4"
+                                       style="display: none;"/>
+                                <label for="star4" title="text"
+                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                       onclick="fixStars(this)">&#9733;</label>
 
-                                                <span class="reviews__rating"><i
-                                                        class="icon ion-ios-star"></i>9.0</span>
-                                            </div>
-                                            <p class="reviews__text">There are many variations of passages of Lorem
-                                                Ipsum available, but the majority have suffered alteration in some form,
-                                                by injected humour, or randomised words which don't look even slightly
-                                                believable. If you are going to use a passage of Lorem Ipsum, you need
-                                                to be sure there isn't anything embarrassing hidden in the middle of
-                                                text.</p>
-                                        </li>
-
-                                        <li class="reviews__item">
-                                            <div class="reviews__autor">
-                                                <img class="reviews__avatar" src="img/user.png" alt="">
-                                                <span class="reviews__name">Best Marvel movie in my opinion</span>
-                                                <span class="reviews__time">24.08.2018, 17:53 by John Doe</span>
-
-                                                <span class="reviews__rating"><i
-                                                        class="icon ion-ios-star"></i>7.5</span>
-                                            </div>
-                                            <p class="reviews__text">There are many variations of passages of Lorem
-                                                Ipsum available, but the majority have suffered alteration in some form,
-                                                by injected humour, or randomised words which don't look even slightly
-                                                believable. If you are going to use a passage of Lorem Ipsum, you need
-                                                to be sure there isn't anything embarrassing hidden in the middle of
-                                                text.</p>
-                                        </li>
-                                    </ul>
-
-                                    <form action="#" class="form">
-
-                                        <input type="text" class="form__input" placeholder="Title">
-                                        <textarea class="form__textarea" placeholder="Review"></textarea>
-                                        <div class="form__slider">
-                                            <div class="form__slider-rating" id="slider__rating"></div>
-                                            <div class="form__slider-value" id="form__slider-value"></div>
-                                        </div>
-
-                                        <button type="button" class="form__btn">Send</button>
-                                    </form>
-                                </div>
+                                <input type="radio" id="star5" name="rate" value="5"
+                                       style="display: none;"/>
+                                <label for="star5" title="text"
+                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                       onclick="fixStars(this)">&#9733;</label>
                             </div>
-                            <!-- end reviews -->
-                        </div>
+                            <button style="cursor: pointer; height: 30px; width: 100px; margin-top: 10px;" type="submit"
+                                    class="form__btn">Rate
+                            </button>
+                        </form>
                     </div>
-
-                    <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
-                        <!-- project gallery -->
-                        <%--                        <div class="gallery" itemscope>--%>
-                        <%--                            <div class="row">--%>
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-1.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-1.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 1</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-2.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-2.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 2</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-3.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-3.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 3</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-4.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-4.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 4</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-5.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-5.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 5</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-
-                        <%--                                <!-- gallery item -->--%>
-                        <%--                                <figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>--%>
-                        <%--                                    <a href="img/gallery/project-6.jpg" itemprop="contentUrl" data-size="1920x1280">--%>
-                        <%--                                        <img src="img/gallery/project-6.jpg" itemprop="thumbnail" alt="Image description" />--%>
-                        <%--                                    </a>--%>
-                        <%--                                    <figcaption itemprop="caption description">Some image caption 6</figcaption>--%>
-                        <%--                                </figure>--%>
-                        <%--                                <!-- end gallery item -->--%>
-                        <%--                            </div>--%>
-                        <%--                        </div>--%>
-                        <!-- end project gallery -->
-                    </div>
+                    </c:if>
                 </div>
                 <!-- end content tabs -->
             </div>
@@ -554,128 +397,29 @@
                     <!-- end section title -->
 
                     <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">I Dream in Another Language</a></h3>
-                                <span class="card__category">
-										<a href="#">Action</a>
-										<a href="#">Triler</a>
+                    <c:forEach items="${rdFilms}" var="rdFilms">
+                        <div class="col-6 col-sm-4 col-lg-6">
+                            <div class="card">
+                                <div class="card__cover">
+                                    <img src="${rdFilms.imageLink}" alt="${rdFilms.filmName}">
+                                    <a href="detail?filmName=${rdFilms.filmName}" class="card__play">
+                                        <i class="icon ion-ios-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title"><a
+                                            href="detail?filmName=${rdFilms.filmName}">${rdFilms.filmName}</a></h3>
+                                    <span class="card__category">
+										<c:forEach items="${rdFilms.categories}" var="category">
+                                            <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
+                                        </c:forEach>
 									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
+                                    <span class="card__rate"><i
+                                            class="icon ion-ios-star"></i>${rdFilms.ratingValue}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover2.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Benched</a></h3>
-                                <span class="card__category">
-										<a href="#">Comedy</a>
-									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover3.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Whitney</a></h3>
-                                <span class="card__category">
-										<a href="#">Romance</a>
-										<a href="#">Drama</a>
-										<a href="#">Music</a>
-									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>6.3</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover4.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Blindspotting</a></h3>
-                                <span class="card__category">
-										<a href="#">Comedy</a>
-										<a href="#">Drama</a>
-									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.9</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover5.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">I Dream in Another Language</a></h3>
-                                <span class="card__category">
-										<a href="#">Action</a>
-										<a href="#">Triler</a>
-									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>8.4</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end card -->
-
-                    <!-- card -->
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="img/covers/cover6.jpg" alt="">
-                                <a href="#" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a href="#">Benched</a></h3>
-                                <span class="card__category">
-										<a href="#">Comedy</a>
-									</span>
-                                <span class="card__rate"><i class="icon ion-ios-star"></i>7.1</span>
-                            </div>
-                        </div>
-                    </div>
+                    </c:forEach>
                     <!-- end card -->
                 </div>
             </div>
@@ -786,11 +530,11 @@
     }
 
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var rows = document.querySelectorAll('tr[data-episode-id]');
 
-        rows.forEach(function(row) {
-            row.addEventListener('click', function() {
+        rows.forEach(function (row) {
+            row.addEventListener('click', function () {
                 var episodeId = this.getAttribute('data-episode-id');
                 var filmId = this.closest('.accordion__card').getAttribute('data-film-id');
                 var href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
