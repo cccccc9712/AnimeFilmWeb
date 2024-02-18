@@ -1,4 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="maxPagesToShow" value="5"/>
+<c:set var="pageStart" value="${(currentPage - (maxPagesToShow div 2)) > 0 ? (currentPage - (maxPagesToShow div 2)) : 1}"/>
+<c:set var="pageEnd" value="${(pageStart + (maxPagesToShow - 1)) < noOfPages ? (pageStart + (maxPagesToShow - 1)) : noOfPages}"/>
+
+<!-- Điều chỉnh nếu số lượng trang không đủ -->
+<c:if test="${pageEnd - pageStart < maxPagesToShow - 1}">
+    <c:set var="pageStart" value="${(pageEnd - (maxPagesToShow - 1)) > 0 ? (pageEnd - (maxPagesToShow - 1)) : 1}"/>
+</c:if>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,6 +132,21 @@
       <c:if test="${not empty films and films.size() > 0}">
       <div class="col-12">
         <ul class="paginator paginator--list">
+            <c:if test="${currentPage > 1}">
+                <li class="paginator__item">
+                    <c:choose>
+                        <c:when test="${not empty currentSearch}">
+                            <a href="category?page=${currentPage - 1}&searchQuery=${currentSearch}"><i class="icon ion-ios-arrow-back"></i></a>
+                        </c:when>
+                        <c:when test="${not empty currentCategory}">
+                            <a href="category?page=${currentPage - 1}&categoryName=${currentCategory}"><i class="icon ion-ios-arrow-back"></i></a>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="category?page=${currentPage - 1}"><i class="icon ion-ios-arrow-back"></i></a>
+                        </c:otherwise>
+                    </c:choose>
+                </li>
+            </c:if>
           <c:forEach begin="1" end="${noOfPages}" var="i">
             <li class="paginator__item ${currentPage == i ? 'paginator__item--active' : ''}">
               <c:choose>
@@ -138,6 +162,21 @@
               </c:choose>
             </li>
           </c:forEach>
+          <c:if test="${currentPage < noOfPages}">
+            <li class="paginator__item">
+              <c:choose>
+                <c:when test="${not empty currentSearch}">
+                  <a href="category?page=${currentPage + 1}&searchQuery=${currentSearch}"><i class="icon ion-ios-arrow-forward"></i></a>
+                </c:when>
+                <c:when test="${not empty currentCategory}">
+                  <a href="category?page=${currentPage + 1}&categoryName=${currentCategory}"><i class="icon ion-ios-arrow-forward"></i></a>
+                </c:when>
+                <c:otherwise>
+                  <a href="category?page=${currentPage + 1}"><i class="icon ion-ios-arrow-forward"></i></a>
+                </c:otherwise>
+              </c:choose>
+            </li>
+          </c:if>
         </ul>
       </div>
       </c:if>

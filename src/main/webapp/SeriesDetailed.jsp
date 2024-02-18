@@ -1,27 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="maxPagesToShow" value="4" />
-<c:set var="currentPage" value="${currentPage}" />
-<c:set var="totalPages" value="${totalPages}" />
+<c:set var="maxPagesToShow" value="4"/>
+<c:set var="currentPage" value="${currentPage}"/>
+<c:set var="totalPages" value="${totalPages}"/>
 
 <!-- Tính toán trang bắt đầu và kết thúc -->
-<c:set var="startPage" value="${currentPage - (maxPagesToShow / 2)}" />
-<c:set var="endPage" value="${currentPage + (maxPagesToShow / 2)}" />
+<c:set var="startPage" value="${currentPage - (maxPagesToShow / 2)}"/>
+<c:set var="endPage" value="${currentPage + (maxPagesToShow / 2)}"/>
 
 <!-- Điều chỉnh nếu bắt đầu hoặc kết thúc vượt quá giới hạn -->
 <c:if test="${startPage < 1}">
-    <c:set var="startPage" value="1" />
-    <c:set var="endPage" value="${maxPagesToShow}" />
+    <c:set var="startPage" value="1"/>
+    <c:set var="endPage" value="${maxPagesToShow}"/>
 </c:if>
 <c:if test="${endPage > totalPages}">
-    <c:set var="endPage" value="${totalPages}" />
-    <c:set var="startPage" value="${totalPages - maxPagesToShow + 1}" />
+    <c:set var="endPage" value="${totalPages}"/>
+    <c:set var="startPage" value="${totalPages - maxPagesToShow + 1}"/>
 </c:if>
 
 <!-- Điều chỉnh lại nếu tổng số trang nhỏ hơn maxPagesToShow -->
 <c:if test="${totalPages < maxPagesToShow}">
-    <c:set var="startPage" value="1" />
-    <c:set var="endPage" value="${totalPages}" />
+    <c:set var="startPage" value="1"/>
+    <c:set var="endPage" value="${totalPages}"/>
 </c:if>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
@@ -258,86 +258,102 @@
                                 <div class="comments">
                                     <ul class="comments__list">
                                         <c:forEach items="${cmt}" var="comment">
-                                            <li class="comments__item">
-                                                <div class="comments__autor">
-                                                    <img class="comments__avatar" src="img/user.png" alt="">
-                                                    <span class="comments__name">${comment.userName}</span>
-                                                    <span class="comments__time">${comment.commentDate}</span>
-                                                </div>
-                                                <p class="comments__text">${comment.commentText}</p>
-                                                <c:choose>
-                                                    <c:when test="${not empty sessionScope.userSession}">
-                                                        <div class="comments__actions">
-                                                            <button type="button" onclick="prepareReplyForm(${comment.commentID});">
-                                                                <i class="icon ion-ios-share-alt"></i>Reply
-                                                            </button>
-                                                        </div>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="comments__actions">
-                                                            <button>Sign in to reply</button>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <!-- Nested replies should be here -->
-                                            </li>
-                                        </c:forEach>
-                                    </ul>
-                                </div>
+                                        <li class="comments__item">
+                                            <div class="comments__autor">
+                                                <img class="comments__avatar" src="img/user.png" alt="">
+                                                <span class="comments__name">${comment.userName}</span>
+                                                <span class="comments__time">${comment.commentDate}</span>
+                                            </div>
+                                            <p class="comments__text">${comment.commentText}</p>
 
-                                <!-- Comments paginator -->
-                                <div class="col-12">
-                                    <ul class="paginator paginator--list">
-                                        <c:if test="${currentPage > 1}">
-                                            <li class="paginator__item paginator__item--prev">
-                                                <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i class="icon ion-ios-arrow-back"></i></a>
-                                            </li>
-                                        </c:if>
-
-                                        <!-- Dynamic pagination logic -->
-                                        <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}" />
-                                        <c:set var="endPage" value="${currentPage + 2 <= totalPages ? currentPage + 2 : totalPages}" />
-
-                                        <c:forEach begin="${startPage}" end="${endPage}" var="i">
-                                            <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
-                                                <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
-                                            </li>
-                                        </c:forEach>
-
-                                        <c:if test="${currentPage < totalPages}">
-                                            <li class="paginator__item paginator__item--next">
-                                                <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i class="icon ion-ios-arrow-forward"></i></a>
-                                            </li>
-                                        </c:if>
-                                    </ul>
-                                </div>
-                                <!-- End paginator -->
-
-                                <c:choose>
-                                    <c:when test="${sessionScope.userSession != null}">
-                                        <form action="${pageContext.request.contextPath}/comment" method="post" class="form">
-                                            <textarea id="text" name="commentText" required placeholder="Add your comment here..." class="form__textarea"></textarea>
-                                            <input type="hidden" name="filmId" value="${film.filmID}"/>
-                                            <input type="hidden" name="filmName" value="${film.filmName}"/>
-                                            <button type="submit" class="form__btn">Send</button>
-                                        </form>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div style="display: flex; justify-content: center; align-items: center;">
-                                            <h1 style="color: white">Sign in to comment and rate!</h1>
-                                            <a href="SignIn.jsp" class="header__sign-in">
-                                                <i class="icon ion-ios-log-in"></i>
-                                                <span>sign in</span>
-                                            </a>
-                                        </div>
-                                    </c:otherwise>
-                                </c:choose>
+                                            <c:choose>
+                                            <c:when test="${not empty sessionScope.userSession}">
+                                            <div class="comments__actions">
+                                                <button type="button" onclick="prepareReplyForm(${comment.commentID});">
+                                                    <i class="icon ion-ios-share-alt"></i>Reply
+                                                </button>
+                                            </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                            <div class="comments__actions">
+                                                <button>Sign in to reply</button>
+                                            </div>
+                                            </c:otherwise>
+                                            </c:choose>
+                                            <c:forEach items="${comment.replies}" var="reply">
+                                        <li class="comments__item comments__item--answer">
+                                            <div class="comments__autor">
+                                                <img class="comments__avatar" src="img/user.png" alt="">
+                                                <span class="comments__name">${reply.userName}</span>
+                                                <span class="comments__time">${reply.commentDate}</span>
+                                            </div>
+                                            <p class="comments__text">${reply.commentText}</p>
+                                            </div>
+                                        </li>
+                                </c:forEach>
+                                </li>
+                                </c:forEach>
+                                </ul>
                             </div>
-                            <!-- End comments -->
 
+                            <!-- Comments paginator -->
+                            <div class="col-12">
+                                <ul class="paginator paginator--list">
+                                    <c:if test="${currentPage > 1}">
+                                        <li class="paginator__item paginator__item--prev">
+                                            <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i
+                                                    class="icon ion-ios-arrow-back"></i></a>
+                                        </li>
+                                    </c:if>
+                                    <!-- Dynamic pagination logic -->
+                                    <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}"/>
+                                    <c:set var="endPage"
+                                           value="${currentPage + 2 <= totalPages ? currentPage + 2 : totalPages}"/>
+
+                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                        <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
+                                            <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
+                                        </li>
+                                    </c:forEach>
+
+                                    <c:if test="${currentPage < totalPages}">
+                                        <li class="paginator__item paginator__item--next">
+                                            <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i
+                                                    class="icon ion-ios-arrow-forward"></i></a>
+                                        </li>
+                                    </c:if>
+                                </ul>
+                            </div>
+                            <!-- End paginator -->
+
+                            <c:choose>
+                                <c:when test="${sessionScope.userSession != null}">
+                                    <form action="${pageContext.request.contextPath}/comment" method="post"
+                                          class="form">
+                                        <textarea id="text" name="commentText" required
+                                                  placeholder="Add your comment here..."
+                                                  class="form__textarea"></textarea>
+                                        <input type="hidden" name="filmId" value="${film.filmID}"/>
+                                        <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                        <button type="submit" class="form__btn">Send</button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <h1 style="color: white">Sign in to comment and rate!</h1>
+                                        <a href="SignIn.jsp" class="header__sign-in">
+                                            <i class="icon ion-ios-log-in"></i>
+                                            <span>sign in</span>
+                                        </a>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
+                        <!-- End comments -->
+
                     </div>
-                    <c:if test="${sessionScope.userSession != null}">
+                </div>
+                <c:if test="${sessionScope.userSession != null}">
                     <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                         <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
                               action="#" method="post">
@@ -382,49 +398,49 @@
                             </button>
                         </form>
                     </div>
-                    </c:if>
-                </div>
-                <!-- end content tabs -->
+                </c:if>
             </div>
+            <!-- end content tabs -->
+        </div>
 
-            <!-- sidebar -->
-            <div class="col-12 col-lg-4 col-xl-4">
-                <div class="row">
-                    <!-- section title -->
-                    <div class="col-12">
-                        <h2 class="section__title section__title--sidebar">You may also like...</h2>
-                    </div>
-                    <!-- end section title -->
+        <!-- sidebar -->
+        <div class="col-12 col-lg-4 col-xl-4">
+            <div class="row">
+                <!-- section title -->
+                <div class="col-12">
+                    <h2 class="section__title section__title--sidebar">You may also like...</h2>
+                </div>
+                <!-- end section title -->
 
-                    <!-- card -->
-                    <c:forEach items="${rdFilms}" var="rdFilms">
-                        <div class="col-6 col-sm-4 col-lg-6">
-                            <div class="card">
-                                <div class="card__cover">
-                                    <img src="${rdFilms.imageLink}" alt="${rdFilms.filmName}">
-                                    <a href="detail?filmName=${rdFilms.filmName}" class="card__play">
-                                        <i class="icon ion-ios-play"></i>
-                                    </a>
-                                </div>
-                                <div class="card__content">
-                                    <h3 class="card__title"><a
-                                            href="detail?filmName=${rdFilms.filmName}">${rdFilms.filmName}</a></h3>
-                                    <span class="card__category">
+                <!-- card -->
+                <c:forEach items="${rdFilms}" var="rdFilms">
+                    <div class="col-6 col-sm-4 col-lg-6">
+                        <div class="card">
+                            <div class="card__cover">
+                                <img src="${rdFilms.imageLink}" alt="${rdFilms.filmName}">
+                                <a href="detail?filmName=${rdFilms.filmName}" class="card__play">
+                                    <i class="icon ion-ios-play"></i>
+                                </a>
+                            </div>
+                            <div class="card__content">
+                                <h3 class="card__title"><a
+                                        href="detail?filmName=${rdFilms.filmName}">${rdFilms.filmName}</a></h3>
+                                <span class="card__category">
 										<c:forEach items="${rdFilms.categories}" var="category">
                                             <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                                         </c:forEach>
 									</span>
-                                    <span class="card__rate"><i
-                                            class="icon ion-ios-star"></i>${rdFilms.ratingValue}</span>
-                                </div>
+                                <span class="card__rate"><i
+                                        class="icon ion-ios-star"></i>${rdFilms.ratingValue}</span>
                             </div>
                         </div>
-                    </c:forEach>
-                    <!-- end card -->
-                </div>
+                    </div>
+                </c:forEach>
+                <!-- end card -->
             </div>
-            <!-- end sidebar -->
         </div>
+        <!-- end sidebar -->
+    </div>
     </div>
 </section>
 <!-- end content -->
