@@ -1,5 +1,34 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
+<%@ page import="entity.User" %>
+<%@ page import="java.util.List" %>
+<%
+    filmDtos film = (filmDtos) request.getAttribute("film");
+    User user = (User) session.getAttribute("userSession");
+%>
+<!DOCTYPE html>
+<html lang="en">
+<%@include file="decorator/head.jsp" %>
+<style>
+    textarea.form__textarea {
+        overflow: auto;
+    }
 
+    textarea.form__textarea::-webkit-scrollbar {
+        display: none;
+    }
+
+    textarea.form__textarea:focus {
+        outline: none;
+    }
+
+</style>
+<body class="body">
+
+<!-- header -->
+<%@include file="decorator/header.jsp" %>
+<!-- end header -->
 <c:set var="maxPagesToShow" value="5"/> <!-- Giả sử bạn muốn hiển thị tối đa 5 trang -->
 <c:set var="pageStart" value="${currentPage - (maxPagesToShow div 2)}"/>
 <c:set var="pageEnd" value="${pageStart + maxPagesToShow - 1}"/>
@@ -13,23 +42,6 @@
     <c:set var="pageStart" value="1"/>
     <c:set var="pageEnd" value="${maxPagesToShow < totalPages ? maxPagesToShow : totalPages}"/>
 </c:if>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
-<%@ page import="entity.User" %>
-<%@ page import="java.util.List" %>
-<%
-    filmDtos film = (filmDtos) request.getAttribute("film");
-    User user = (User) session.getAttribute("userSession");
-%>
-<!DOCTYPE html>
-<html lang="en">
-<%@include file="decorator/head.jsp" %>
-<body class="body">
-
-<!-- header -->
-<%@include file="decorator/header.jsp" %>
-<!-- end header -->
-
 <!-- details -->
 <section class="section details">
     <!-- details background -->
@@ -258,27 +270,35 @@
                                                 <div class="comments__actions">
                                                     <c:choose>
                                                         <c:when test="${not empty sessionScope.userSession}">
-                                                            <button type="button" onclick="showReplyForm('${comment.commentID}');">
+                                                            <button type="button"
+                                                                    onclick="showReplyForm('${comment.commentID}');">
                                                                 <i class="icon ion-ios-share-alt"></i>Reply
                                                             </button>
-                                                            <div id="replyForm${comment.commentID}" style="display:none;">
-                                                                <form class="form" action="${pageContext.request.contextPath}/reply" method="post">
-                                                                    <textarea style="height: 50px" class="form__textarea" name="replyText" required placeholder="Type your reply here..."></textarea>
-                                                                    <input type="hidden" name="parentCommentID" value="${comment.commentID}"/>
-                                                                    <input type="hidden" name="filmID" value="${film.filmID}"/>
-                                                                    <input type="hidden" name="filmName" value="${film.filmName}"/>
-                                                                    <button style="height: 20px; width: 60px" type="submit" class="form__btn">Reply</button>
-                                                                </form>
-                                                            </div>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <button>Sign in to reply</button>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
+                                                <div id="replyForm${comment.commentID}" style="display:none;">
+                                                    <form class="form" action="${pageContext.request.contextPath}/reply"
+                                                          method="post">
+                                                        <textarea style="height: 50px" class="form__textarea"
+                                                                  name="replyText" required
+                                                                  placeholder="Type your reply here..."></textarea>
+                                                        <input type="hidden" name="parentCommentID"
+                                                               value="${comment.commentID}"/>
+                                                        <input type="hidden" name="filmID" value="${film.filmID}"/>
+                                                        <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                                        <button style="height: 20px; width: 60px" type="submit"
+                                                                class="form__btn">Reply
+                                                        </button>
+                                                    </form>
+                                                </div>
                                                 <ul class="comments__replies">
                                                     <c:forEach items="${comment.replies}" var="reply">
-                                                        <li style="margin-top: 20px" class="comments__item comments__item--answer">
+                                                        <li style="margin-top: 20px"
+                                                            class="comments__item comments__item--answer">
                                                             <div class="comments__autor">
                                                                 <img class="comments__avatar" src="img/user.png" alt="">
                                                                 <span class="comments__name">${reply.userName}</span>
@@ -286,152 +306,155 @@
                                                             </div>
                                                             <p class="comments__text">${reply.commentText}</p>
                                                         </li>
+
                                                     </c:forEach>
+
                                                 </ul>
                                             </li>
                                         </c:forEach>
                                     </ul>
-                            </div>
+                                </div>
 
-                            <!-- Comments paginator -->
-                            <div class="col-12">
-                                <ul class="paginator paginator--list">
-                                    <c:if test="${currentPage > 1}">
-                                        <li class="paginator__item paginator__item--prev">
-                                            <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i
-                                                    class="icon ion-ios-arrow-back"></i></a>
-                                        </li>
-                                    </c:if>
-                                    <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
-                                        <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
-                                            <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
-                                        </li>
-                                    </c:forEach>
-                                    <c:if test="${currentPage < totalPages}">
-                                        <li class="paginator__item paginator__item--next">
-                                            <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i
-                                                    class="icon ion-ios-arrow-forward"></i></a>
-                                        </li>
-                                    </c:if>
-                                </ul>
-                            </div>
-                            <!-- End paginator -->
+                                <!-- Comments paginator -->
+                                <div class="col-12">
+                                    <ul class="paginator paginator--list">
+                                        <c:if test="${currentPage > 1}">
+                                            <li class="paginator__item paginator__item--prev">
+                                                <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i
+                                                        class="icon ion-ios-arrow-back"></i></a>
+                                            </li>
+                                        </c:if>
+                                        <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
+                                            <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
+                                                <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                        <c:if test="${currentPage < totalPages}">
+                                            <li class="paginator__item paginator__item--next">
+                                                <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i
+                                                        class="icon ion-ios-arrow-forward"></i></a>
+                                            </li>
+                                        </c:if>
+                                    </ul>
+                                </div>
+                                <!-- End paginator -->
 
-                            <c:choose>
-                                <c:when test="${sessionScope.userSession != null}">
-                                    <form action="${pageContext.request.contextPath}/comment" method="post"
-                                          class="form">
+                                <c:choose>
+                                    <c:when test="${sessionScope.userSession != null}">
+                                        <form action="${pageContext.request.contextPath}/comment" method="post"
+                                              class="form">
                                         <textarea id="text" name="commentText" required
                                                   placeholder="Add your comment here..."
                                                   class="form__textarea"></textarea>
-                                        <input type="hidden" name="filmId" value="${film.filmID}"/>
-                                        <input type="hidden" name="filmName" value="${film.filmName}"/>
-                                        <button type="submit" class="form__btn">Send</button>
-                                    </form>
-                                </c:when>
-                                <c:otherwise>
-                                    <div style="display: flex; justify-content: center; align-items: center;">
-                                        <h1 style="color: white">Sign in to comment and rate!</h1>
-                                        <a href="SignIn.jsp" class="header__sign-in">
-                                            <i class="icon ion-ios-log-in"></i>
-                                            <span>sign in</span>
-                                        </a>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
+                                            <input type="hidden" name="filmId" value="${film.filmID}"/>
+                                            <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                            <button type="submit" class="form__btn">Send</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div style="display: flex; justify-content: center; align-items: center;">
+                                            <h1 style="color: white">Sign in to comment and rate!</h1>
+                                            <a href="SignIn.jsp" class="header__sign-in">
+                                                <i class="icon ion-ios-log-in"></i>
+                                                <span>sign in</span>
+                                            </a>
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <!-- End comments -->
+
                         </div>
-                        <!-- End comments -->
-
                     </div>
+                    <c:if test="${sessionScope.userSession != null}">
+                        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                            <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
+                                  action="#" method="post">
+                                <div class="rate">
+                                    <input type="radio" id="star1" name="rate" value="1"
+                                           style="display: none;"/>
+                                    <label for="star1" title="text"
+                                           style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                           onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                           onclick="fixStars(this)">&#9733;</label>
+
+                                    <input type="radio" id="star2" name="rate" value="2"
+                                           style="display: none;"/>
+                                    <label for="star2" title="text"
+                                           style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                           onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                           onclick="fixStars(this)">&#9733;</label>
+
+                                    <input type="radio" id="star3" name="rate" value="3"
+                                           style="display: none;"/>
+                                    <label for="star3" title="text"
+                                           style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                           onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                           onclick="fixStars(this)">&#9733;</label>
+
+                                    <input type="radio" id="star4" name="rate" value="4"
+                                           style="display: none;"/>
+                                    <label for="star4" title="text"
+                                           style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                           onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                           onclick="fixStars(this)">&#9733;</label>
+
+                                    <input type="radio" id="star5" name="rate" value="5"
+                                           style="display: none;"/>
+                                    <label for="star5" title="text"
+                                           style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
+                                           onmouseover="highlightStars(this)" onmouseout="resetStars()"
+                                           onclick="fixStars(this)">&#9733;</label>
+                                </div>
+                                <button style="cursor: pointer; height: 30px; width: 100px; margin-top: 10px;"
+                                        type="submit"
+                                        class="form__btn">Rate
+                                </button>
+                            </form>
+                        </div>
+                    </c:if>
                 </div>
-                <c:if test="${sessionScope.userSession != null}">
-                    <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                        <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
-                              action="#" method="post">
-                            <div class="rate">
-                                <input type="radio" id="star1" name="rate" value="1"
-                                       style="display: none;"/>
-                                <label for="star1" title="text"
-                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                       onclick="fixStars(this)">&#9733;</label>
-
-                                <input type="radio" id="star2" name="rate" value="2"
-                                       style="display: none;"/>
-                                <label for="star2" title="text"
-                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                       onclick="fixStars(this)">&#9733;</label>
-
-                                <input type="radio" id="star3" name="rate" value="3"
-                                       style="display: none;"/>
-                                <label for="star3" title="text"
-                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                       onclick="fixStars(this)">&#9733;</label>
-
-                                <input type="radio" id="star4" name="rate" value="4"
-                                       style="display: none;"/>
-                                <label for="star4" title="text"
-                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                       onclick="fixStars(this)">&#9733;</label>
-
-                                <input type="radio" id="star5" name="rate" value="5"
-                                       style="display: none;"/>
-                                <label for="star5" title="text"
-                                       style="float:left; cursor:pointer; font-size:30px; color:#ccc;"
-                                       onmouseover="highlightStars(this)" onmouseout="resetStars()"
-                                       onclick="fixStars(this)">&#9733;</label>
-                            </div>
-                            <button style="cursor: pointer; height: 30px; width: 100px; margin-top: 10px;" type="submit"
-                                    class="form__btn">Rate
-                            </button>
-                        </form>
-                    </div>
-                </c:if>
+                <!-- end content tabs -->
             </div>
-            <!-- end content tabs -->
-        </div>
 
-        <!-- sidebar -->
-        <div class="col-12 col-lg-4 col-xl-4">
-            <div class="row">
-                <!-- section title -->
-                <div class="col-12">
-                    <h2 class="section__title section__title--sidebar">You may also like...</h2>
-                </div>
-                <!-- end section title -->
+            <!-- sidebar -->
+            <div class="col-12 col-lg-4 col-xl-4">
+                <div class="row">
+                    <!-- section title -->
+                    <div class="col-12">
+                        <h2 class="section__title section__title--sidebar">You may also like...</h2>
+                    </div>
+                    <!-- end section title -->
 
-                <!-- card -->
-                <c:forEach items="${rdFilms}" var="rdFilms">
-                    <div class="col-6 col-sm-4 col-lg-6">
-                        <div class="card">
-                            <div class="card__cover">
-                                <img src="${rdFilms.imageLink}" alt="${rdFilms.filmName}">
-                                <a href="detail?filmName=${rdFilms.filmName}" class="card__play">
-                                    <i class="icon ion-ios-play"></i>
-                                </a>
-                            </div>
-                            <div class="card__content">
-                                <h3 class="card__title"><a
-                                        href="detail?filmName=${rdFilms.filmName}">${rdFilms.filmName}</a></h3>
-                                <span class="card__category">
+                    <!-- card -->
+                    <c:forEach items="${rdFilms}" var="rdFilms">
+                        <div class="col-6 col-sm-4 col-lg-6">
+                            <div class="card">
+                                <div class="card__cover">
+                                    <img src="${rdFilms.imageLink}" alt="${rdFilms.filmName}">
+                                    <a href="detail?filmName=${rdFilms.filmName}" class="card__play">
+                                        <i class="icon ion-ios-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title"><a
+                                            href="detail?filmName=${rdFilms.filmName}">${rdFilms.filmName}</a></h3>
+                                    <span class="card__category">
 										<c:forEach items="${rdFilms.categories}" var="category">
                                             <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                                         </c:forEach>
 									</span>
-                                <span class="card__rate"><i
-                                        class="icon ion-ios-star"></i>${rdFilms.ratingValue}</span>
+                                    <span class="card__rate"><i
+                                            class="icon ion-ios-star"></i>${rdFilms.ratingValue}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </c:forEach>
-                <!-- end card -->
+                    </c:forEach>
+                    <!-- end card -->
+                </div>
             </div>
+            <!-- end sidebar -->
         </div>
-        <!-- end sidebar -->
-    </div>
     </div>
 </section>
 <!-- end content -->
@@ -496,6 +519,7 @@
 <%@include file="decorator/script.jsp" %>
 
 </body>
+
 <script>
     var selectedStarIndex = -1;
 

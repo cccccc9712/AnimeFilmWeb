@@ -154,7 +154,8 @@ public class commentDao extends DBContext {
 
     public int getTotalCommentsForFilm(int filmID) {
         int totalComments = 0;
-        String sql = "SELECT COUNT(*) AS total FROM Comments WHERE filmID = ?";
+        // Thêm điều kiện parentCommentID IS NULL vào câu truy vấn
+        String sql = "SELECT COUNT(*) AS total FROM Comments WHERE filmID = ? AND parentCommentID IS NULL";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -176,6 +177,7 @@ public class commentDao extends DBContext {
         }
         return totalComments;
     }
+
 
     public void saveReply(String replyText, int userID, int filmID, int parentCommentID) {
         // SQL statement for inserting a new reply
