@@ -1,27 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:set var="maxPagesToShow" value="4"/>
-<c:set var="currentPage" value="${currentPage}"/>
-<c:set var="totalPages" value="${totalPages}"/>
+<c:set var="maxPagesToShow" value="5"/> <!-- Giả sử bạn muốn hiển thị tối đa 5 trang -->
+<c:set var="pageStart" value="${currentPage - (maxPagesToShow div 2)}"/>
+<c:set var="pageEnd" value="${pageStart + maxPagesToShow - 1}"/>
 
-<!-- Tính toán trang bắt đầu và kết thúc -->
-<c:set var="startPage" value="${currentPage - (maxPagesToShow / 2)}"/>
-<c:set var="endPage" value="${currentPage + (maxPagesToShow / 2)}"/>
-
-<!-- Điều chỉnh nếu bắt đầu hoặc kết thúc vượt quá giới hạn -->
-<c:if test="${startPage < 1}">
-    <c:set var="startPage" value="1"/>
-    <c:set var="endPage" value="${maxPagesToShow}"/>
+<!-- Điều chỉnh nếu số lượng trang không đủ -->
+<c:if test="${pageEnd > totalPages}">
+    <c:set var="pageEnd" value="${totalPages}"/>
+    <c:set var="pageStart" value="${pageEnd - maxPagesToShow + 1}"/>
 </c:if>
-<c:if test="${endPage > totalPages}">
-    <c:set var="endPage" value="${totalPages}"/>
-    <c:set var="startPage" value="${totalPages - maxPagesToShow + 1}"/>
-</c:if>
-
-<!-- Điều chỉnh lại nếu tổng số trang nhỏ hơn maxPagesToShow -->
-<c:if test="${totalPages < maxPagesToShow}">
-    <c:set var="startPage" value="1"/>
-    <c:set var="endPage" value="${totalPages}"/>
+<c:if test="${pageStart < 1}">
+    <c:set var="pageStart" value="1"/>
+    <c:set var="pageEnd" value="${maxPagesToShow < totalPages ? maxPagesToShow : totalPages}"/>
 </c:if>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
@@ -258,42 +248,49 @@
                                 <div class="comments">
                                     <ul class="comments__list">
                                         <c:forEach items="${cmt}" var="comment">
-                                        <li class="comments__item">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">${comment.userName}</span>
-                                                <span class="comments__time">${comment.commentDate}</span>
-                                            </div>
-                                            <p class="comments__text">${comment.commentText}</p>
-
-                                            <c:choose>
-                                            <c:when test="${not empty sessionScope.userSession}">
-                                            <div class="comments__actions">
-                                                <button type="button" onclick="prepareReplyForm(${comment.commentID});">
-                                                    <i class="icon ion-ios-share-alt"></i>Reply
-                                                </button>
-                                            </div>
-                                            </c:when>
-                                            <c:otherwise>
-                                            <div class="comments__actions">
-                                                <button>Sign in to reply</button>
-                                            </div>
-                                            </c:otherwise>
-                                            </c:choose>
-                                            <c:forEach items="${comment.replies}" var="reply">
-                                        <li class="comments__item comments__item--answer">
-                                            <div class="comments__autor">
-                                                <img class="comments__avatar" src="img/user.png" alt="">
-                                                <span class="comments__name">${reply.userName}</span>
-                                                <span class="comments__time">${reply.commentDate}</span>
-                                            </div>
-                                            <p class="comments__text">${reply.commentText}</p>
-                                            </div>
-                                        </li>
-                                </c:forEach>
-                                </li>
-                                </c:forEach>
-                                </ul>
+                                            <li class="comments__item">
+                                                <div class="comments__autor">
+                                                    <img class="comments__avatar" src="img/user.png" alt="">
+                                                    <span class="comments__name">${comment.userName}</span>
+                                                    <span class="comments__time">${comment.commentDate}</span>
+                                                </div>
+                                                <p class="comments__text">${comment.commentText}</p>
+                                                <div class="comments__actions">
+                                                    <c:choose>
+                                                        <c:when test="${not empty sessionScope.userSession}">
+                                                            <button type="button" onclick="showReplyForm('${comment.commentID}');">
+                                                                <i class="icon ion-ios-share-alt"></i>Reply
+                                                            </button>
+                                                            <div id="replyForm${comment.commentID}" style="display:none;">
+                                                                <form class="form" action="${pageContext.request.contextPath}/reply" method="post">
+                                                                    <textarea style="height: 50px" class="form__textarea" name="replyText" required placeholder="Type your reply here..."></textarea>
+                                                                    <input type="hidden" name="parentCommentID" value="${comment.commentID}"/>
+                                                                    <input type="hidden" name="filmID" value="${film.filmID}"/>
+                                                                    <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                                                    <button style="height: 20px; width: 60px" type="submit" class="form__btn">Reply</button>
+                                                                </form>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <button>Sign in to reply</button>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                                <ul class="comments__replies">
+                                                    <c:forEach items="${comment.replies}" var="reply">
+                                                        <li style="margin-top: 20px" class="comments__item comments__item--answer">
+                                                            <div class="comments__autor">
+                                                                <img class="comments__avatar" src="img/user.png" alt="">
+                                                                <span class="comments__name">${reply.userName}</span>
+                                                                <span class="comments__time">${reply.commentDate}</span>
+                                                            </div>
+                                                            <p class="comments__text">${reply.commentText}</p>
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
                             </div>
 
                             <!-- Comments paginator -->
@@ -305,17 +302,11 @@
                                                     class="icon ion-ios-arrow-back"></i></a>
                                         </li>
                                     </c:if>
-                                    <!-- Dynamic pagination logic -->
-                                    <c:set var="startPage" value="${currentPage - 2 > 0 ? currentPage - 2 : 1}"/>
-                                    <c:set var="endPage"
-                                           value="${currentPage + 2 <= totalPages ? currentPage + 2 : totalPages}"/>
-
-                                    <c:forEach begin="${startPage}" end="${endPage}" var="i">
+                                    <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
                                         <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
                                             <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
                                         </li>
                                     </c:forEach>
-
                                     <c:if test="${currentPage < totalPages}">
                                         <li class="paginator__item paginator__item--next">
                                             <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i
@@ -559,5 +550,17 @@
             });
         });
     });
+
+    function showReplyForm(commentID) {
+        // Lấy phần tử form trả lời dựa trên commentID
+        var replyForm = document.getElementById('replyForm' + commentID);
+        // Kiểm tra nếu form đang ẩn, thì hiển thị nó; nếu không thì ẩn nó
+        if (replyForm.style.display === 'none' || replyForm.style.display === '') {
+            replyForm.style.display = 'block';
+        } else {
+            replyForm.style.display = 'none';
+        }
+    }
+
 </script>
 </html>

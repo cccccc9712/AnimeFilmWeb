@@ -1,9 +1,7 @@
 package dal;
 
 import dtos.episodeDtos;
-import dtos.filmDtos;
 import dtos.seasonDtos;
-import entity.Episode;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class episodeDAO extends DBContext{
+public class episodeDao extends DBContext{
     PreparedStatement ps = null;
     ResultSet rs = null;
 
@@ -125,7 +123,7 @@ public class episodeDAO extends DBContext{
 
 
     public static void main(String[] args) {
-        episodeDAO d = new episodeDAO();
+        episodeDao d = new episodeDao();
         List<seasonDtos> sd = d.getSeasonsForFilm("Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu");
         for (seasonDtos a : sd){
             System.out.println(a.toString());

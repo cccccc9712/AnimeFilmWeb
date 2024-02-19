@@ -1,12 +1,11 @@
 package controller;
 
 import dal.commentDao;
-import dal.episodeDAO;
+import dal.episodeDao;
 import dal.filmDao;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
-import entity.Comment;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,7 +23,7 @@ public class filmDetailedControl extends HttpServlet {
         String filmName = req.getParameter("filmName");
         PrintWriter out = new PrintWriter(System.out);
         filmDao fd = new filmDao();
-        episodeDAO ed = new episodeDAO();
+        episodeDao ed = new episodeDao();
         commentDao cmd = new commentDao();
 
         int currentPage = 1;

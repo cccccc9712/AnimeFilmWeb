@@ -9,14 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class commentDao extends DBContext{
+public class commentDao extends DBContext {
 
     PreparedStatement ps = null;
     ResultSet rs = null;
 
     public boolean insertComment(int filmID, int userID, String commentText, Integer parentCommentID) {
         String sql = "INSERT INTO Comments (filmID, userID, commentText, commentDate, parentCommentID) VALUES (?, ?, ?, GETDATE(), ?)";
-        try  {
+        try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, filmID);
@@ -177,13 +177,31 @@ public class commentDao extends DBContext{
         return totalComments;
     }
 
+    public void saveReply(String replyText, int userID, int filmID, int parentCommentID) {
+        // SQL statement for inserting a new reply
+        String sql = "INSERT INTO Comments (filmID, userID, commentText, commentDate, parentCommentID) " +
+                "VALUES (?, ?, ?, GETDATE(), ?)";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            ps.setInt(2, userID);
+            ps.setString(3, replyText);
+            if (parentCommentID > 0) {
+                ps.setInt(4, parentCommentID);
+            } else {
+                // If parentCommentID is not valid, set it to NULL
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         commentDao cmd = new commentDao();
-        List<commentDto> listCmt = cmd.getCommentsPerPage(20,1,6);
-        for (commentDto a : listCmt){
-            System.out.println(a);
-        }
-//        int total = cmd.getTotalCommentsForFilm(20);
-//        System.out.println(total);
+        cmd.saveReply("Hay qua", 3, 20, 7);
     }
 }

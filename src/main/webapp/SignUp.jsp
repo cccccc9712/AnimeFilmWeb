@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="sign__group sign__group--checkbox">
-                            <input id="agree" name="agree" type="checkbox" checked="checked">
+                            <input id="agree" name="agree" type="checkbox">
                             <label for="agree">I agree to the <a href="#">Privacy Policy</a></label>
                         </div>
 

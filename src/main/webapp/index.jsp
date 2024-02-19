@@ -258,6 +258,8 @@
                     <c:when test="${sessionScope.userSession != null}">
                         <div class="row">
                             <!-- card -->
+                            <c:choose>
+                                <c:when test="${not empty watchedEpisodes}">
                             <c:forEach items="${watchedEpisodes}" var="watchedEpisodes">
                                 <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                     <div class="card">
@@ -280,6 +282,11 @@
                                     </div>
                                 </div>
                             </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <h1 style="color: white">No film watched.</h1>
+                                </c:otherwise>
+                            </c:choose>
                             <!-- end card -->
                         </div>
                     </c:when>

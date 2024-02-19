@@ -1,10 +1,8 @@
 package controller;
 
-import dal.episodeDAO;
+import dal.episodeDao;
 import dal.filmDao;
 import dtos.episodeDtos;
-import dtos.filmDtos;
-import entity.Episode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Time;
 import java.util.Date;
 
@@ -33,7 +30,7 @@ public class watchingControl extends HttpServlet {
         if (episodeIdStr != null && !episodeIdStr.isEmpty() && filmIdStr != null && !filmIdStr.isEmpty()) {
             int episodeId = Integer.parseInt(episodeIdStr);
             int filmId = Integer.parseInt(filmIdStr);
-            episodeDAO ed = new episodeDAO();
+            episodeDao ed = new episodeDao();
             episodeDtos episode = ed.getEpisodeById(episodeId);
             ed.increaseViewCount(filmId);
 
