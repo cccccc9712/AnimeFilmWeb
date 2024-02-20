@@ -722,7 +722,7 @@ public class filmDao extends DBContext {
                 + "    FROM Ratings "
                 + "    GROUP BY filmID"
                 + ") ra ON f.filmID = ra.filmID "
-                + "WHERE fav.userID = ?";
+                + "WHERE fav.userID = ? ORDER BY fav.addedDate DESC";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);

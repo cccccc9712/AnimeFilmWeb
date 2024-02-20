@@ -382,7 +382,7 @@
                     <c:if test="${sessionScope.userSession != null}">
                         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                             <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
-                                  action="#" method="post">
+                                  action="${pageContext.request.contextPath}/rateFilm" method="post">
                                 <div class="rate">
                                     <input type="radio" id="star1" name="rate" value="1"
                                            style="display: none;"/>
@@ -419,11 +419,14 @@
                                            onmouseover="highlightStars(this)" onmouseout="resetStars()"
                                            onclick="fixStars(this)">&#9733;</label>
                                 </div>
+                                <input type="hidden" name="filmId" value="${film.filmID}"/>
+                                <input type="hidden" name="filmName" value="${film.filmName}"/>
                                 <button style="cursor: pointer; height: 30px; width: 100px; margin-top: 10px;"
                                         type="submit"
                                         class="form__btn">Rate
                                 </button>
                             </form>
+                            <h1 style="color: #0cb457">${mess}</h1>
                         </div>
                     </c:if>
                 </div>
