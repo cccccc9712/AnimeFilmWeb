@@ -5,7 +5,6 @@
 <%@ page import="java.util.List" %>
 <%
     filmDtos film = (filmDtos) request.getAttribute("film");
-    User user = (User) session.getAttribute("userSession");
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,8 +79,22 @@
                                             <li href="#">${tag.tagName}</li>
                                         </c:forEach>
                                     </ul>
-                                    <button style="font-size:26px; margin-left: 20px"><i class="fa fa-bookmark-o"></i>
-                                    </button>
+
+                                    <c:set var="isFavourite" value="${false}"/>
+                                    <c:forEach items="${favouriteFilms}" var="favourite">
+                                        <c:if test="${favourite.filmID == film.filmID}">
+                                            <c:set var="isFavourite" value="${true}"/>
+                                        </c:if>
+                                    </c:forEach>
+
+                                    <form action="${pageContext.request.contextPath}/favourite" method="post">
+                                        <input type="hidden" name="filmId" value="${film.filmID}">
+                                        <input type="hidden" name="filmName" value="${film.filmName}">
+                                        <button type="submit" style="font-size:26px; margin-left: 20px">
+                                            <i class="fa ${isFavourite ? 'fa-bookmark' : 'fa-bookmark-o'}" style="color: ${isFavourite ? 'yellow' : 'inherit'};"></i>
+                                        </button>
+                                    </form>
+
                                 </div>
 
                                 <ul class="card__meta">
@@ -585,6 +598,5 @@
             replyForm.style.display = 'none';
         }
     }
-
 </script>
 </html>

@@ -11,6 +11,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +21,8 @@ import java.util.List;
 public class filmDetailedControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Integer userId = (Integer) session.getAttribute("userId");
         String filmName = req.getParameter("filmName");
         PrintWriter out = new PrintWriter(System.out);
         filmDao fd = new filmDao();
@@ -36,6 +39,11 @@ public class filmDetailedControl extends HttpServlet {
         filmDtos film = fd.getFilmByName(filmName);
         List<seasonDtos> seasonList = ed.getSeasonsForFilm(filmName);
         List<filmDtos> listFilmMayLike = fd.getRandom6FilmsWithFullDetails();
+
+        if (userId  != null) {
+            List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
+            req.setAttribute("favouriteFilms", favouriteFilms);
+        }
 
         List<commentDto> comments = cmd.getCommentsPerPage(filmId, currentPage, commentsPerPage);
         int totalComments = cmd.getTotalCommentsForFilm(filmId);

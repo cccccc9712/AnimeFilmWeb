@@ -23,13 +23,17 @@ public class homeControl  extends HttpServlet {
         filmDao fd = new filmDao();
         HttpSession session = req.getSession();
         Integer userId = (Integer) session.getAttribute("userId");
+
         List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
         List<filmDtos> newFilms = fd.getNewFilms();
         List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
         if (userId  != null) {
+            List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
             List<newestEpisodeDto> watchedEpisodes = fd.getWatchedEpisodesByUserId(userId);
+            req.setAttribute("favouriteFilms", favouriteFilms);
             req.setAttribute("watchedEpisodes", watchedEpisodes);
         }
+
         req.setAttribute("latestEpisodes", latestEpisodes);
         req.setAttribute("films", trendingFilms);
         req.setAttribute("newFilms", newFilms);

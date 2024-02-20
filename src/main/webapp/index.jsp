@@ -218,31 +218,40 @@
                     <c:when test="${sessionScope.userSession != null}">
                         <div class="row">
                             <!-- card -->
-                            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                <div class="card">
-                                    <div class="card__cover">
-                                        <img src="img/covers/cover2.jpg" alt="">
-                                        <a href="#" class="card__play">
-                                            <i class="icon ion-ios-play"></i>
-                                        </a>
-                                    </div>
-                                    <div class="card__content">
-                                        <h3 class="card__title"><a href="#">Blindspotting</a></h3>
-                                        <span class="card__category">
-										<a href="#">Comedy</a>
-										<a href="#">Drama</a>
-									</span>
-                                        <span class="card__rate"><i class="icon ion-ios-star"></i>7.9</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <c:choose>
+                                <c:when test="${not empty favouriteFilms}">
+                                    <c:forEach items="${favouriteFilms}" var="favouriteFilm">
+                                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                            <div class="card">
+                                                <div class="card__cover">
+                                                    <img src="${favouriteFilm.imageLink}" alt="${favouriteFilm.filmName}">
+                                                    <a href="detail?filmName=${favouriteFilm.filmName}" class="card__play">
+                                                        <i class="icon ion-ios-play"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="card__content">
+                                                    <h3 class="card__title"><a href="detail?filmName=${favouriteFilm.filmName}">${favouriteFilm.filmName}</a></h3>
+                                                    <span class="card__category">
+                                            <c:forEach items="${favouriteFilm.categories}" var="category">
+                                                <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
+                                            </c:forEach>
+                                        </span>
+                                                    <span class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
+                                                    <span class="card__rate"><i class="icon ion-ios-star"></i>${favouriteFilm.ratingValue}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <h1 style="color: white">No film watched.</h1>
+                                </c:otherwise>
+                            </c:choose>
                             <!-- end card -->
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div style="display: flex;
-                                    justify-content: center;
-                                    align-items: center;">
+                        <div style="display: flex; justify-content: center; align-items: center;">
                             <h1 style="color: white">Log in to use this function!</h1>
                             <a href="SignIn.jsp" class="header__sign-in">
                                 <i class="icon ion-ios-log-in"></i>
@@ -253,6 +262,7 @@
                 </c:choose>
             </div>
 
+
             <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="4-tab">
                 <c:choose>
                     <c:when test="${sessionScope.userSession != null}">
@@ -260,28 +270,29 @@
                             <!-- card -->
                             <c:choose>
                                 <c:when test="${not empty watchedEpisodes}">
-                            <c:forEach items="${watchedEpisodes}" var="watchedEpisodes">
-                                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                                    <div class="card">
-                                        <div class="card__cover">
-                                            <img src="${watchedEpisodes.imageLink}" alt="${watchedEpisodes.filmName}">
-                                            <a href="watching?episodeId=${watchedEpisodes.epId}&filmId=${watchedEpisodes.filmId}"
-                                               class="card__play">
-                                                <i class="icon ion-ios-play"></i>
-                                            </a>
-                                        </div>
-                                        <div class="card__content">
-                                            <h3 class="card__title"><a
-                                                    href="watching?episodeId=${watchedEpisodes.epId}&filmId=${watchedEpisodes.filmId}">${watchedEpisodes.filmName}</a>
-                                            </h3>
-                                            <span class="card__category">
+                                    <c:forEach items="${watchedEpisodes}" var="watchedEpisodes">
+                                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                                            <div class="card">
+                                                <div class="card__cover">
+                                                    <img src="${watchedEpisodes.imageLink}"
+                                                         alt="${watchedEpisodes.filmName}">
+                                                    <a href="watching?episodeId=${watchedEpisodes.epId}&filmId=${watchedEpisodes.filmId}"
+                                                       class="card__play">
+                                                        <i class="icon ion-ios-play"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="card__content">
+                                                    <h3 class="card__title"><a
+                                                            href="watching?episodeId=${watchedEpisodes.epId}&filmId=${watchedEpisodes.filmId}">${watchedEpisodes.filmName}</a>
+                                                    </h3>
+                                                    <span class="card__category">
                                     <a>${watchedEpisodes.epTittle}</a>
                                     <a>${watchedEpisodes.seasonName}</a>
                                 </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
+                                    </c:forEach>
                                 </c:when>
                                 <c:otherwise>
                                     <h1 style="color: white">No film watched.</h1>

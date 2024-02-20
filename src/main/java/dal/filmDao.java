@@ -7,6 +7,7 @@ import entity.Tag;
 import entity.Season;
 import entity.Episode;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -696,13 +697,90 @@ public class filmDao extends DBContext {
         return filmId;
     }
 
+    public float getAverageRatingForFilm(int filmID) {
+        String sql = "SELECT AVG(ratingValue) AS averageRating FROM Ratings WHERE filmID = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getFloat("averageRating");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<filmDtos> getFavouriteFilmsByUserId(int userId) {
+        List<filmDtos> favouriteFilms = new ArrayList<>();
+        String sql = "SELECT f.*, ra.averageRating FROM Favourite fav "
+                + "JOIN Film f ON fav.filmID = f.filmID "
+                + "LEFT JOIN ("
+                + "    SELECT filmID, AVG(ratingValue) AS averageRating "
+                + "    FROM Ratings "
+                + "    GROUP BY filmID"
+                + ") ra ON f.filmID = ra.filmID "
+                + "WHERE fav.userID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(rs.getFloat("averageRating"));
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+
+                favouriteFilms.add(film);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return favouriteFilms;
+    }
+
+    public boolean isFavouriteExists(int userId, int filmId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        boolean exists = false;
+        String sql = "SELECT COUNT(*) AS count FROM Favourite WHERE userId = ? AND filmId = ?";
+
+        try {
+            conn = getConnection(); // Giả định bạn đã có phương thức này để lấy kết nối DB
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, filmId);
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                exists = rs.getInt("count") > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
 
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        List<newestEpisodeDto> ned = fd.getLatestEpisodes();
-        for (newestEpisodeDto a : ned){
-            System.out.printf(a.toString());
+        List<filmDtos> ned = fd.getFavouriteFilmsByUserId(3);
+        for (filmDtos f : ned){
+            System.out.println(f.toString());
         }
     }
 
