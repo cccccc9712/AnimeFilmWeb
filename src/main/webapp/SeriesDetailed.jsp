@@ -329,6 +329,7 @@
                                 </div>
 
                                 <!-- Comments paginator -->
+                                <c:if test="${totalComments > 0}">
                                 <div class="col-12">
                                     <ul class="paginator paginator--list">
                                         <c:if test="${currentPage > 1}">
@@ -350,6 +351,7 @@
                                         </c:if>
                                     </ul>
                                 </div>
+                                </c:if>
                                 <!-- End paginator -->
 
                                 <c:choose>
@@ -383,7 +385,7 @@
                         <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                             <form style="padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;"
                                   action="${pageContext.request.contextPath}/rateFilm" method="post">
-                                <div class="rate">
+                                <div class="rate" data-user-rating="${userRating}">
                                     <input type="radio" id="star1" name="rate" value="1"
                                            style="display: none;"/>
                                     <label for="star1" title="text"
@@ -539,6 +541,7 @@
 <script>
     var selectedStarIndex = -1;
 
+    // Hàm highlight sao dựa trên người dùng hover
     function highlightStars(star) {
         resetStars();
         star.style.color = '#ffc700';
@@ -551,6 +554,7 @@
         }
     }
 
+    // Reset màu sắc của các sao khi không hover hoặc sau khi đã chọn
     function resetStars() {
         const stars = document.querySelectorAll('.rate label');
         stars.forEach((star, index) => {
@@ -562,6 +566,7 @@
         });
     }
 
+    // Hàm này được gọi khi người dùng click vào một sao
     function fixStars(star) {
         const stars = document.querySelectorAll('.rate label');
         selectedStarIndex = Array.from(stars).indexOf(star); // Update the selected star index
@@ -575,6 +580,31 @@
             }
         });
     }
+
+    // Hàm highlight sao dựa trên đánh giá từ server
+    function highlightUserRating(userRating) {
+        if (userRating && userRating > 0) {
+            const stars = document.querySelectorAll('.rate label');
+            selectedStarIndex = Math.floor(userRating) - 1; // Cập nhật index dựa trên đánh giá từ server
+            stars.forEach((star, index) => {
+                if (index < userRating) {
+                    star.style.color = '#ffc700'; // Highlight the star
+                    star.previousElementSibling.checked = true; // Check the corresponding radio button
+                } else {
+                    star.style.color = '#ccc'; // Dim the rest of the stars
+                    star.previousElementSibling.checked = false; // Uncheck the radio button
+                }
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var rateDiv = document.querySelector('.rate');
+        var userRating = rateDiv.getAttribute('data-user-rating');
+        if (userRating) {
+            highlightUserRating(parseInt(userRating));
+        }
+    });
 
 
     document.addEventListener("DOMContentLoaded", function () {

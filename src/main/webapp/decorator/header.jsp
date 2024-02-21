@@ -32,7 +32,7 @@
                             </li>
 
                             <li class="header__nav-item">
-                                <a href="About.jsp" class="header__nav-link">About us</a>
+                                <a href="../about.jsp" class="header__nav-link">About us</a>
                             </li>
 
                             <!-- dropdown -->

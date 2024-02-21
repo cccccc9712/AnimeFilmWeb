@@ -17,7 +17,7 @@
                 <h6 class="footer__title">Resources</h6>
                 <ul class="footer__list">
                     <li><a href="home">Home</a></li>
-                    <li><a href="./About.jsp">About Us</a></li>
+                    <li><a href="../about.jsp">About Us</a></li>
                     <li><a href="./pricing.jsp">Pricing Plan</a></li>
                 </ul>
             </div>

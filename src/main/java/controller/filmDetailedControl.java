@@ -3,6 +3,7 @@ package controller;
 import dal.commentDao;
 import dal.episodeDao;
 import dal.filmDao;
+import dal.ratingDao;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
@@ -28,6 +29,7 @@ public class filmDetailedControl extends HttpServlet {
         filmDao fd = new filmDao();
         episodeDao ed = new episodeDao();
         commentDao cmd = new commentDao();
+        ratingDao rd = new ratingDao();
 
         int currentPage = 1;
         if (req.getParameter("page") != null) {
@@ -42,6 +44,8 @@ public class filmDetailedControl extends HttpServlet {
 
         if (userId  != null) {
             List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
+            Float userRating = rd.getUserRatingForFilm(userId, filmId);
+            req.setAttribute("userRating", userRating);
             req.setAttribute("favouriteFilms", favouriteFilms);
         }
 
@@ -54,6 +58,7 @@ public class filmDetailedControl extends HttpServlet {
             comment.setReplies(replies);
         }
 
+        req.setAttribute("totalComments", totalComments);
         req.setAttribute("currentPage", currentPage);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("cmt", comments);

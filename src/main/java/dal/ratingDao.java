@@ -68,6 +68,36 @@ public class ratingDao extends DBContext {
         }
     }
 
+    public Float getUserRatingForFilm(int userId, int filmId) {
+        String sql = "SELECT ratingValue FROM Ratings WHERE userId = ? AND filmId = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, filmId);
+            rs = ps.executeQuery();
 
+            if (rs.next()) {
+                return rs.getFloat("ratingValue");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(rs);
+            close(ps);
+        }
+        return null;
+    }
+
+    private void close(AutoCloseable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                // Log the exception or handle it
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
