@@ -22,6 +22,20 @@
         outline: none;
     }
 
+    .show-more:hover, .show-less:hover {
+        background: -webkit-linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block; /* Đảm bảo icon có thể áp dụng background */
+    }
+
+    .show-more, .show-less {
+        font-size: 24px; /* Hoặc bất kỳ giá trị nào bạn muốn */
+        color: honeydew; /* Màu cho icon show-less */
+        margin: 0 0 0 55px ;
+    }
+
+
 </style>
 <body class="body">
 
@@ -309,19 +323,20 @@
                                                     </form>
                                                 </div>
                                                 <ul class="comments__replies">
-                                                    <c:forEach items="${comment.replies}" var="reply">
-                                                        <li style="margin-top: 20px"
-                                                            class="comments__item comments__item--answer">
-                                                            <div class="comments__autor">
+                                                    <c:forEach items="${comment.replies}" var="reply" varStatus="status">
+                                                        <li class="${status.index >= 2 ? 'hidden comments__item comments__item--answer' : 'comments__item comments__item--answer'}" style="margin-top: 20px">
+                                                        <div class="comments__autor">
                                                                 <img class="comments__avatar" src="img/user.png" alt="">
                                                                 <span class="comments__name">${reply.userName}</span>
                                                                 <span class="comments__time">${reply.commentDate}</span>
                                                             </div>
                                                             <p class="comments__text">${reply.commentText}</p>
                                                         </li>
-
                                                     </c:forEach>
-
+                                                    <c:if test="${fn:length(comment.replies) > 2}">
+                                                        <button class="show-more fas fa-angle-down" data-comment-id="${comment.commentID}"></button>
+                                                        <button class="show-less fas fa-angle-up" style="display:none;" data-comment-id="${comment.commentID}"></button>
+                                                    </c:if>
                                                 </ul>
                                             </li>
                                         </c:forEach>
@@ -631,5 +646,42 @@
             replyForm.style.display = 'none';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Xử lý Show More
+        document.querySelectorAll('.show-more').forEach(button => {
+            button.addEventListener('click', function() {
+                var hiddenReplies = this.parentElement.querySelectorAll('.hidden');
+                hiddenReplies.forEach((reply, index) => {
+                    if (index < 2) {
+                        reply.classList.remove('hidden');
+                    }
+                });
+                this.nextElementSibling.style.display = ''; // Hiển thị nút Show Less
+
+                if (this.parentElement.querySelectorAll('.hidden').length === 0) {
+                    this.style.display = 'none'; // Ẩn nút Show More nếu không còn phản hồi bị ẩn
+                }
+            });
+        });
+
+    // Xử lý Show Less
+    document.querySelectorAll('.show-less').forEach(button => {
+        button.addEventListener('click', function() {
+            var replies = this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)');
+            replies.forEach((reply, index) => {
+                if (index >= 2) { // Giả sử bạn muốn ẩn 2 phản hồi mỗi lần nhấn Show Less
+                    reply.classList.add('hidden');
+                }
+            });
+
+            if (this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)').length <= 2) {
+                this.style.display = 'none'; // Ẩn nút Show Less nếu số lượng phản hồi hiển thị như ban đầu
+            }
+
+            this.previousElementSibling.style.display = ''; // Hiển thị lại nút Show More
+        });
+    });
+    });
 </script>
 </html>

@@ -370,37 +370,6 @@ public class filmDao extends DBContext {
         return 0;
     }
 
-//    public List<filmDtos> getFilmsPerPage(int currentPage, int filmsPerPage) {
-//        List<filmDtos> films = new ArrayList<>();
-//        String query = "SELECT * FROM Film ORDER BY filmID DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-//        try {
-//            conn = new DBContext().getConnection();
-//            ps = conn.prepareStatement(query);
-//            int offset = (currentPage - 1) * filmsPerPage;
-//            ps.setInt(1, offset); // Đặt OFFSET
-//            ps.setInt(2, filmsPerPage); // Đặt số lượng ROWS để FETCH
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                filmDtos film = new filmDtos();
-//                film.setFilmID(rs.getInt("filmID"));
-//                film.setFilmName(rs.getString("filmName"));
-//                film.setDescription(rs.getString("description"));
-//                film.setImageLink(rs.getString("imageLink"));
-//                film.setTrailerLink(rs.getString("trailerLink"));
-//                film.setViewCount(rs.getLong("viewCount"));
-//                // Get related data
-//                film.setCategories(getCategoriesForFilm(film.getFilmID()));
-//                film.setTags(getTagsForFilm(film.getFilmID()));
-//                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
-//                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
-//                films.add(film);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return films;
-//    }
-
     public List<filmDtos> getFilmsPerPage(int currentPage, int filmsPerPage) {
         List<filmDtos> films = new ArrayList<>();
         String sql = "WITH RatingAverage AS (\n" +

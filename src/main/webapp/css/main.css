@@ -3715,5 +3715,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   height: auto;
 }
 
+.hidden { display: none; }
+
 
 
