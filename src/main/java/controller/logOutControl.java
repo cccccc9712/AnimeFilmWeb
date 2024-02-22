@@ -26,10 +26,15 @@ public class logOutControl extends HttpServlet {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("rememberMe".equals(cookie.getName())) {
-                    cookie.setValue(null);
+                    Cookie newcookie = new Cookie(cookie.getName(), null);
+                    String cookiePath = req.getContextPath();
                     cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    resp.addCookie(cookie);
+                    if (cookiePath.isEmpty()) {
+                        cookie.setPath("/");
+                    } else {
+                        cookie.setPath(cookiePath);
+                    }
+                    resp.addCookie(newcookie);
                     break;
                 }
             }
