@@ -2,6 +2,7 @@ package dal;
 
 import dtos.userDto;
 import entity.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,33 +13,38 @@ public class userDao extends DBContext {
     ResultSet rs = null;
 
     public User login(String mail, String pass) {
-        String query = "SELECT * FROM [User] WHERE gmail = ? AND userPass = ?";
+        User user = null;
+        String query = "SELECT * FROM [User] WHERE gmail = ?";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setString(1, mail);
-            ps.setString(2, pass);
             rs = ps.executeQuery();
-            while (rs.next()) {
-                return new User(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4),
-                        rs.getBoolean(5));
+            if (rs.next()) {
+                String storedHash = rs.getString("userPass");
+
+                if (BCrypt.checkpw(pass, storedHash)) {
+                    user = new User(rs.getInt("userID"),
+                            rs.getString("userName"),
+                            storedHash,
+                            rs.getString("gmail"),
+                            rs.getBoolean("isAdmin"));
+                }
             }
         } catch (Exception e) {
 
         }
-        return null;
+        return user;
     }
 
     public boolean registerUser(userDto user) {
+        String hashedPassword = BCrypt.hashpw(user.getUserPass(), BCrypt.gensalt());
         String sql = "INSERT INTO [User] (userName, userPass, gmail, isAdmin) VALUES (?, ?, ?, ?)";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, user.getUserName());
-            ps.setString(2, user.getUserPass()); // Giả sử bạn đã hash mật khẩu
+            ps.setString(2, hashedPassword);
             ps.setString(3, user.getUserGmail());
             ps.setBoolean(4, user.getAdmin());
             int result = ps.executeUpdate();
@@ -163,7 +169,7 @@ public class userDao extends DBContext {
 
     public static void main(String[] args) {
         userDao dao = new userDao();
-        User user = dao.login("user4@gmail.com", "dsadsa");
+        User user = dao.login("user4@gmail.com", "Pass4");
         System.out.println(user);
     }
 

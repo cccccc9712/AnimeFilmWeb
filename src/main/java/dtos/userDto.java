@@ -11,12 +11,11 @@ public class userDto{
     public userDto() {
     }
 
-    public userDto(String userName, String userPass, String userGmail, Boolean isAdmin, String remember_Token) {
+    public userDto(String userName, String userPass, String userGmail, Boolean isAdmin) {
         this.userName = userName;
         this.userPass = userPass;
         this.userGmail = userGmail;
         this.isAdmin = isAdmin;
-        this.remember_Token = remember_Token;
     }
 
     public String getRemember_Token() {

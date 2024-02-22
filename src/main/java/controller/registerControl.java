@@ -46,7 +46,7 @@ public class registerControl extends HttpServlet {
             if (!ud.checkEmailExists(email)) {
                 if (password.equals(cfPassword)) {
                     String username = generateUsername(email);
-                    boolean checked = ud.registerUser(new userDto(username, password, email, false, null));
+                    boolean checked = ud.registerUser(new userDto(username, password, email, false));
                     if (checked) {
                         resp.sendRedirect("SignIn.jsp");
                     } else {
