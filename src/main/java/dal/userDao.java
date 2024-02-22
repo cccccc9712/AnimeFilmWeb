@@ -5,6 +5,7 @@ import entity.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class userDao extends DBContext {
     PreparedStatement ps = null;
@@ -132,9 +133,9 @@ public class userDao extends DBContext {
 
     public boolean deleteRememberToken(int userId) {
         String sql = "UPDATE [User] SET remember_token = NULL WHERE userID = ?";
-        try  {
-             conn = new DBContext().getConnection();
-             ps = conn.prepareStatement(sql);
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0; // Trả về true nếu có ít nhất một hàng được cập nhật.
@@ -144,9 +145,26 @@ public class userDao extends DBContext {
         }
     }
 
+    public boolean changePassword(String email, String newPassword) {
+        String sql = "UPDATE [User] SET userPass = ? WHERE gmail = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newPassword); // Thay đổi mật khẩu mới
+            ps.setString(2, email); // Định dạng email của người dùng cần thay đổi mật khẩu
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public static void main(String[] args) {
         userDao dao = new userDao();
-        System.out.println(dao.checkEmailExists("thangtmhe180330@gmail.com"));
+        User user = dao.login("user4@gmail.com", "dsadsa");
+        System.out.println(user);
     }
 
 }

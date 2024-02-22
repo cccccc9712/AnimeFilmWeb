@@ -12,29 +12,12 @@ import java.util.UUID;
 
 @WebServlet(name = "loginControl", urlPatterns = {"/login"})
 public class loginControl extends HttpServlet {
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.service(req, resp);
-    }
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.service(req, resp);
-    }
-
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
         String mail = req.getParameter("mail");
         String password = req.getParameter("pass");
         boolean remember = req.getParameter("remember") != null;
-
-        if (!validateEmail(mail)) {
-            req.setAttribute("failedLoginMessage", "Wrong email format!");
-            req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
-            return;
-        }
 
         if (mail.isBlank() || password.isBlank()) {
             req.setAttribute("failedLoginMessage", "Please input to sign in!");
@@ -42,11 +25,19 @@ public class loginControl extends HttpServlet {
             return;
         }
 
+        if (!validateEmail(mail)) {
+            req.setAttribute("failedLoginMessage", "Wrong email format!");
+            req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
+            return;
+        }
+
+
         userDao dao = new userDao();
         User user = dao.login(mail, password);
         if (user == null) {
             req.setAttribute("failedLoginMessage", "Wrong Gmail or Password!");
             req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
+            return;
         } else {
             HttpSession session = req.getSession();
             session.setAttribute("userId", user.getUserId());
@@ -60,7 +51,6 @@ public class loginControl extends HttpServlet {
                 resp.addCookie(rememberMeCookie);
             }
             }
-
             resp.sendRedirect("home");
         }
 

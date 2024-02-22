@@ -17,7 +17,7 @@
                         </a>
 
                         <div class="sign__group">
-                            <input type="email" name="mail" class="sign__input" placeholder="Email">
+                            <input type="text" name="mail" class="sign__input" placeholder="Email">
                         </div>
 
                         <div class="sign__group">
@@ -35,7 +35,7 @@
 
                         <span class="sign__text">Don't have an account? <a href="SignUp.jsp">Sign up!</a></span>
 
-                        <span class="sign__text"><a href="#">Forgot password?</a></span>
+                        <span class="sign__text"><a href="gmailVerifyForm.jsp">Forgot password?</a></span>
                     </form>
 
                     <!-- end authorization form -->
