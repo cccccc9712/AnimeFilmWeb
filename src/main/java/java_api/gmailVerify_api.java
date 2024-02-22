@@ -37,11 +37,13 @@ public class gmailVerify_api {
                 }
             });
 
+            String content = "Dear user,<br><br>Your unique verification code for completing the authentication process is <b>" + code + "</b>.<br>Please enter this code within the designated field to proceed.<br>Ensure the confidentiality of this code for your security.<br><br>Thank you for your cooperation.";
             Message mess = new MimeMessage(session);
             mess.setFrom(new InternetAddress(fromEmail));
             mess.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            mess.setSubject("Verification Code");
-            mess.setText("Your verification code is: " + code);
+            mess.setSubject("Henix Anime Film Web Verification Code:");
+            mess.setFrom(new InternetAddress(fromEmail, "HENIX Anime Film"));
+            mess.setContent(content, "text/html");
 
             Transport.send(mess);
             sended = true;
