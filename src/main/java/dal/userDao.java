@@ -6,7 +6,7 @@ import entity.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class userDao extends DBContext{
+public class userDao extends DBContext {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
@@ -25,7 +25,7 @@ public class userDao extends DBContext{
                         rs.getString(4),
                         rs.getBoolean(5));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
         return null;
@@ -84,6 +84,65 @@ public class userDao extends DBContext{
         return false;
     }
 
+    public boolean saveUserRememberToken(int userId, String rememberToken) {
+        String sql = "UPDATE [User] SET remember_token = ? WHERE userID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, rememberToken);
+            ps.setInt(2, userId);
+            int result = ps.executeUpdate();
+            return result > 0; // Nếu có ít nhất một bản ghi được cập nhật, trả về true
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra
+        } finally {
+            // Đóng các resource để tránh rò rỉ bộ nhớ
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public User getUserByRememberMeToken(String rememberMeToken) {
+        User user = null;
+        String sql = "SELECT userID, userName, userPass, gmail, isAdmin FROM [User] WHERE remember_token = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, rememberMeToken);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("userID");
+                    String userName = rs.getString("userName");
+                    String userPass = rs.getString("userPass");
+                    String gmail = rs.getString("gmail");
+                    boolean isAdmin = rs.getBoolean("isAdmin");
+                    user = new User(userId, userName, userPass, gmail, isAdmin);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    public boolean deleteRememberToken(int userId) {
+        String sql = "UPDATE [User] SET remember_token = NULL WHERE userID = ?";
+        try  {
+             conn = new DBContext().getConnection();
+             ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0; // Trả về true nếu có ít nhất một hàng được cập nhật.
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false; // Trả về false nếu có lỗi xảy ra.
+        }
+    }
 
     public static void main(String[] args) {
         userDao dao = new userDao();

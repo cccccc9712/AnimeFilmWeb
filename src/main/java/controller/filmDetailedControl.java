@@ -1,18 +1,13 @@
 package controller;
 
-import dal.commentDao;
-import dal.episodeDao;
-import dal.filmDao;
-import dal.ratingDao;
+import dal.*;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,14 +17,38 @@ import java.util.List;
 public class filmDetailedControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
         Integer userId = (Integer) session.getAttribute("userId");
+
         String filmName = req.getParameter("filmName");
-        PrintWriter out = new PrintWriter(System.out);
         filmDao fd = new filmDao();
         episodeDao ed = new episodeDao();
         commentDao cmd = new commentDao();
         ratingDao rd = new ratingDao();
+
+        if (userId == null) {
+            Cookie[] cookies = req.getCookies();
+            String rememberMeToken = null;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("rememberMe".equals(cookie.getName())) {
+                        rememberMeToken = cookie.getValue();
+                        break;
+                    }
+                }
+
+                if (rememberMeToken != null) {
+                    userDao dao = new userDao();
+                    User user = dao.getUserByRememberMeToken(rememberMeToken);
+                    if (user != null) {
+                        session = req.getSession(true); // Tạo session mới nếu cần
+                        session.setAttribute("userId", user.getUserId());
+                        session.setAttribute("userSession", user);
+                        userId = user.getUserId();
+                    }
+                }
+            }
+        }
 
         int currentPage = 1;
         if (req.getParameter("page") != null) {

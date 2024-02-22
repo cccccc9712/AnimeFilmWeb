@@ -2,13 +2,13 @@ package controller;
 
 import dal.categoryDao;
 import dal.filmDao;
+import dal.userDao;
 import dtos.filmDtos;
 import entity.Category;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +25,36 @@ public class categoryControl extends HttpServlet {
         String pageStr = req.getParameter("page");
         String category = req.getParameter("categoryName");
         String searchQuery = req.getParameter("searchQuery");
+
+        HttpSession session = req.getSession(false);
+        Integer userId = null;
+
+        if (session != null) {
+            userId = (Integer) session.getAttribute("userId");
+            if (userId == null) {
+                Cookie[] cookies = req.getCookies();
+                String rememberMeToken = null;
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if ("rememberMe".equals(cookie.getName())) {
+                            rememberMeToken = cookie.getValue();
+                            break;
+                        }
+                    }
+
+                    if (rememberMeToken != null) {
+                        userDao dao = new userDao();
+                        User user = dao.getUserByRememberMeToken(rememberMeToken);
+                        if (user != null) {
+                            session = req.getSession(true); // Tạo session mới nếu cần
+                            session.setAttribute("userId", user.getUserId());
+                            session.setAttribute("userSession", user);
+                        }
+                    }
+                }
+            }
+        }
+
         int page = 1;
         if (pageStr != null) {
             page = Integer.parseInt(pageStr);

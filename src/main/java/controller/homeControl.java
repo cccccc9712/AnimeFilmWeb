@@ -1,33 +1,59 @@
 package controller;
 
 import dal.filmDao;
+import dal.userDao;
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
 import entity.Episode;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "homeControl", urlPatterns = "/home")
-public class homeControl  extends HttpServlet {
+public class homeControl extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        filmDao fd = new filmDao();
-        HttpSession session = req.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
+        HttpSession session = req.getSession(false);
+        Integer userId = null;
 
+        if (session != null) {
+            userId = (Integer) session.getAttribute("userId");
+            if (userId == null) {
+                Cookie[] cookies = req.getCookies();
+                String rememberMeToken = null;
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if ("rememberMe".equals(cookie.getName())) {
+                            rememberMeToken = cookie.getValue();
+                            break;
+                        }
+                    }
+
+                    if (rememberMeToken != null) {
+                        userDao dao = new userDao();
+                        User user = dao.getUserByRememberMeToken(rememberMeToken);
+                        if (user != null) {
+                            session = req.getSession(true); // Tạo session mới nếu cần
+                            session.setAttribute("userId", user.getUserId());
+                            session.setAttribute("userSession", user);
+                            userId = user.getUserId();
+                        }
+                    }
+                }
+            }
+        }
+
+        filmDao fd = new filmDao();
         List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
         List<filmDtos> newFilms = fd.getNewFilms();
         List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
-        if (userId  != null) {
+        if (userId != null) {
             List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
             List<newestEpisodeDto> watchedEpisodes = fd.getWatchedEpisodesByUserId(userId);
             req.setAttribute("favouriteFilms", favouriteFilms);

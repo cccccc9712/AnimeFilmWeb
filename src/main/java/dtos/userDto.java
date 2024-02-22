@@ -6,15 +6,25 @@ public class userDto{
     private String userPass;
     private String userGmail;
     private Boolean isAdmin;
+    private String remember_Token;
 
     public userDto() {
     }
 
-    public userDto(String userName, String userPass, String userGmail, Boolean isAdmin) {
+    public userDto(String userName, String userPass, String userGmail, Boolean isAdmin, String remember_Token) {
         this.userName = userName;
         this.userPass = userPass;
         this.userGmail = userGmail;
         this.isAdmin = isAdmin;
+        this.remember_Token = remember_Token;
+    }
+
+    public String getRemember_Token() {
+        return remember_Token;
+    }
+
+    public void setRemember_Token(String remember_Token) {
+        this.remember_Token = remember_Token;
     }
 
     public String getUserName() {
@@ -56,6 +66,7 @@ public class userDto{
                 ", userPass='" + userPass + '\'' +
                 ", userGmail='" + userGmail + '\'' +
                 ", isAdmin=" + isAdmin +
+                ", remember_Token='" + remember_Token + '\'' +
                 '}';
     }
 }

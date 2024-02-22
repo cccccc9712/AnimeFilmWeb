@@ -4,13 +4,11 @@ import dal.userDao;
 import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 @WebServlet(name = "loginControl", urlPatterns = {"/login"})
 public class loginControl extends HttpServlet {
@@ -30,6 +28,7 @@ public class loginControl extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         String mail = req.getParameter("mail");
         String password = req.getParameter("pass");
+        boolean remember = req.getParameter("remember") != null;
 
         if (!validateEmail(mail)) {
             req.setAttribute("failedLoginMessage", "Wrong email format!");
@@ -52,9 +51,19 @@ public class loginControl extends HttpServlet {
             HttpSession session = req.getSession();
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("userSession", user);
+
+            if(remember){
+                String rememberToken = UUID.randomUUID().toString();
+                dao.saveUserRememberToken(user.getUserId(), rememberToken);
+                Cookie rememberMeCookie = new Cookie("rememberMe", rememberToken);
+                rememberMeCookie.setMaxAge(30 * 24 * 60 * 60);
+                resp.addCookie(rememberMeCookie);
+            }
+            }
+
             resp.sendRedirect("home");
         }
-    }
+
 
     public static boolean validateEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";

@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="sign__group sign__group--checkbox">
-                            <input id="remember" name="remember" type="checkbox" checked="checked">
+                            <input id="remember" name="remember" type="checkbox">
                             <label for="remember">Remember Me</label>
                         </div>
 
