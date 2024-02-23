@@ -629,7 +629,7 @@
             row.addEventListener('click', function () {
                 var episodeId = this.getAttribute('data-episode-id');
                 var filmId = this.closest('.accordion__card').getAttribute('data-film-id');
-                var href = 'watching?episodeId=' + episodeId + '&filmId=' + filmId;
+                var href = 'CheckPremium?episodeId=' + episodeId + '&filmId=' + filmId;
 
                 window.location.href = href;
             });

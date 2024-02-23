@@ -7,6 +7,7 @@ public class Episode {
     private String epTittle;
     private String epLink;
     private Date epDate;
+    private Boolean isPremium;
 
     public Episode() {
     }
@@ -16,6 +17,14 @@ public class Episode {
         this.epTittle = epTittle;
         this.epLink = epLink;
         this.epDate = epDate;
+    }
+
+    public Boolean getPremium() {
+        return isPremium;
+    }
+
+    public void setPremium(Boolean premium) {
+        isPremium = premium;
     }
 
     public int getEpId() {

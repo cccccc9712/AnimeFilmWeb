@@ -65,7 +65,7 @@
                     <div class="price__item"><span>Limited Availability</span></div>
                     <div class="price__item"><span>Desktop Only</span></div>
                     <div class="price__item"><span>Limited Support</span></div>
-                    <a href="#" class="price__btn">Choose Plan</a>
+                    <a href="#" class="price__btn">Is using</a>
                 </div>
             </div>
             <!-- end price -->
@@ -79,7 +79,7 @@
                     <div class="price__item"><span>Lifetime Availability</span></div>
                     <div class="price__item"><span>TV & Desktop</span></div>
                     <div class="price__item"><span>24/7 Support</span></div>
-                    <a href="#" class="price__btn">Choose Plan</a>
+                    <a href="RegisterPremium" class="price__btn">Register</a>
                 </div>
             </div>
             <!-- end price -->
@@ -101,6 +101,12 @@
     </div>
 </div>
 <!-- end pricing -->
+
+<div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+    <c:if test="${not empty errorMessage}">
+        <div style="color: #fc4357;">${errorMessage}</div>
+    </c:if>
+</div>
 
 <!-- features -->
 <section class="section section--dark">

@@ -35,7 +35,7 @@
                         </div>
 
                         <c:if test="${not empty errorMessage}">
-                            <div style="color: red;">${errorMessage}</div>
+                            <div style="color: #fc4357;">${errorMessage}</div>
                         </c:if>
 
                         <button class="sign__btn" type="submit">Sign up</button>

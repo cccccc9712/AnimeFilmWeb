@@ -1,55 +1,18 @@
 package dtos;
 
-import java.sql.Date;
+import entity.Episode;
 
-public class episodeDtos {
-    private int epId;
-    private String epTittle;
-    private String epLink;
-    private Date epDate;
+import java.util.Date;
+
+public class episodeDtos extends Episode {
     private int filmId;
 
     public episodeDtos() {
     }
 
     public episodeDtos(int epId, String epTittle, String epLink, Date epDate, int filmId) {
-        this.epId = epId;
-        this.epTittle = epTittle;
-        this.epLink = epLink;
-        this.epDate = epDate;
+        super(epId, epTittle, epLink, epDate);
         this.filmId = filmId;
-    }
-
-    public int getEpId() {
-        return epId;
-    }
-
-    public void setEpId(int epId) {
-        this.epId = epId;
-    }
-
-    public String getEpTittle() {
-        return epTittle;
-    }
-
-    public void setEpTittle(String epTittle) {
-        this.epTittle = epTittle;
-    }
-
-    public String getEpLink() {
-        return epLink;
-    }
-
-    public void setEpLink(String epLink) {
-        this.epLink = epLink;
-    }
-
-    public Date getEpDate() {
-        return epDate;
-    }
-
-    public void setEpDate(Date epDate) {
-        this.epDate = epDate;
     }
 
     public int getFilmId() {
@@ -63,11 +26,7 @@ public class episodeDtos {
     @Override
     public String toString() {
         return "episodeDtos{" +
-                "epId=" + epId +
-                ", epTittle='" + epTittle + '\'' +
-                ", epLink='" + epLink + '\'' +
-                ", epDate=" + epDate +
-                ", filmId=" + filmId +
+                "filmId=" + filmId +
                 '}';
     }
 }

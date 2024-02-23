@@ -22,7 +22,7 @@
                             <input type="text" name="mail" class="sign__input" placeholder="Enter your email to continue">
                         </div>
 
-                        <div style="color: red">${errorMessage}</div>
+                        <div style="color: #fc4357">${errorMessage}</div>
 
                         <button class="sign__btn" type="submit">Sent code</button>
                         <span class="sign__text">Go back to <a href="SignIn.jsp">sign in!</a>?</span>

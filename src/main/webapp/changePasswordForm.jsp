@@ -26,7 +26,7 @@
                             <input type="password" name="confirmPassword" class="sign__input" placeholder="Confirm New Password">
                         </div>
 
-                        <div style="color: red">${errorMessage}</div>
+                        <div style="color: #fc4357">${errorMessage}</div>
 
                         <button class="sign__btn" type="submit">Reset password</button>
                     </form>

@@ -4,6 +4,7 @@ import dtos.userDto;
 import entity.User;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -167,10 +168,78 @@ public class userDao extends DBContext {
         }
     }
 
+    public boolean checkUserPremiumStatus(int userID) {
+        boolean isPremium = false;
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT * FROM PremiumStatus WHERE userID = ? AND outOfDate > GETDATE() AND [status] = 'active'";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                isPremium = true; // User has an active premium status that has not expired
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isPremium;
+    }
+
+    public boolean registerPremium(int userId, String premiumName, Date registeredDate, Date outOfDate) {
+        boolean registeredSuccessfully = false;
+
+        try {
+            conn = new DBContext().getConnection();
+
+            // Câu lệnh SQL để thêm người dùng vào bảng PremiumStatus
+            String sql = "INSERT INTO PremiumStatus (userID, premiumName, registeredDate, outOfDate) VALUES (?, ?, ?, ?)";
+
+            // Chuẩn bị câu lệnh SQL
+            ps = conn.prepareStatement(sql);
+
+            // Đặt các giá trị cho câu lệnh SQL
+            ps.setInt(1, userId);
+            ps.setString(2, premiumName);
+            ps.setDate(3, registeredDate);
+            ps.setDate(4, outOfDate);
+
+            // Thực thi câu lệnh SQL
+            int rowsAffected = ps.executeUpdate();
+
+            // Kiểm tra xem có hàng nào được cập nhật không
+            if (rowsAffected > 0) {
+                registeredSuccessfully = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return registeredSuccessfully;
+    }
+
     public static void main(String[] args) {
         userDao dao = new userDao();
-        User user = dao.login("user4@gmail.com", "Pass4");
-        System.out.println(user);
+        long millis = System.currentTimeMillis();
+        Date registeredDate = new Date(millis);
+        // Đặt ngày hết hạn là một tháng kể từ ngày hiện tại
+        // Lưu ý: 30 ngày * 24 giờ * 60 phút * 60 giây * 1000 millis
+        Date outOfDate = new Date(millis + (30L * 24 * 60 * 60 * 1000));
+        System.out.println(dao.registerPremium(3, "Premium",registeredDate, outOfDate ));
     }
 
 }

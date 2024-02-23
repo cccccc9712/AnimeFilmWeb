@@ -2,6 +2,7 @@ package dal;
 
 import dtos.episodeDtos;
 import dtos.seasonDtos;
+import entity.Episode;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -54,7 +55,7 @@ public class episodeDao extends DBContext{
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, filmId);
-            ps.executeUpdate(); // Sử dụng executeUpdate() để thực hiện truy vấn cập nhật
+            ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -90,21 +91,20 @@ public class episodeDao extends DBContext{
         return seasons;
     }
 
-    public List<episodeDtos> getEpisodesForSeason(int seasonId) {
-        List<episodeDtos> episodes = new ArrayList<>();
-        String sql = "SELECT episodeID, title, episodeLink, releaseDate FROM Episode WHERE seasonID = ?";
+    public List<Episode> getEpisodesForSeason(int seasonId) {
+        List<Episode> episodes = new ArrayList<>();
+        String sql = "SELECT episodeID, title, episodeLink, releaseDate, isPremium FROM Episode WHERE seasonID = ?";
         ResultSet rsLocal = null;
         try (PreparedStatement psLocal = getConnection().prepareStatement(sql)) {
             psLocal.setInt(1, seasonId);
             rsLocal = psLocal.executeQuery();
             while (rsLocal.next()) {
-                episodeDtos episode = new episodeDtos();
+                Episode episode = new Episode();
                 episode.setEpId(rsLocal.getInt("episodeID"));
                 episode.setEpTittle(rsLocal.getString("title"));
                 episode.setEpLink(rsLocal.getString("episodeLink"));
                 episode.setEpDate(rsLocal.getDate("releaseDate"));
-                // Giả sử bạn cũng muốn lưu trữ seasonID trong EpisodeDtos, bạn cần thêm thuộc tính và setter tương ứng trong class EpisodeDtos
-                // episode.setSeasonId(seasonId); // Chỉ thêm nếu có thuộc tính seasonId trong EpisodeDtos
+                episode.setPremium(rsLocal.getBoolean("isPremium"));
                 episodes.add(episode);
             }
         } catch (Exception e) {
@@ -121,12 +121,35 @@ public class episodeDao extends DBContext{
         return episodes;
     }
 
+    public boolean checkEpisodeIsPremium(int episodeId) {
+        boolean isPremium = false;
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT isPremium FROM Episode WHERE episodeID = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, episodeId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                isPremium = rs.getBoolean("isPremium");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isPremium;
+    }
+
 
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
-        List<seasonDtos> sd = d.getSeasonsForFilm("Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu");
-        for (seasonDtos a : sd){
-            System.out.println(a.toString());
-        }
+        Boolean sd = d.checkEpisodeIsPremium(64);
+            System.out.println(sd);
     }
 }

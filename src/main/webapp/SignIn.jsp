@@ -29,7 +29,7 @@
                             <label for="remember">Remember Me</label>
                         </div>
 
-                        <div style="color: red">${failedLoginMessage}</div>
+                        <div style="color: #fc4357">${failedLoginMessage}</div>
 
                         <button class="sign__btn" type="submit">Sign in</button>
 

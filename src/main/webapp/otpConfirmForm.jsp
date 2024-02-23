@@ -23,7 +23,7 @@
                             <input type="text" name="code" class="sign__input" placeholder="OTP Code Verification">
                         </div>
 
-                        <div style="color: red">${errorMessage}</div>
+                        <div style="color: #fc4357">${errorMessage}</div>
 
                         <button class="sign__btn" type="submit">Submit code</button>
                         <span class="sign__text">Go back to <a href="SignIn.jsp">sign in!</a>?</span>

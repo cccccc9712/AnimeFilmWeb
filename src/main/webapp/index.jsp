@@ -107,20 +107,18 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab"
                                                         href="#tab-1" role="tab" aria-controls="tab-1"
-                                                        aria-selected="true">NEW
-                                    RELEASES</a></li>
+                                                        aria-selected="true">New Episode</a></li>
 
                                 <li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"
                                                         role="tab" aria-controls="tab-2"
-                                                        aria-selected="false">MOVIES</a></li>
+                                                        aria-selected="false">Trending</a></li>
 
                                 <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
-                                                        role="tab" aria-controls="tab-3" aria-selected="false">TV
-                                    SERIES</a></li>
+                                                        role="tab" aria-controls="tab-3" aria-selected="false">Favourite</a></li>
 
                                 <li class="nav-item"><a class="nav-link" id="4-tab" data-toggle="tab" href="#tab-4"
                                                         role="tab" aria-controls="tab-4"
-                                                        aria-selected="false">CARTOONS</a></li>
+                                                        aria-selected="false">Just Watched</a></li>
                             </ul>
                         </div>
                     </div>
@@ -236,8 +234,8 @@
                                                 <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
                                             </c:forEach>
                                         </span>
-                                                    <span class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
                                                     <span class="card__rate"><i class="icon ion-ios-star"></i>${favouriteFilm.ratingValue}</span>
+                                                    <span class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
                                                 </div>
                                             </div>
                                         </div>
