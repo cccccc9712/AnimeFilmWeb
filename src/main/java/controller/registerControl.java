@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java_api.gmailVerify_api;
 
 import java.io.IOException;
 import java.util.Random;
@@ -45,13 +46,21 @@ public class registerControl extends HttpServlet {
         if ("on".equals(agree)) {
             if (!ud.checkEmailExists(email)) {
                 if (password.equals(cfPassword)) {
-                    String username = generateUsername(email);
-                    boolean checked = ud.registerUser(new userDto(username, password, email, false));
-                    if (checked) {
-                        resp.sendRedirect("SignIn.jsp");
+                    User user = new User();
+                    user.setUserGmail(email);
+                    gmailVerify_api gmailApi = new gmailVerify_api();
+                    String verificationCode = gmailApi.getRandom();
+                    boolean emailSent = gmailApi.sendEmail(user, verificationCode);
+                    if(emailSent) {
+                        req.getSession().setAttribute("isRegister", true);
+                        req.getSession().setAttribute("userEmail", email);
+                        req.getSession().setAttribute("password", password);
+                        req.getSession().setAttribute("verificationCode", verificationCode);
+                        resp.sendRedirect("otpConfirmForm.jsp");
                     } else {
-                        req.setAttribute("errorMessage", "Sign up successfully!");
+                        req.setAttribute("errorMessage", "Failed to send verification email. Please try again.");
                         req.getRequestDispatcher("SignUp.jsp").forward(req, resp);
+                        return;
                     }
                 }else {
                     req.setAttribute("errorMessage", "Please enter correct confirm password");
@@ -67,16 +76,6 @@ public class registerControl extends HttpServlet {
         }
     }
 
-    private static String generateUsername(String email) {
-        String namePart = email.split("@")[0];
-
-        Random random = new Random();
-        int randomNumber = 1000 + random.nextInt(9000);
-
-        String username = namePart + randomNumber;
-
-        return username;
-    }
 
     public static boolean validateEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
