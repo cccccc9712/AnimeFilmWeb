@@ -79,7 +79,7 @@
                     <div class="price__item"><span>Lifetime Availability</span></div>
                     <div class="price__item"><span>TV & Desktop</span></div>
                     <div class="price__item"><span>24/7 Support</span></div>
-                    <a href="RegisterPremium" class="price__btn">Register</a>
+                    <a href="#" class="price__btn" id="registerButton">Register</a>
                 </div>
             </div>
             <!-- end price -->
@@ -194,5 +194,43 @@
 <!-- JS -->
 
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var registerButton = document.getElementById("registerButton");
+
+        registerButton.addEventListener("click", function(event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của nút "Register"
+
+            var bankCode = "NCB"; // Mã ngân hàng của Techcombank
+            var amount = "20000"; // Số tiền thanh toán
+
+            // Tạo đối tượng XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+
+            // Xác định phương thức và URL của servlet ajaxServlet
+            xhr.open("POST", "/AnimeFilmWeb/vnpayajax", true);
+
+            // Thiết lập tiêu đề của yêu cầu
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // Xử lý khi nhận được phản hồi từ servlet
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.code === "00") {
+                        // Nếu thành công, chuyển hướng người dùng đến URL thanh toán
+                        window.location.href = response.data;
+                    } else {
+                        // Nếu không thành công, hiển thị thông báo lỗi
+                        alert("Error: " + response.message);
+                    }
+                }
+            };
+
+            // Gửi yêu cầu đến servlet với các tham số cần thiết
+            xhr.send("bankCode=" + bankCode + "&amount=" + amount);
+        });
+    });
+</script>
 
 </html>

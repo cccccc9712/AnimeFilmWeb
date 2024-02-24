@@ -289,7 +289,7 @@
                                         <c:forEach items="${cmt}" var="comment">
                                             <li class="comments__item">
                                                 <div class="comments__autor">
-                                                    <img class="comments__avatar" src="img/user.png" alt="">
+                                                    <img class="comments__avatar" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="">
                                                     <span class="comments__name">${comment.userName}</span>
                                                     <span class="comments__time">${comment.commentDate}</span>
                                                 </div>
@@ -326,7 +326,7 @@
                                                     <c:forEach items="${comment.replies}" var="reply" varStatus="status">
                                                         <li class="${status.index >= 2 ? 'hidden comments__item comments__item--answer' : 'comments__item comments__item--answer'}" style="margin-top: 20px">
                                                         <div class="comments__autor">
-                                                                <img class="comments__avatar" src="img/user.png" alt="">
+                                                                <img class="comments__avatar" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="">
                                                                 <span class="comments__name">${reply.userName}</span>
                                                                 <span class="comments__time">${reply.commentDate}</span>
                                                             </div>
