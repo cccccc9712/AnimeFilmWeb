@@ -75,7 +75,7 @@ public class filmDao extends DBContext {
                 "    GROUP BY\n" +
                 "        filmID\n" +
                 ")\n" +
-                "SELECT TOP (5) f.*, ra.averageRating\n" +
+                "SELECT TOP (7) f.*, ra.averageRating\n" +
                 "FROM Film f\n" +
                 "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
                 "ORDER BY f.filmID DESC;";

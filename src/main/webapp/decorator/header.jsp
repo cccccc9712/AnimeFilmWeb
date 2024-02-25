@@ -1,5 +1,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- header -->
+<style>
+
+    @media (max-width: 768px) {
+        .header__logo img {
+            max-height: 50px; /* Chiều cao nhỏ hơn trên thiết bị di động */
+        }
+        .header__content a{
+            padding: 0px;
+        }
+    }
+
+
+</style>
 <header class="header">
     <div class="header__wrap">
         <div class="container">
@@ -7,7 +20,7 @@
                 <div class="col-12">
                     <div class="header__content">
                         <!-- header logo -->
-                        <a href="home" class="">
+                        <a href="home" class="header__logo">
                             <img style="width: auto; height: 90px; border-radius: 10px" src="img/LOgo%20(1).png" alt="">
                         </a>
                         <!-- end header logo -->

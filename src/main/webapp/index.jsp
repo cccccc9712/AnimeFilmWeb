@@ -30,7 +30,7 @@
                         <div class="item">
                             <!-- card -->
                             <div class="card card--big">
-                                <div style="" class="card__cover">
+                                <div class="card__cover">
                                     <img id="newFilm" src="${newFilm.imageLink}" alt="${newFilm.filmName}">
                                     <a href="detail?filmName=${newFilm.filmName}" class="card__play">
                                         <i class="icon ion-ios-play"></i>
@@ -67,7 +67,7 @@
             <div class="row">
                 <div class="col-12">
                     <!-- content title -->
-                    <h2 class="content__title">New items</h2>
+                    <h2 class="content__title">Item tabs</h2>
                     <!-- end content title -->
 
                     <!-- content tabs nav -->
@@ -158,6 +158,9 @@
                     </c:forEach>
                     <!-- end card -->
                 </div>
+                <div class="col-12">
+                    <a href="category" class="section__btn">Show more</a>
+                </div>
             </div>
 
             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab-tab">
@@ -208,6 +211,9 @@
                         </div>
                     </c:forEach>
                 </div>
+                <div class="col-12">
+                    <a href="category" class="section__btn">Show more</a>
+                </div>
             </div>
 
 
@@ -235,7 +241,7 @@
                                             </c:forEach>
                                         </span>
                                                     <span class="card__rate"><i class="icon ion-ios-star"></i>${favouriteFilm.ratingValue}</span>
-                                                    <span class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
+                                                    <span style="margin-left: 5px" class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -315,6 +321,7 @@
         </div>
         <!-- end content tabs -->
     </div>
+
 </section>
 <!-- end content -->
 

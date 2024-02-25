@@ -21,7 +21,7 @@
       <div class="col-12">
         <div class="section__wrap">
           <!-- section title -->
-          <h2 class="section__title">Categories</h2>
+          <h2 class="section__title">All films</h2>
           <!-- end section title -->
 
           <!-- breadcrumb -->

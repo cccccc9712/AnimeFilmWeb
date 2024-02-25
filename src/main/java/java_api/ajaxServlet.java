@@ -41,12 +41,6 @@ public class ajaxServlet extends HttpServlet {
         User user = (User) session.getAttribute("userSession");
         userDao ud = new userDao();
 
-        if (ud.checkUserPremiumStatus(user.getUserId())) {
-            req.setAttribute("message", "You are already a premium.");
-            req.getRequestDispatcher("pricing.jsp").forward(req, resp);
-            return;
-        }
-
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
