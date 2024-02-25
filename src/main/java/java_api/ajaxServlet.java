@@ -7,10 +7,13 @@ package java_api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import dal.userDao;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,11 +37,21 @@ public class ajaxServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("userSession");
+        userDao ud = new userDao();
+
+        if (ud.checkUserPremiumStatus(user.getUserId())) {
+            req.setAttribute("message", "You are already a premium.");
+            req.getRequestDispatcher("pricing.jsp").forward(req, resp);
+            return;
+        }
+
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        long amount = Integer.parseInt(req.getParameter("amount"))*100;
-        String bankCode = req.getParameter("bankCode");
+        long amount = 20000*100;
+        String bankCode = "NCB";
 
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_IpAddr = Config.getIpAddress(req);
