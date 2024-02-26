@@ -42,7 +42,7 @@
 <!-- header -->
 <%@include file="decorator/header.jsp" %>
 <!-- end header -->
-<c:set var="maxPagesToShow" value="5"/> <!-- Giả sử bạn muốn hiển thị tối đa 5 trang -->
+<c:set var="maxPagesToShow" value="4"/> <!-- Giả sử bạn muốn hiển thị tối đa 5 trang -->
 <c:set var="pageStart" value="${currentPage - (maxPagesToShow div 2)}"/>
 <c:set var="pageEnd" value="${pageStart + maxPagesToShow - 1}"/>
 
@@ -259,13 +259,13 @@
                                                         href="#tab-1" role="tab" aria-controls="tab-1"
                                                         aria-selected="true">Comments</a></li>
 
-                                <li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"
-                                                        role="tab" aria-controls="tab-2"
-                                                        aria-selected="false">Reviews</a></li>
+<%--                                <li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"--%>
+<%--                                                        role="tab" aria-controls="tab-2"--%>
+<%--                                                        aria-selected="false">Reviews</a></li>--%>
 
-                                <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
-                                                        role="tab" aria-controls="tab-3"
-                                                        aria-selected="false">Photos</a></li>
+<%--                                <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"--%>
+<%--                                                        role="tab" aria-controls="tab-3"--%>
+<%--                                                        aria-selected="false">Photos</a></li>--%>
                             </ul>
                         </div>
                     </div>

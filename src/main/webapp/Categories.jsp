@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="maxPagesToShow" value="5"/>
+<c:set var="maxPagesToShow" value="4"/>
 <c:set var="pageStart" value="${(currentPage - (maxPagesToShow div 2)) > 0 ? (currentPage - (maxPagesToShow div 2)) : 1}"/>
 <c:set var="pageEnd" value="${(pageStart + (maxPagesToShow - 1)) < noOfPages ? (pageStart + (maxPagesToShow - 1)) : noOfPages}"/>
 

@@ -1,16 +1,16 @@
+<%@ page import="entity.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- header -->
 <style>
 
     @media (max-width: 768px) {
         .header__logo img {
-            max-height: 50px; /* Chiều cao nhỏ hơn trên thiết bị di động */
+            max-height: 50px;
         }
         .header__content a{
             padding: 0px;
         }
     }
-
 
 </style>
 <header class="header">
@@ -27,12 +27,10 @@
 
                         <!-- header nav -->
                         <ul class="header__nav">
-
                             <!-- dropdown -->
                             <li class="header__nav-item">
                                 <a class="dropdown-toggle header__nav-link" href="category" role="button"
                                     >All films</a>
-
 <%--                                <ul class="dropdown-menu header__dropdown-menu"--%>
 <%--                                    aria-labelledby="dropdownMenuCatalog">--%>
 <%--                                    <li><a href="Categories.jsp">Catalog List</a></li>--%>
@@ -64,6 +62,15 @@
                         </ul>
                         <!-- end header nav -->
 
+                        <%
+                            User user = (User) session.getAttribute("userSession");
+                            Boolean isAdmin = false;
+                            if(user != null){
+                                isAdmin = user.getAdmin();
+                                request.setAttribute("isAdmin", isAdmin);
+                            }
+                        %>
+
                         <!-- header auth -->
                         <div class="header__auth">
                             <button class="header__search-btn" type="button">
@@ -73,10 +80,16 @@
                             <c:choose>
                                 <c:when test="${sessionScope.userSession != null}">
                                     <li class="dropdown header__nav-item">
-                                        <a class="dropdown-toggle header__nav-link" style="margin-left: 40px" href="#" role="button" id="dropdownUser" data-toggle="dropdown"><i class="fa-solid fa-user" style="color: #ffffff;margin-right: 10px"></i>${sessionScope.userSession.getUserName()}</a>
-
+                                        <a class="dropdown-toggle header__nav-link" style="margin-left: 40px" href="#" role="button" id="dropdownUser" data-toggle="dropdown"><i class="fas fa-user" style="color: #ffffff;margin-right: 10px"></i>${sessionScope.userSession.getUserName()}</a>
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownUser">
-                                            <li><a href="#">View profile</a></li>
+                                            <c:choose>
+                                                <c:when test="${not isAdmin}">
+                                                    <li><a href="#">View profile</a></li>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <li><a href="#">Dashboard</a></li>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <a href="${pageContext.request.contextPath}/logout">Logout</a>
                                         </ul>
                                     </li>

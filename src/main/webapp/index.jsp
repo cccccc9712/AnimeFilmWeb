@@ -290,9 +290,9 @@
                                                             href="watching?episodeId=${watchedEpisodes.epId}&filmId=${watchedEpisodes.filmId}">${watchedEpisodes.filmName}</a>
                                                     </h3>
                                                     <span class="card__category">
-                                    <a>${watchedEpisodes.epTittle}</a>
-                                    <a>${watchedEpisodes.seasonName}</a>
-                                </span>
+                                                    <a>${watchedEpisodes.epTittle}</a>
+                                                    <a>${watchedEpisodes.seasonName}</a>
+                                                </span>
                                                 </div>
                                             </div>
                                         </div>

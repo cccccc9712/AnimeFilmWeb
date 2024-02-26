@@ -63,7 +63,6 @@
             <!-- end price -->
 
             <%
-                User user = (User) session.getAttribute("userSession");
                 userDao ud = new userDao();
                 if (user != null) {
                     Boolean isPremium = ud.checkUserPremiumStatus(user.getUserId());
