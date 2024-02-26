@@ -202,8 +202,56 @@ public class commentDao extends DBContext {
         }
     }
 
+    public boolean deleteComment(int commentID) {
+        String sql = "DELETE FROM Comments WHERE commentID = ?";
+        try {
+            conn = getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, commentID);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false; // Mặc định trả về false nếu có lỗi xảy ra
+    }
+
+    public boolean canDeleteComment(int commentID, int userID) {
+        String sql = "SELECT userID FROM Comments WHERE commentID = ?";
+        try {
+            conn = getConnection(); // Sử dụng getConnection() từ DBContext
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, commentID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int ownerUserID = rs.getInt("userID");
+                return ownerUserID == userID;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false; // Mặc định trả về false nếu không tìm thấy bình luận hoặc có lỗi xảy ra
+    }
+
+
+
     public static void main(String[] args) {
         commentDao cmd = new commentDao();
-        cmd.saveReply("Hay qua", 3, 20, 7);
+        cmd.deleteComment(2);
     }
 }
