@@ -2621,11 +2621,9 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
 }
 .comments__rate button:last-child i {
   margin-left: 6px;
-  color: #c22b3c;
 }
 .comments__rate button:first-child i {
   margin-right: 6px;
-  color: #0cb457;
 }
 .comments__rate button:first-child:before {
   content: '';

@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="./css/plyr.css" type="text/css">
         <link rel="stylesheet" href="./css/photoswipe.css" type="text/css">
         <link rel="stylesheet" href="./css/default-skin.css" type="text/css">
-        <link rel="stylesheet" href="./css/main.css?v=1.2" type="text/css">
+        <link rel="stylesheet" href="./css/main.css?v=1.4" type="text/css">
         <link rel="stylesheet" href=".https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
             integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
             crossorigin="anonymous" referrerpolicy="no-referrer" /><!-- Favicons -->

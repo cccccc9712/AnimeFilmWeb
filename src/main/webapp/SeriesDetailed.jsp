@@ -32,9 +32,42 @@
     .show-more, .show-less {
         font-size: 24px; /* Hoặc bất kỳ giá trị nào bạn muốn */
         color: honeydew; /* Màu cho icon show-less */
-        margin: 0 0 0 55px ;
+        margin: 0 0 0 55px;
     }
 
+    /* Style The Dropdown Button */
+    .dropbtnMORE {
+        color: white;
+        padding: 10px;
+        font-size: 14px;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* The container <div> - needed to position the dropdown content */
+    .dropdownMORE {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-contentMORE {
+        display: none;
+        position: absolute;
+        background-color: #2b2b31;
+        min-width: 80px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        transition: opacity 0.5s ease;
+    }
+
+    /* Links inside the dropdown */
+    .dropdown-contentMORE a, .dropdown-contentMORE button {
+        color: whitesmoke;
+        padding: 8px 12px;
+        text-decoration: none;
+        display: block;
+    }
 
 </style>
 <body class="body">
@@ -105,7 +138,8 @@
                                         <input type="hidden" name="filmId" value="${film.filmID}">
                                         <input type="hidden" name="filmName" value="${film.filmName}">
                                         <button type="submit" style="font-size:26px; margin-left: 20px">
-                                            <i class="fa ${isFavourite ? 'fa-bookmark' : 'fa-bookmark-o'}" style="color: ${isFavourite ? 'yellow' : 'inherit'};"></i>
+                                            <i class="fa ${isFavourite ? 'fa-bookmark' : 'fa-bookmark-o'}"
+                                               style="color: ${isFavourite ? 'yellow' : 'inherit'};"></i>
                                         </button>
                                     </form>
 
@@ -259,13 +293,13 @@
                                                         href="#tab-1" role="tab" aria-controls="tab-1"
                                                         aria-selected="true">Comments</a></li>
 
-<%--                                <li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"--%>
-<%--                                                        role="tab" aria-controls="tab-2"--%>
-<%--                                                        aria-selected="false">Reviews</a></li>--%>
+                                <%--                                <li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2"--%>
+                                <%--                                                        role="tab" aria-controls="tab-2"--%>
+                                <%--                                                        aria-selected="false">Reviews</a></li>--%>
 
-<%--                                <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"--%>
-<%--                                                        role="tab" aria-controls="tab-3"--%>
-<%--                                                        aria-selected="false">Photos</a></li>--%>
+                                <%--                                <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"--%>
+                                <%--                                                        role="tab" aria-controls="tab-3"--%>
+                                <%--                                                        aria-selected="false">Photos</a></li>--%>
                             </ul>
                         </div>
                     </div>
@@ -289,12 +323,47 @@
                                         <c:forEach items="${cmt}" var="comment">
                                             <li class="comments__item">
                                                 <div class="comments__autor">
-                                                    <img class="comments__avatar" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="">
+                                                    <img class="comments__avatar"
+                                                         src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
+                                                         alt="">
                                                     <span class="comments__name">${comment.userName}</span>
                                                     <span class="comments__time">${comment.commentDate}</span>
                                                 </div>
                                                 <p class="comments__text">${comment.commentText}</p>
+
+                                                <div id="editForm${comment.commentID}" style="display:none;">
+                                                    <form class="form"
+                                                          action="${pageContext.request.contextPath}/editComment"
+                                                          method="post">
+                                                        <textarea class="form__textarea" name="commentText"
+                                                                  required>${comment.commentText}</textarea>
+                                                        <input type="hidden" name="commentID"
+                                                               value="${comment.commentID}"/>
+                                                        <button type="submit" style="color: whitesmoke">Update</button>
+                                                        <button type="button"
+                                                                style="color: whitesmoke; margin-left: 5px"
+                                                                onclick="closeEditForm('${comment.commentID}')">Cancel
+                                                        </button>
+                                                    </form>
+                                                </div>
+
                                                 <div class="comments__actions">
+                                                    <div class="comments__rate">
+                                                        <div class="dropdownMORE">
+                                                            <c:if test="${comment.userID == sessionScope.userSession.userId}">
+                                                                <button class="dropbtnMORE"><i
+                                                                        class="icon ion-ios-more"></i></button>
+                                                                <div class="dropdown-contentMORE">
+                                                                    <button type="button"
+                                                                            onclick="showEditForm('${comment.commentID}')">
+                                                                        Edit
+                                                                    </button>
+                                                                    <a href="deleteComment?commentID=${comment.commentID}&filmName=${film.filmName}&page=${currentPage}">Delete</a>
+                                                                </div>
+                                                            </c:if>
+                                                        </div>
+                                                    </div>
+
                                                     <c:choose>
                                                         <c:when test="${not empty sessionScope.userSession}">
                                                             <button type="button"
@@ -307,6 +376,8 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
+
+                                                    <%--input reply for comment--%>
                                                 <div id="replyForm${comment.commentID}" style="display:none;">
                                                     <form class="form" action="${pageContext.request.contextPath}/reply"
                                                           method="post">
@@ -322,20 +393,102 @@
                                                         </button>
                                                     </form>
                                                 </div>
+
+                                                    <%--show reply--%>
                                                 <ul class="comments__replies">
-                                                    <c:forEach items="${comment.replies}" var="reply" varStatus="status">
-                                                        <li class="${status.index >= 2 ? 'hidden comments__item comments__item--answer' : 'comments__item comments__item--answer'}" style="margin-top: 20px">
-                                                        <div class="comments__autor">
-                                                                <img class="comments__avatar" src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg" alt="">
+                                                    <c:forEach items="${comment.replies}" var="reply"
+                                                               varStatus="status">
+                                                        <li class="${status.index >= 2 ? 'hidden comments__item comments__item--answer' : 'comments__item comments__item--answer'}"
+                                                            style="margin-top: 20px">
+                                                            <div class="comments__autor">
+                                                                <img class="comments__avatar"
+                                                                     src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg"
+                                                                     alt="">
                                                                 <span class="comments__name">${reply.userName}</span>
                                                                 <span class="comments__time">${reply.commentDate}</span>
                                                             </div>
                                                             <p class="comments__text">${reply.commentText}</p>
+
+                                                                <%--edit reply--%>
+                                                            <div id="editForm${reply.commentID}"
+                                                                 style="display:none;">
+                                                                <form class="form"
+                                                                      action="${pageContext.request.contextPath}/editComment"
+                                                                      method="post">
+                                                        <textarea class="form__textarea" name="commentText"
+                                                                  required>${reply.commentText}</textarea>
+                                                                    <input type="hidden" name="commentID"
+                                                                           value="${comment.commentID}"/>
+                                                                    <button type="submit" style="color: whitesmoke">
+                                                                        Update
+                                                                    </button>
+                                                                    <button type="button"
+                                                                            style="color: whitesmoke; margin-left: 5px"
+                                                                            onclick="closeEditForm('${reply.commentID}')">
+                                                                        Cancel
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+
+                                                                <%--reply action--%>
+                                                            <div class="comments__actions">
+                                                                <div class="comments__rate">
+                                                                    <div class="dropdownMORE">
+                                                                        <c:if test="${reply.userID == sessionScope.userSession.userId}">
+                                                                            <button class="dropbtnMORE"><i
+                                                                                    class="icon ion-ios-more"></i>
+                                                                            </button>
+                                                                            <div class="dropdown-contentMORE">
+                                                                                <button type="button"
+                                                                                        onclick="showEditForm('${reply.commentID}')">
+                                                                                    Edit
+                                                                                </button>
+                                                                                <a href="deleteComment?commentID=${reply.commentID}&filmName=${film.filmName}">Delete</a>
+                                                                            </div>
+                                                                        </c:if>
+                                                                    </div>
+                                                                </div>
+
+                                                                <c:choose>
+                                                                    <c:when test="${not empty sessionScope.userSession}">
+                                                                        <button type="button"
+                                                                                onclick="showReplyForm('${reply.commentID}');">
+                                                                            <i class="icon ion-ios-share-alt"></i>Reply
+                                                                        </button>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <button>Sign in to reply</button>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+
+                                                                <%--input reply for reply--%>
+                                                            <div id="replyForm${reply.commentID}" style="display:none;">
+                                                                <form class="form"
+                                                                      action="${pageContext.request.contextPath}/reply"
+                                                                      method="post">
+                                                        <textarea style="height: 50px" class="form__textarea"
+                                                                  name="replyText" required
+                                                                  placeholder="Type your reply here...">@${reply.userName} </textarea>
+                                                                    <input type="hidden" name="parentCommentID"
+                                                                           value="${comment.commentID}"/>
+                                                                    <input type="hidden" name="filmID"
+                                                                           value="${film.filmID}"/>
+                                                                    <input type="hidden" name="filmName"
+                                                                           value="${film.filmName}"/>
+                                                                    <button style="height: 20px; width: 60px"
+                                                                            type="submit"
+                                                                            class="form__btn">Reply
+                                                                    </button>
+                                                                </form>
+                                                            </div>
                                                         </li>
                                                     </c:forEach>
                                                     <c:if test="${fn:length(comment.replies) > 2}">
-                                                        <button class="show-more fas fa-angle-down" data-comment-id="${comment.commentID}"></button>
-                                                        <button class="show-less fas fa-angle-up" style="display:none;" data-comment-id="${comment.commentID}"></button>
+                                                        <button class="show-more fas fa-angle-down"
+                                                                data-comment-id="${comment.commentID}"></button>
+                                                        <button class="show-less fas fa-angle-up" style="display:none;"
+                                                                data-comment-id="${comment.commentID}"></button>
                                                     </c:if>
                                                 </ul>
                                             </li>
@@ -345,27 +498,29 @@
 
                                 <!-- Comments paginator -->
                                 <c:if test="${totalComments > 0}">
-                                <div class="col-12">
-                                    <ul class="paginator paginator--list">
-                                        <c:if test="${currentPage > 1}">
-                                            <li class="paginator__item paginator__item--prev">
-                                                <a href="detail?filmName=${film.filmName}&page=${currentPage - 1}"><i
-                                                        class="icon ion-ios-arrow-back"></i></a>
-                                            </li>
-                                        </c:if>
-                                        <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
-                                            <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
-                                                <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
-                                            </li>
-                                        </c:forEach>
-                                        <c:if test="${currentPage < totalPages}">
-                                            <li class="paginator__item paginator__item--next">
-                                                <a href="detail?filmName=${film.filmName}&page=${currentPage + 1}"><i
-                                                        class="icon ion-ios-arrow-forward"></i></a>
-                                            </li>
-                                        </c:if>
-                                    </ul>
-                                </div>
+                                    <div class="col-12">
+                                        <ul class="paginator paginator--list">
+                                            <c:if test="${currentPage > 1}">
+                                                <li class="paginator__item paginator__item--prev">
+                                                    <a href="detail?filmName=${film.filmName}&page=${1}"><i
+                                                            class="icon ion-ios-arrow-back"></i><i
+                                                            class="icon ion-ios-arrow-back"></i></a>
+                                                </li>
+                                            </c:if>
+                                            <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
+                                                <li class="paginator__item ${i == currentPage ? 'paginator__item--active' : ''}">
+                                                    <a href="detail?filmName=${film.filmName}&page=${i}">${i}</a>
+                                                </li>
+                                            </c:forEach>
+                                            <c:if test="${currentPage < totalPages}">
+                                                <li class="paginator__item paginator__item--next">
+                                                    <a href="detail?filmName=${film.filmName}&page=${totalPages}"><i
+                                                            class="icon ion-ios-arrow-forward"></i><i
+                                                            class="icon ion-ios-arrow-forward"></i></a>
+                                                </li>
+                                            </c:if>
+                                        </ul>
+                                    </div>
                                 </c:if>
                                 <!-- End paginator -->
 
@@ -613,7 +768,7 @@
         }
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var rateDiv = document.querySelector('.rate');
         var userRating = rateDiv.getAttribute('data-user-rating');
         if (userRating) {
@@ -650,7 +805,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         // Xử lý Show More
         document.querySelectorAll('.show-more').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 var hiddenReplies = this.parentElement.querySelectorAll('.hidden');
                 hiddenReplies.forEach((reply, index) => {
                     if (index < 2) {
@@ -665,23 +820,72 @@
             });
         });
 
-    // Xử lý Show Less
-    document.querySelectorAll('.show-less').forEach(button => {
-        button.addEventListener('click', function() {
-            var replies = this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)');
-            replies.forEach((reply, index) => {
-                if (index >= 2) { // Giả sử bạn muốn ẩn 2 phản hồi mỗi lần nhấn Show Less
-                    reply.classList.add('hidden');
+        // Xử lý Show Less
+        document.querySelectorAll('.show-less').forEach(button => {
+            button.addEventListener('click', function () {
+                var replies = this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)');
+                replies.forEach((reply, index) => {
+                    if (index >= 2) { // Giả sử bạn muốn ẩn 2 phản hồi mỗi lần nhấn Show Less
+                        reply.classList.add('hidden');
+                    }
+                });
+
+                if (this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)').length <= 2) {
+                    this.style.display = 'none'; // Ẩn nút Show Less nếu số lượng phản hồi hiển thị như ban đầu
                 }
+
+                this.previousElementSibling.style.display = ''; // Hiển thị lại nút Show More
             });
-
-            if (this.parentElement.querySelectorAll('.comments__item.comments__item--answer:not(.hidden)').length <= 2) {
-                this.style.display = 'none'; // Ẩn nút Show Less nếu số lượng phản hồi hiển thị như ban đầu
-            }
-
-            this.previousElementSibling.style.display = ''; // Hiển thị lại nút Show More
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Gắn sự kiện click lên container chứa cả comment và reply
+        var commentsContainer = document.querySelector('.comments'); // Thay đổi selector nếu cần
+        if (commentsContainer) {
+            commentsContainer.addEventListener('click', function (event) {
+                var target = event.target;
+                // Tìm button dropdown trong phần tử hiện tại hoặc phần tử cha
+                var dropBtn = target.closest('.dropbtnMORE');
+
+                if (dropBtn) {
+                    // Ngăn chặn sự kiện lan truyền
+                    event.stopPropagation();
+
+                    // Logic mở/toggle dropdown
+                    var dropdownContent = dropBtn.nextElementSibling;
+                    var isOpen = dropdownContent.style.display === 'block';
+                    closeAllDropdowns(); // Đóng tất cả dropdown trước khi toggle
+                    dropdownContent.style.display = isOpen ? 'none' : 'block';
+                } else {
+                    // Đóng tất cả dropdown khi click ngoài
+                    closeAllDropdowns();
+                }
+            });
+        }
+
+        // Hàm đóng tất cả dropdown
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-contentMORE').forEach(function (content) {
+                content.style.display = 'none';
+            });
+        }
     });
+
+    function showEditForm(commentID) {
+        var editForm = document.getElementById('editForm' + commentID);
+        if (editForm.style.display === 'none' || replyForm.style.display === '') {
+            editForm.style.display = 'block';
+        }
+    }
+
+    function closeEditForm(commentID) {
+        var editForm = document.getElementById('editForm' + commentID);
+        if (editForm.style.display === 'block' || editForm.style.display === '') {
+            editForm.style.display = 'none';
+        }
+    }
+
+
 </script>
 </html>
