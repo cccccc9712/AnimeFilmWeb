@@ -885,7 +885,5 @@
             editForm.style.display = 'none';
         }
     }
-
-
 </script>
 </html>
