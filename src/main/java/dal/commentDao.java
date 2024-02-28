@@ -59,6 +59,7 @@ public class commentDao extends DBContext {
                         null, // parentCommentID luôn null vì đây là comment chính
                         rs.getString("userName")
                 );
+                comment.setEdited(rs.getBoolean("isEdited"));
                 comments.add(comment);
             }
         } catch (Exception e) {
@@ -78,7 +79,7 @@ public class commentDao extends DBContext {
 
     public List<commentDto> getRepliesByCommentId(int commentID) {
         List<commentDto> replies = new ArrayList<>();
-        String sql = "SELECT c.commentID, c.filmID, c.userID, c.commentText, c.commentDate, c.parentCommentID, u.userName " +
+        String sql = "SELECT c.commentID, c.filmID, c.userID, c.commentText, c.commentDate, c.parentCommentID, c.isEdited ,u.userName " +
                 "FROM Comments c " +
                 "JOIN [User] u ON c.userID = u.userID " +
                 "WHERE c.parentCommentID = ? " + // Lấy replies dựa trên parentCommentID
@@ -98,6 +99,7 @@ public class commentDao extends DBContext {
                         rs.getInt("parentCommentID"), // Đây là reply, nên có parentCommentID
                         rs.getString("userName")
                 );
+                reply.setEdited(rs.getBoolean("isEdited"));
                 replies.add(reply);
             }
         } catch (Exception e) {
@@ -135,6 +137,7 @@ public class commentDao extends DBContext {
                         null, // Giả sử bạn không lấy parentCommentID ở đây hoặc bạn có thể thêm nếu cần
                         rs.getString("userName")
                 );
+                comment.setEdited(rs.getBoolean("isEdited"));
                 comments.add(comment);
             }
         } catch (Exception e) {
@@ -245,9 +248,32 @@ public class commentDao extends DBContext {
                 ex.printStackTrace();
             }
         }
-        return false; // Mặc định trả về false nếu không tìm thấy bình luận hoặc có lỗi xảy ra
+        return false;
     }
 
+    public boolean editComment(int commentID, String newCommentText) {
+        String sql = "UPDATE Comments " +
+                "SET commentText = ?, isEdited = 1 " +
+                "WHERE commentID = ?;";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, newCommentText);
+            ps.setInt(2, commentID);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
 
     public static void main(String[] args) {

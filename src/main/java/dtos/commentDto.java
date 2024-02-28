@@ -7,7 +7,6 @@ import java.util.List;
 
 public class commentDto extends Comment {
     private String userName;
-
     private List<commentDto> replies;
 
     public commentDto() {

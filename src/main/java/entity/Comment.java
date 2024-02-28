@@ -10,6 +10,7 @@ public class Comment {
     private String commentText;
     private Timestamp commentDate;
     private Integer parentCommentID;
+    private boolean isEdited;
 
     public Comment() {
     }
@@ -21,6 +22,14 @@ public class Comment {
         this.commentText = commentText;
         this.commentDate = commentDate;
         this.parentCommentID = parentCommentID;
+    }
+
+    public boolean isEdited() {
+        return isEdited;
+    }
+
+    public void setEdited(boolean edited) {
+        isEdited = edited;
     }
 
     public int getCommentID() {

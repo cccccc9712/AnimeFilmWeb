@@ -333,12 +333,14 @@
 
                                                 <div id="editForm${comment.commentID}" style="display:none;">
                                                     <form class="form"
-                                                          action="${pageContext.request.contextPath}/editComment"
+                                                          action="updateComment"
                                                           method="post">
                                                         <textarea class="form__textarea" name="commentText"
                                                                   required>${comment.commentText}</textarea>
                                                         <input type="hidden" name="commentID"
                                                                value="${comment.commentID}"/>
+                                                        <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                                        <input type="hidden" name="page" value="${currentPage}"/>
                                                         <button type="submit" style="color: whitesmoke">Update</button>
                                                         <button type="button"
                                                                 style="color: whitesmoke; margin-left: 5px"
@@ -413,12 +415,14 @@
                                                             <div id="editForm${reply.commentID}"
                                                                  style="display:none;">
                                                                 <form class="form"
-                                                                      action="${pageContext.request.contextPath}/editComment"
+                                                                      action="updateComment"
                                                                       method="post">
                                                         <textarea class="form__textarea" name="commentText"
                                                                   required>${reply.commentText}</textarea>
                                                                     <input type="hidden" name="commentID"
-                                                                           value="${comment.commentID}"/>
+                                                                           value="${reply.commentID}"/>
+                                                                    <input type="hidden" name="filmName" value="${film.filmName}"/>
+                                                                    <input type="hidden" name="page" value="${currentPage}"/>
                                                                     <button type="submit" style="color: whitesmoke">
                                                                         Update
                                                                     </button>
@@ -443,7 +447,7 @@
                                                                                         onclick="showEditForm('${reply.commentID}')">
                                                                                     Edit
                                                                                 </button>
-                                                                                <a href="deleteComment?commentID=${reply.commentID}&filmName=${film.filmName}">Delete</a>
+                                                                                <a href="deleteComment?commentID=${reply.commentID}&filmName=${film.filmName}&page=${currentPage}">Delete</a>
                                                                             </div>
                                                                         </c:if>
                                                                     </div>
