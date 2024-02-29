@@ -808,7 +808,7 @@ public class filmDao extends DBContext {
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        List<filmDtos> ned = fd.getFavouriteFilmsByUserId(3);
+        List<filmDtos> ned = fd.getAllFilms();
         for (filmDtos f : ned){
             System.out.println(f.toString());
         }

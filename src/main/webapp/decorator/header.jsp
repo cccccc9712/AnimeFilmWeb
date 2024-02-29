@@ -87,7 +87,7 @@
                                                     <li><a href="#">View profile</a></li>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <li><a href="#">Dashboard</a></li>
+                                                    <li><a href="adminDashboard">Dashboard</a></li>
                                                 </c:otherwise>
                                             </c:choose>
                                             <a href="${pageContext.request.contextPath}/logout">Logout</a>

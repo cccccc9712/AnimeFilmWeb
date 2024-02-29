@@ -139,7 +139,7 @@
                             <div class="card">
                                 <div class="card__cover">
                                     <img src="${latestFilm.imageLink}" alt="${latestFilm.filmName}">
-                                    <a href="watching?episodeId=${latestFilm.epId}&filmId=${latestFilm.filmId}"
+                                    <a href="CheckPremium?episodeId=${latestFilm.epId}&filmId=${latestFilm.filmId}"
                                        class="card__play">
                                         <i class="icon ion-ios-play"></i>
                                     </a>
@@ -475,5 +475,4 @@
 <%@include file="decorator/script.jsp" %>
 <%-- End Decorator --%>
 </body>
-
 </html>

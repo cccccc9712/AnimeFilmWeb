@@ -25,6 +25,7 @@ public class checkPremiumControl extends HttpServlet {
         episodeDao ed = new episodeDao();
         boolean isEpisodePremium = ed.checkEpisodeIsPremium(episodeId);
 
+        // Nếu tập phim không phải là premium, chuyển hướng người dùng đến trang xem phim
         if (!isEpisodePremium) {
             resp.sendRedirect("watching?episodeId=" + episodeId + "&filmId=" + filmId);
         } else {
@@ -34,8 +35,9 @@ public class checkPremiumControl extends HttpServlet {
                 return;
             } else {
                 userDao ud = new userDao();
+                boolean isAdmin = user.getAdmin();
                 boolean userPremium = ud.checkUserPremiumStatus(user.getUserId());
-                if (userPremium) {
+                if (userPremium || isAdmin) {
                     resp.sendRedirect("watching?episodeId=" + episodeId + "&filmId=" + filmId);
                 } else {
                     // Nếu người dùng không có premium, chuyển hướng họ đến trang giới thiệu gói premium

@@ -66,7 +66,7 @@
                 userDao ud = new userDao();
                 if (user != null) {
                     Boolean isPremium = ud.checkUserPremiumStatus(user.getUserId());
-                    request.setAttribute("isPremium", isPremium);
+                    request.setAttribute("isPremiumOrAdmin", isPremium || isAdmin);
                 } %>
 
             <!-- price -->
@@ -81,7 +81,7 @@
                     <c:choose>
                         <c:when test="${sessionScope.userSession != null}">
                             <c:choose>
-                                <c:when test="${not isPremium}">
+                                <c:when test="${not isPremiumOrAdmin}">
                                     <a href="#" class="price__btn" id="registerButton">Register</a>
                                 </c:when>
                                 <c:otherwise>
