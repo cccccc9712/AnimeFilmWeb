@@ -90,6 +90,28 @@ public class episodeDao extends DBContext{
         }
         return seasons;
     }
+    public List<seasonDtos> getSeasonsForFilmById(int filmId) {
+        List<seasonDtos> seasons = new ArrayList<>();
+        String sql = "SELECT s.seasonID, s.seasonName, f.filmID, f.filmName \n" +
+                "FROM Season s\n" +
+                "JOIN Film f ON s.filmID = f.filmID\n" +
+                "WHERE f.filmID = ?";
+        try (PreparedStatement psLocal = conn.prepareStatement(sql)) {
+            psLocal.setInt(1, filmId);
+            ResultSet rsLocal = psLocal.executeQuery();
+            while (rsLocal.next()) {
+                seasonDtos season = new seasonDtos();
+                season.setSeasonId(rsLocal.getInt("seasonID"));
+                season.setSeasonName(rsLocal.getString("seasonName"));
+                season.setFilmId(rsLocal.getInt("filmID"));
+                season.setEpisodes(getEpisodesForSeason(season.getSeasonId()));
+                seasons.add(season);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return seasons;
+    }
 
     public List<Episode> getEpisodesForSeason(int seasonId) {
         List<Episode> episodes = new ArrayList<>();
@@ -149,7 +171,5 @@ public class episodeDao extends DBContext{
 
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
-        Boolean sd = d.checkEpisodeIsPremium(64);
-            System.out.println(sd);
     }
 }
