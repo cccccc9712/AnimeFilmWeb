@@ -27,7 +27,7 @@
 </style>
 <body>
 <%@include file="adminDecorator/adminHeader.jsp" %>
-<div style="margin-bottom: 10px" class="wrapper">
+<div class="wrapper">
     <div class="container mt-5">
         <div class="row mb-3">
             <div class="col-md-3">
@@ -68,7 +68,6 @@
                 <th>Tags</th>
                 <th>Views</th>
                 <th>Rate</th>
-                <%--            <th>Upload date</th>--%>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -92,8 +91,7 @@
                     </td>
                     <td>${film.viewCount}</td>
                     <td>${film.ratingValue}</td>
-                        <%--                <td>${film.uploadDate}</td>--%>
-                    <td><a href="editFilm.jsp?id=${film.filmID}" class="btn btn-primary">Edit</a></td>
+                    <td><a href="editFilmPage?filmId=${film.filmID}" class="btn btn-primary">Edit</a></td>
                     <td>
                         <form action="deleteFilm" method="POST">
                             <input type="hidden" name="filmID" value="${film.filmID}">
@@ -113,7 +111,6 @@
                 <th>Tags</th>
                 <th>Views</th>
                 <th>Rate</th>
-                <%--            <th>Upload date</th>--%>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
