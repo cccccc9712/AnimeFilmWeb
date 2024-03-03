@@ -1,6 +1,7 @@
 package entity;
 
 public class Tag {
+    private String tagID;
     private String tagName;
 
     public Tag() {
@@ -18,10 +19,19 @@ public class Tag {
         this.tagName = tagName;
     }
 
+    public String getTagID() {
+        return tagID;
+    }
+
+    public void setTagID(String tagID) {
+        this.tagID = tagID;
+    }
+
     @Override
     public String toString() {
         return "Tag{" +
-                "tagName='" + tagName + '\'' +
+                "tagID='" + tagID + '\'' +
+                ", tagName='" + tagName + '\'' +
                 '}';
     }
 }

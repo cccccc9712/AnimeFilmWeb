@@ -2,15 +2,10 @@ package dal;
 
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
-import entity.Category;
-import entity.Tag;
-import entity.Season;
-import entity.Episode;
+import entity.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -804,7 +799,37 @@ public class filmDao extends DBContext {
         return exists;
     }
 
+    public boolean addFilm(Film film) {
+        String sql = "INSERT INTO Film (filmName, description, releaseDate, imageLink, trailerLink, viewCount) VALUES (?, ?, ?, ?, ?, ?)";
+        try {
+            conn = this.getConnection();
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
+            ps.setString(1, film.getFilmName());
+            ps.setString(2, film.getFilmDescription());
+
+            ps.setTimestamp(3, film.getFilmReleaseDate());
+
+            ps.setString(4, film.getFilmImgLink());
+            ps.setString(5, film.getFilmTrailerLink());
+            ps.setLong(6, film.getFilmViewCount());
+
+            int result = ps.executeUpdate();
+            if (result > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    film.setFilmID(rs.getInt(1));
+                }
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();

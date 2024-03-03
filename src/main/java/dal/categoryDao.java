@@ -21,6 +21,7 @@ public class categoryDao extends DBContext{
                 rs = ps.executeQuery();
                 while (rs.next()) {
                     Category category = new Category();
+                    category.setCategoryID(rs.getString("CategoryID"));
                     category.setCategoryName(rs.getString("CategoryName"));
                     categories.add(category);
                 }
@@ -31,11 +32,24 @@ public class categoryDao extends DBContext{
         return categories;
     }
 
+    public void insertCategory(int filmId, int categoryId) {
+        String sql = "insert into FilmCategory values(?, ?)";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+            ps.setInt(2, categoryId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
     categoryDao d = new categoryDao();
     List<Category> ct = d.getCategories();
     for (Category c : ct){
-        System.out.println(c.getCategoryName());
+        System.out.println(c.toString());
     }
     }
 }

@@ -1,22 +1,22 @@
 package entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Film {
 
     private int filmID;
-
     private String filmName;
     private String filmDescription;
-    private Date filmReleaseDate;
+    private Timestamp filmReleaseDate;
     private String filmImgLink;
     private String filmTrailerLink;
-    private String filmViewCount;
+    private Long filmViewCount;
 
     public Film() {
     }
 
-    public Film(int filmID, String filmName, String filmDescription, Date filmReleaseDate, String filmImgLink, String filmTrailerLink, String filmViewCount) {
+    public Film(int filmID, String filmName, String filmDescription, Timestamp filmReleaseDate, String filmImgLink, String filmTrailerLink, Long filmViewCount) {
         this.filmID = filmID;
         this.filmName = filmName;
         this.filmDescription = filmDescription;
@@ -50,11 +50,11 @@ public class Film {
         this.filmDescription = filmDescription;
     }
 
-    public Date getFilmReleaseDate() {
+    public Timestamp getFilmReleaseDate() {
         return filmReleaseDate;
     }
 
-    public void setFilmReleaseDate(Date filmReleaseDate) {
+    public void setFilmReleaseDate(Timestamp filmReleaseDate) {
         this.filmReleaseDate = filmReleaseDate;
     }
 
@@ -74,11 +74,11 @@ public class Film {
         this.filmTrailerLink = filmTrailerLink;
     }
 
-    public String getFilmViewCount() {
+    public Long getFilmViewCount() {
         return filmViewCount;
     }
 
-    public void setFilmViewCount(String filmViewCount) {
+    public void setFilmViewCount(Long filmViewCount) {
         this.filmViewCount = filmViewCount;
     }
 
