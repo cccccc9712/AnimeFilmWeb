@@ -2,6 +2,7 @@ package dal;
 
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
+import dtos.seasonDtos;
 import entity.*;
 
 import java.sql.*;
@@ -150,12 +151,13 @@ public class filmDao extends DBContext {
 
     private List<Season> getSeasonsForFilm(int filmID) {
         List<Season> seasons = new ArrayList<>();
-        String sql = "SELECT s.seasonName FROM Season s WHERE s.filmID = ?";
+        String sql = "SELECT s.seasonID, s.seasonName FROM Season s WHERE s.filmID = ?";
         try (PreparedStatement psLocal = conn.prepareStatement(sql)) {
             psLocal.setInt(1, filmID);
             try (ResultSet rsLocal = psLocal.executeQuery()) {
                 while (rsLocal.next()) {
                     Season season = new Season();
+                    season.getSeasonID(rsLocal.getInt("seasonID"));
                     season.setSeasonName(rsLocal.getString("seasonName"));
                     seasons.add(season);
                 }
@@ -210,7 +212,6 @@ public class filmDao extends DBContext {
             rs = ps.executeQuery();
             if (rs.next()) {
                 film = new filmDtos();
-                // Set film details
                 film.setFilmID(rs.getInt("filmID"));
                 film.setFilmName(rs.getString("filmName"));
                 film.setDescription(rs.getString("description"));
@@ -219,7 +220,6 @@ public class filmDao extends DBContext {
                 film.setViewCount(rs.getLong("viewCount"));
                 film.setRatingValue(rs.getFloat("averageRating"));
 
-                // Get related data
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
                 film.setSeasons(getSeasonsForFilm(film.getFilmID()));
@@ -228,7 +228,6 @@ public class filmDao extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Close resources
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
@@ -566,8 +565,8 @@ public class filmDao extends DBContext {
                 + "JOIN Film f ON s.filmID = f.filmID "
                 + "ORDER BY e.releaseDate DESC";
         try {
-             conn = new DBContext().getConnection();
-             ps = conn.prepareStatement(sql);
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 newestEpisodeDto episode = new newestEpisodeDto();
@@ -702,7 +701,7 @@ public class filmDao extends DBContext {
         String sql = "SELECT filmID FROM Film WHERE filmName = ?";
 
         try {
-             conn = new DBContext().getConnection();
+            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, filmName);
             try (ResultSet rs = ps.executeQuery()) {
@@ -833,10 +832,8 @@ public class filmDao extends DBContext {
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        List<filmDtos> ned = fd.getAllFilms();
-        for (filmDtos f : ned){
-            System.out.println(f.toString());
-        }
+        List<Season> sd = fd.getSeasonsForFilm(1);
+        System.out.println(sd.toString());
     }
 
 }

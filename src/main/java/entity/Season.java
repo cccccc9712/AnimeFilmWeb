@@ -1,6 +1,7 @@
 package entity;
 
 public class Season {
+    private int seasonID;
     private String seasonName;
 
     public Season() {
@@ -16,6 +17,14 @@ public class Season {
 
     public void setSeasonName(String seasonName) {
         this.seasonName = seasonName;
+    }
+
+    public int getSeasonID(int seasonID) {
+        return this.seasonID;
+    }
+
+    public void setSeasonID(int seasonID) {
+        this.seasonID = seasonID;
     }
 
     @Override
