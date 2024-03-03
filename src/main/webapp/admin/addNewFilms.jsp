@@ -5,19 +5,19 @@
 <%@include file="adminDecorator/adminHead.jsp" %>
 <body>
 <%@include file="adminDecorator/adminHeader.jsp" %>
-<div style="margin-bottom: 10px" class="wrapper">
+<div class="wrapper">
     <div class="container mt-5">
         <c:if test="${not empty errorMessage}">
             <div class="alert alert-danger" role="alert">
-                ${errorMessage}
+                    ${errorMessage}
             </div>
         </c:if>
         <c:if test="${not empty successMessage}">
             <div class="alert alert-success" role="alert">
-                ${successMessage}
+                    ${successMessage}
             </div>
         </c:if>
-        <h2>Thêm Film</h2>
+        <h2>Add New Film</h2>
         <form action="addFilm" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="name">Name:</label>
@@ -31,23 +31,23 @@
             <div class="form-group">
                 <label for="categories">Categories:</label><br>
                 <c:forEach items="${categories}" var="category">
-                    <div style="margin-left: 20px">
+                    <div class="form-check form-check-inline">
                         <input class="form-check-input" id="${category.categoryID}" type="checkbox" name="categories"
                                value="${category.categoryID}">
                         <label class="form-check-label"
-                               for="${category.categoryID}">${category.categoryName}</label><br>
+                               for="${category.categoryID}">${category.categoryName}</label>
                     </div>
                 </c:forEach>
             </div>
             <div class="form-group">
                 <label for="categories">Tags:</label><br>
-                <div class="form-check form-check-inline">
-                    <c:forEach items="${tags}" var="tag">
+                <c:forEach items="${tags}" var="tag">
+                    <div class="form-check form-check-inline">
                         <input class="form-check-input" name="tags" type="checkbox" id="${tag.tagID}"
                                value="${tag.tagID}">
                         <label class="form-check-label" for="${tag.tagID}">${tag.tagName}</label>
-                    </c:forEach>
-                </div>
+                    </div>
+                </c:forEach>
             </div>
             <div class="form-group">
                 <label for="description">Description:</label>
