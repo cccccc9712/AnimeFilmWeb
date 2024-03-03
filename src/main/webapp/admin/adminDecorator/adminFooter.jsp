@@ -20,6 +20,7 @@
     }
     .wrapper {
         flex: 1;
+        margin-bottom: 10px;
     }
     .footer {
         flex-shrink: 0;
