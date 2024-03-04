@@ -60,29 +60,34 @@ public class editFilmControl extends HttpServlet {
         List<Category> filmCategories = film.getCategories();
         List<Tag> filmTags = film.getTags();
 
-
-        for (Category c : filmCategories) {
-            if (!contains(selectedCategories, c.getCategoryID())) {
-                cateDao.removeCategoryFromFilm(filmId, c.getCategoryID());
+        if (selectedCategories != null) {
+            for (Category c : filmCategories) {
+                if (!contains(selectedCategories, c.getCategoryID())) {
+                    cateDao.removeCategoryFromFilm(filmId, c.getCategoryID());
+                }
             }
+            for (String c : selectedCategories) {
+                if (!containsCategories(filmCategories, Integer.parseInt(c))) {
+                    cateDao.insertCategory(filmId, Integer.parseInt(c));
+                }
+            }
+        } else {
+            cateDao.removeAllCategoryFromFilm(filmId);
         }
 
-        for (Tag t : filmTags) {
-            if (!contains(selectedTags, t.getTagID())) {
-                tgDao.removeTagsFromFilm(filmId, t.getTagID());
+        if (selectedTags != null) {
+            for (Tag t : filmTags) {
+                if (!contains(selectedTags, t.getTagID())) {
+                    tgDao.removeTagsFromFilm(filmId, t.getTagID());
+                }
             }
-        }
-
-        for (String c : selectedCategories) {
-            if (!containsCategories(filmCategories, Integer.parseInt(c))) {
-                cateDao.insertCategory(filmId, Integer.parseInt(c));
+            for (String t : selectedTags) {
+                if (!containsTags(filmTags, Integer.parseInt(t))) {
+                    tgDao.insertTags(filmId, Integer.parseInt(t));
+                }
             }
-        }
-
-        for (String t : selectedTags) {
-            if (!containsTags(filmTags, Integer.parseInt(t))) {
-                tgDao.insertTags(filmId, Integer.parseInt(t));
-            }
+        }else {
+            tgDao.removeAllTagsFromFilm(filmId);
         }
 
         resp.sendRedirect("adminDashboard");

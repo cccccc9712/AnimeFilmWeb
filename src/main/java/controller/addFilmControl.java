@@ -63,13 +63,15 @@ public class addFilmControl extends HttpServlet {
         boolean sucess = dao.addFilm(film);
         int filmId = film.getFilmID();
         if (sucess) {
-            // Add film categories to database
-            for (String categoryId : categories) {
-                categoryDao.insertCategory(filmId, Integer.parseInt(categoryId));
+            if (categories != null) {
+                for (String categoryId : categories) {
+                    categoryDao.insertCategory(filmId, Integer.parseInt(categoryId));
+                }
             }
-            // Add film tags to database
-            for (String tagId : tags) {
-                tagsDao.insertTags(filmId, Integer.parseInt(tagId));
+            if (tags != null) {
+                for (String tagId : tags) {
+                    tagsDao.insertTags(filmId, Integer.parseInt(tagId));
+                }
             }
             req.setAttribute("categories", ct);
             req.setAttribute("tags", tg);

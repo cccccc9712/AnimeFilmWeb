@@ -60,10 +60,24 @@ public class categoryDao extends DBContext {
         }
     }
 
+    public void removeAllCategoryFromFilm(int filmId) {
+        String sql = "DELETE FROM FilmCategory WHERE filmID = ?";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         categoryDao d = new categoryDao();
-        d.removeCategoryFromFilm(37, 7);
+        d.removeAllCategoryFromFilm(43);
 
     }
 }

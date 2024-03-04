@@ -59,6 +59,19 @@ public class tagsDao extends DBContext{
             e.printStackTrace();
         }
     }
+    public void removeAllTagsFromFilm(int filmId) {
+        String sql = "DELETE FROM FilmTag WHERE filmID = ?";
+
+        try {
+            conn = new DBContext().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void insertTags(int filmId, int tagId) {
         String sql = "insert into FilmTag values(?, ?)";

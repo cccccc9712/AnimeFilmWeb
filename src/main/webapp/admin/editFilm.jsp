@@ -42,18 +42,19 @@
                 </div>
                 <div class="form-group">
                     <label for="trailerLink">Trailer Link:</label>
-                    <input type="text" name="trailerLink" class="form-control" id="trailerLink" placeholder="${film.trailerLink}">
+                    <input type="text" name="trailerLink" class="form-control" id="trailerLink"
+                           placeholder="${film.trailerLink}">
                 </div>
                 <div class="form-group">
                     <label for="categories">Categories:</label><br>
                     <% for (Category category : allCategories) {
-                        boolean isChecked = filmCategories.stream().anyMatch(fc -> fc.getCategoryName().equals(category.getCategoryName()));
+                        boolean isCateChecked = filmCategories.stream().anyMatch(fc -> fc.getCategoryName().equals(category.getCategoryName()));
                     %>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="categories" type="checkbox" id="<%=category.getCategoryID()%>"
-                               value="<%=category.getCategoryID()%>" <%=isChecked ? "checked" : ""%>>
+                        <input class="form-check-input" name="categories" type="checkbox"
+                               value="<%=category.getCategoryID()%>" <%=isCateChecked ? "checked" : ""%>>
                         <label class="form-check-label"
-                               for="<%=category.getCategoryID()%>"><%=category.getCategoryName()%>
+                        ><%=category.getCategoryName()%>
                         </label>
                     </div>
                     <% } %>
@@ -61,19 +62,20 @@
                 <div class="form-group">
                     <label for="categories">Tags:</label><br>
                     <% for (Tag tag : allTags) {
-                        boolean isChecked = filmTags.stream().anyMatch(fc -> fc.getTagName().equals(tag.getTagName()));
+                        boolean isTagChecked = filmTags.stream().anyMatch(fc -> fc.getTagName().equals(tag.getTagName()));
                     %>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" name="tags" type="checkbox" id="<%=tag.getTagID()%>"
-                               value="<%=tag.getTagID()%>" <%=isChecked ? "checked" : ""%>>
-                        <label class="form-check-label" for="<%=tag.getTagID()%>"><%=tag.getTagName()%>
+                        <input class="form-check-input" name="tags" type="checkbox"
+                               value="<%=tag.getTagID()%>" <%=isTagChecked ? "checked" : ""%>>
+                        <label class="form-check-label"><%=tag.getTagName()%>
                         </label>
                     </div>
                     <% } %>
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea class="form-control" name="description" id="description" rows="3">${film.description}</textarea>
+                    <textarea class="form-control" name="description" id="description"
+                              rows="3">${film.description}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="thumbnail">Thumbnail:</label>
