@@ -4,6 +4,7 @@ import entity.Tag;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class tagsDao extends DBContext{
             rs = ps.executeQuery();
             while (rs.next()) {
                 Tag category = new Tag();
-                category.setTagID(rs.getString("tagID"));
+                category.setTagID(rs.getInt("tagID"));
                 category.setTagName(rs.getString("tagName"));
                 categories.add(category);
             }
@@ -42,6 +43,21 @@ public class tagsDao extends DBContext{
             e.printStackTrace();
         }
         return categories;
+    }
+
+    public void removeTagsFromFilm(int filmId, int tagId) {
+        String sql = "DELETE FROM FilmTag WHERE filmID = ? AND tagID = ?";
+
+        try {
+            conn = new DBContext().getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+            ps.setInt(2, tagId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void insertTags(int filmId, int tagId) {

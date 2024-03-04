@@ -1,7 +1,7 @@
 package entity;
 
 public class Category {
-    private String categoryID;
+    private int categoryID;
     private String categoryName;
 
     public Category() {
@@ -19,9 +19,9 @@ public class Category {
         this.categoryName = categoryName;
     }
 
-    public String getCategoryID() { return categoryID; }
+    public int getCategoryID() { return categoryID; }
 
-    public void setCategoryID(String categoryID) { this.categoryID = categoryID;}
+    public void setCategoryID(int categoryID) { this.categoryID = categoryID;}
 
     @Override
     public String toString() {

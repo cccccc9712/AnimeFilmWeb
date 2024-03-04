@@ -198,23 +198,13 @@ public class userDao extends DBContext {
 
         try {
             conn = new DBContext().getConnection();
-
-            // Câu lệnh SQL để thêm người dùng vào bảng PremiumStatus
             String sql = "INSERT INTO PremiumStatus (userID, premiumName, registeredDate, outOfDate) VALUES (?, ?, ?, ?)";
-
-            // Chuẩn bị câu lệnh SQL
             ps = conn.prepareStatement(sql);
-
-            // Đặt các giá trị cho câu lệnh SQL
             ps.setInt(1, userId);
             ps.setString(2, premiumName);
             ps.setDate(3, registeredDate);
             ps.setDate(4, outOfDate);
-
-            // Thực thi câu lệnh SQL
             int rowsAffected = ps.executeUpdate();
-
-            // Kiểm tra xem có hàng nào được cập nhật không
             if (rowsAffected > 0) {
                 registeredSuccessfully = true;
             }

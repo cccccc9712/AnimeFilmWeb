@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class categoryDao extends DBContext{
+public class categoryDao extends DBContext {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
@@ -17,14 +17,14 @@ public class categoryDao extends DBContext{
         String sql = "select * from Category";
         try {
             conn = new DBContext().getConnection();
-             ps = conn.prepareStatement(sql);
-                rs = ps.executeQuery();
-                while (rs.next()) {
-                    Category category = new Category();
-                    category.setCategoryID(rs.getString("CategoryID"));
-                    category.setCategoryName(rs.getString("CategoryName"));
-                    categories.add(category);
-                }
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Category category = new Category();
+                category.setCategoryID(rs.getInt("CategoryID"));
+                category.setCategoryName(rs.getString("CategoryName"));
+                categories.add(category);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,11 +45,25 @@ public class categoryDao extends DBContext{
         }
     }
 
-    public static void main(String[] args) {
-    categoryDao d = new categoryDao();
-    List<Category> ct = d.getCategories();
-    for (Category c : ct){
-        System.out.println(c.toString());
+    public void removeCategoryFromFilm(int filmId, int categoryId) {
+        String sql = "DELETE FROM FilmCategory WHERE filmID = ? AND categoryID = ?";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+            ps.setInt(2, categoryId);
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
+    public static void main(String[] args) {
+        categoryDao d = new categoryDao();
+        d.removeCategoryFromFilm(37, 7);
+
     }
 }

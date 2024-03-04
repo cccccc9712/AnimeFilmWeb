@@ -50,7 +50,7 @@ public class ratingDao extends DBContext {
         String sql = "INSERT INTO Ratings (filmID, userID, ratingValue, ratingDate) VALUES (?, ?, ?, ?)";
         try {
             conn = this.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, rating.getFilmId());
             ps.setInt(2, rating.getUserId());
             ps.setFloat(3, rating.getRatingValue());

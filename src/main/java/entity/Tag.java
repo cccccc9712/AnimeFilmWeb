@@ -1,7 +1,7 @@
 package entity;
 
 public class Tag {
-    private String tagID;
+    private int tagID;
     private String tagName;
 
     public Tag() {
@@ -19,11 +19,11 @@ public class Tag {
         this.tagName = tagName;
     }
 
-    public String getTagID() {
+    public int getTagID() {
         return tagID;
     }
 
-    public void setTagID(String tagID) {
+    public void setTagID(int tagID) {
         this.tagID = tagID;
     }
 

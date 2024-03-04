@@ -107,13 +107,14 @@ public class filmDao extends DBContext {
 
     private List<Category> getCategoriesForFilm(int filmID) {
         List<Category> categories = new ArrayList<>();
-        String sql = "SELECT c.CategoryName FROM Category c JOIN FilmCategory fc ON c.CategoryID = fc.CategoryID WHERE fc.filmID = ?";
+        String sql = "SELECT c.CategoryID, c.CategoryName FROM Category c JOIN FilmCategory fc ON c.CategoryID = fc.CategoryID WHERE fc.filmID = ?";
         ResultSet rsLocal = null;
         try (PreparedStatement psLocal = getConnection().prepareStatement(sql)) {
             psLocal.setInt(1, filmID);
             rsLocal = psLocal.executeQuery();
             while (rsLocal.next()) {
                 Category category = new Category();
+                category.setCategoryID(rsLocal.getInt("CategoryID"));
                 category.setCategoryName(rsLocal.getString("CategoryName"));
                 categories.add(category);
             }
@@ -133,12 +134,13 @@ public class filmDao extends DBContext {
 
     private List<Tag> getTagsForFilm(int filmID) {
         List<Tag> tags = new ArrayList<>();
-        String sql = "SELECT t.tagName FROM Tag t JOIN FilmTag ft ON t.tagID = ft.tagID WHERE ft.filmID = ?";
+        String sql = "SELECT t.tagID, t.tagName FROM Tag t JOIN FilmTag ft ON t.tagID = ft.tagID WHERE ft.filmID = ?";
         try (PreparedStatement psLocal = conn.prepareStatement(sql)) {
             psLocal.setInt(1, filmID);
             try (ResultSet rsLocal = psLocal.executeQuery()) {
                 while (rsLocal.next()) {
                     Tag tag = new Tag();
+                    tag.setTagID(rsLocal.getInt("tagID"));
                     tag.setTagName(rsLocal.getString("tagName"));
                     tags.add(tag);
                 }
@@ -776,14 +778,11 @@ public class filmDao extends DBContext {
 
 
     public boolean isFavouriteExists(int userId, int filmId) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
         boolean exists = false;
         String sql = "SELECT COUNT(*) AS count FROM Favourite WHERE userId = ? AND filmId = ?";
 
         try {
-            conn = getConnection(); // Giả định bạn đã có phương thức này để lấy kết nối DB
+            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setInt(2, filmId);
@@ -801,7 +800,7 @@ public class filmDao extends DBContext {
     public boolean addFilm(Film film) {
         String sql = "INSERT INTO Film (filmName, description, releaseDate, imageLink, trailerLink, viewCount) VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            conn = this.getConnection();
+            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, film.getFilmName());
@@ -829,6 +828,82 @@ public class filmDao extends DBContext {
             return false;
         }
     }
+
+    public void updateFilmName (int filmId, String name){
+        String sql = "UPDATE Film SET filmName = ? WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, name);
+            ps.setInt(2, filmId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFilmDescription (int filmId, String description){
+        String sql = "UPDATE Film SET description = ? WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, description);
+            ps.setInt(2, filmId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFilmThumbnail (int filmId, String thumbnailPath){
+        String sql = "UPDATE Film SET imageLink = ? WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, thumbnailPath);
+            ps.setInt(2, filmId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateFilmTrailerLink (int filmId, String trailerLink){
+        String sql = "UPDATE Film SET trailerLink = ? WHERE filmID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, trailerLink);
+            ps.setInt(2, filmId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteFilm(int filmId) {
+        String sql = "DECLARE @filmID INT;\n" +
+                "SET @filmID = ?;\n" +
+                "DELETE FROM Comments WHERE filmID = @filmID;\n" +
+                "DELETE FROM WatchHistory WHERE filmID = @filmID;\n" +
+                "DELETE FROM Favourite WHERE filmID = @filmID;\n" +
+                "DELETE FROM Ratings WHERE filmID = @filmID;\n" +
+                "DELETE FROM FilmTag WHERE filmID = @filmID;\n" +
+                "DELETE FROM FilmCategory WHERE filmID = @filmID;\n" +
+                "DELETE FROM Episode\n" +
+                "WHERE seasonID IN (SELECT seasonID FROM Season WHERE filmID = @filmID);\n" +
+                "DELETE FROM Season WHERE filmID = @filmID;\n" +
+                "DELETE FROM Film WHERE filmID = @filmID;\n";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();

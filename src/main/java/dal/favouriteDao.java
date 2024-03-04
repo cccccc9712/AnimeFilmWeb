@@ -5,6 +5,7 @@ import java.sql.*;
 public class favouriteDao extends DBContext{
     PreparedStatement ps = null;
     ResultSet rs = null;
+
     public void addToFavorites(int userId, int filmId, Timestamp addedDate) {
         String sql = "INSERT INTO Favourite (userID, filmID, addedDate) VALUES (?, ?, ?)";
         try {
@@ -35,12 +36,10 @@ public class favouriteDao extends DBContext{
     }
 
     public boolean removeFavouriteFilm(int userId, int filmId) {
-        Connection conn = null;
-        PreparedStatement ps = null;
         boolean isSuccess = false;
+        String sql = "DELETE FROM Favourite WHERE userId = ? AND filmId = ?";
         try {
-            conn = getConnection(); // Giả định bạn đã có phương thức này để kết nối với cơ sở dữ liệu
-            String sql = "DELETE FROM Favourite WHERE userId = ? AND filmId = ?";
+            conn = new DBContext().getConnection(); // Giả định bạn đã có phương thức này để kết nối với cơ sở dữ liệu
             ps = conn.prepareStatement(sql);
             ps.setInt(1, userId);
             ps.setInt(2, filmId);
