@@ -35,14 +35,14 @@
                 </div>
             </c:if>
             <h2>Edit Film</h2>
-            <form>
+            <form action="editFilm" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" placeholder="${film.filmName}">
+                    <input type="text" name="filmName" class="form-control" id="name" placeholder="${film.filmName}">
                 </div>
                 <div class="form-group">
                     <label for="trailerLink">Trailer Link:</label>
-                    <input type="text" class="form-control" id="trailerLink" placeholder="${film.trailerLink}">
+                    <input type="text" name="trailerLink" class="form-control" id="trailerLink" placeholder="${film.trailerLink}">
                 </div>
                 <div class="form-group">
                     <label for="categories">Categories:</label><br>
@@ -50,7 +50,7 @@
                         boolean isChecked = filmCategories.stream().anyMatch(fc -> fc.getCategoryName().equals(category.getCategoryName()));
                     %>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="<%=category.getCategoryID()%>"
+                        <input class="form-check-input" name="categories" type="checkbox" id="<%=category.getCategoryID()%>"
                                value="<%=category.getCategoryID()%>" <%=isChecked ? "checked" : ""%>>
                         <label class="form-check-label"
                                for="<%=category.getCategoryID()%>"><%=category.getCategoryName()%>
@@ -64,7 +64,7 @@
                         boolean isChecked = filmTags.stream().anyMatch(fc -> fc.getTagName().equals(tag.getTagName()));
                     %>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="<%=tag.getTagID()%>"
+                        <input class="form-check-input" name="tags" type="checkbox" id="<%=tag.getTagID()%>"
                                value="<%=tag.getTagID()%>" <%=isChecked ? "checked" : ""%>>
                         <label class="form-check-label" for="<%=tag.getTagID()%>"><%=tag.getTagName()%>
                         </label>
@@ -73,14 +73,15 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea class="form-control" id="description" rows="3">${film.description}</textarea>
+                    <textarea class="form-control" name="description" id="description" rows="3">${film.description}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="thumbnail">Thumbnail:</label>
-                    <input type="file" class="form-control-file" id="thumbnail">
+                    <input type="file" name="thumbnail" class="form-control-file" id="thumbnail">
                     <img style="margin: 5px 0px 0px 0px" src="${film.imageLink}" width="50vh"
                          alt="${film.filmName}">
                 </div>
+                <input name="filmId" type="hidden" value="${film.filmID}">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-secondary ml-2"><a
                         style="color: whitesmoke; text-decoration: none"
