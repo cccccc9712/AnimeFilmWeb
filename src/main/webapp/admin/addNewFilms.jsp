@@ -35,7 +35,7 @@
                         <input class="form-check-input" id="${category.categoryID}" type="checkbox" name="categories"
                                value="${category.categoryID}">
                         <label class="form-check-label"
-                               for="${category.categoryID}">${category.categoryName}</label>
+                               >${category.categoryName}</label>
                     </div>
                 </c:forEach>
             </div>
@@ -45,7 +45,7 @@
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" name="tags" type="checkbox" id="${tag.tagID}"
                                value="${tag.tagID}">
-                        <label class="form-check-label" for="${tag.tagID}">${tag.tagName}</label>
+                        <label class="form-check-label">${tag.tagName}</label>
                     </div>
                 </c:forEach>
             </div>

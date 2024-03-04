@@ -93,8 +93,8 @@
                     <td>${film.ratingValue}</td>
                     <td><a href="editFilmPage?filmId=${film.filmID}" class="btn btn-primary">Edit</a></td>
                     <td>
-                        <form action="deleteFilm" method="POST">
-                            <input type="hidden" name="filmID" value="${film.filmID}">
+                        <form action="${pageContext.request.contextPath}/deleteFilm" method="POST">
+                            <input type="hidden" name="filmId" value="${film.filmID}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </td>
