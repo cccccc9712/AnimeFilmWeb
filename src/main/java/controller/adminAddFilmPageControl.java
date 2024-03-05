@@ -17,7 +17,7 @@ import java.util.List;
 public class adminAddFilmPageControl extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         categoryDao d = new categoryDao();
         tagsDao t = new tagsDao();
         List<Category> ct = d.getCategories();
@@ -26,15 +26,4 @@ public class adminAddFilmPageControl extends HttpServlet {
         request.setAttribute("tags", tg);
         request.getRequestDispatcher("/admin/addNewFilms.jsp").forward(request, response);
     }
-
-    public void loadCategoriesAndTags(HttpServletRequest request) {
-        categoryDao d = new categoryDao();
-        tagsDao t = new tagsDao();
-        List<Category> ct = d.getCategories();
-        List<Tag> tg = t.getTags();
-
-        request.setAttribute("categories", ct);
-        request.setAttribute("tags", tg);
-    }
-
 }

@@ -53,12 +53,6 @@ public class addFilmControl extends HttpServlet {
         film.setFilmImgLink(thumbnailPath);
         film.setFilmViewCount(0L);
 
-        categoryDao d = new categoryDao();
-        tagsDao t = new tagsDao();
-        List<Category> ct = d.getCategories();
-        List<Tag> tg = t.getTags();
-
-
         // Add film to database
         boolean sucess = dao.addFilm(film);
         int filmId = film.getFilmID();
@@ -73,14 +67,12 @@ public class addFilmControl extends HttpServlet {
                     tagsDao.insertTags(filmId, Integer.parseInt(tagId));
                 }
             }
-            req.setAttribute("categories", ct);
-            req.setAttribute("tags", tg);
             req.setAttribute("successMessage", "Film added successfully");
-            req.getRequestDispatcher("/admin/addNewFilms.jsp").forward(req, resp);
+            req.getRequestDispatcher("newFilmPage").forward(req, resp);
         } else {
             System.out.println("Film added failed");
             req.setAttribute("errorMessage", "Film added failed");
-            req.getRequestDispatcher("/admin/addNewFilms.jsp").forward(req, resp);
+            req.getRequestDispatcher("newFilmPage").forward(req, resp);
         }
     }
 }
