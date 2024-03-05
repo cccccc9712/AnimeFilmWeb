@@ -47,8 +47,9 @@
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             <a style="margin: 0 5px;">All Anime</a>
-            <a class="btn btn-primary align-content-lg-start"
-               href="${pageContext.request.contextPath}/newFilmPage">Add new</a>
+            <form action="newFilmPage" method="post">
+                <button type="submit" class="btn btn-primary">Add new</button>
+            </form>
             <div class="input-group">
                 <form method="get" action="${pageContext.request.contextPath}/adminDashboard">
                     <input type="text" name="searchQuery" class="form-control" placeholder="Search...">
