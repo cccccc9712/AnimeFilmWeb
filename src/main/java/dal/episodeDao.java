@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class episodeDao extends DBContext{
+public class episodeDao extends DBContext {
     PreparedStatement ps = null;
     ResultSet rs = null;
 
@@ -90,6 +90,7 @@ public class episodeDao extends DBContext{
         }
         return seasons;
     }
+
     public List<seasonDtos> getSeasonsForFilmById(int filmId) {
         List<seasonDtos> seasons = new ArrayList<>();
         String sql = "SELECT s.seasonID, s.seasonName, f.filmID, f.filmName \n" +
@@ -166,6 +167,39 @@ public class episodeDao extends DBContext{
             }
         }
         return isPremium;
+    }
+
+    public boolean addSeason(int filmID, String seasonName) {
+        String sql = "INSERT INTO Season (filmID, seasonName) VALUES (?, ?)";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, filmID);
+            ps.setString(2, seasonName);
+
+            int rowsInserted = ps.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteSeason(int seasonID) {
+        String sql = "DELETE FROM Season WHERE seasonID = ?";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, seasonID);
+
+            int rowsDeleted = ps.executeUpdate();
+            return rowsDeleted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

@@ -46,16 +46,19 @@
         </tr>
         </thead>
         <tbody id="episodeList">
-        <td>name</td>
-        <td>uploadDate</td>
-        <td>Episode Link</td>
-        <td>Is Premium</td>
-        <td>
-            <form action="#" method="POST">
-                <input type="hidden" name="thumbnail" value="${x.thumbnail}">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-        </td>
+        <c:forEach var="episodes" items="${episodes}">
+            <tr>
+                <td>${episodes.epTittle}</td>
+                <td>${episodes.epDate}</td>
+                <td>${episodes.epLink}</td>
+                <td>${episodes.epLink}</td>
+                <td>
+                    <form action="#" method="POST">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
         </tbody>
         <tfoot>
         <!-- Optional footer -->
@@ -64,32 +67,5 @@
 </div>
 
 <%@include file="adminDecorator/adminFooter.jsp" %>
-<script>
-    // function uploadVideo() {
-    //     var formData = new FormData();
-    //     formData.append('file', document.getElementById('videoFile').files[0]);
-    //     formData.append('title', document.getElementById('videoName').value);
-    //     formData.append('private', document.getElementById('isPremium').checked ? 'true' : 'false');
-    //
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'YOUR_API_ENDPOINT', true);
-    //     xhr.upload.onprogress = function(e) {
-    //         if (e.lengthComputable) {
-    //             var percentComplete = (e.loaded / e.total) * 100;
-    //             $('.progress-bar').width(percentComplete + '%').text(Math.round(percentComplete) + '%');
-    //         }
-    //     };
-    //     xhr.onload = function() {
-    //         if (this.status == 200) {
-    //             // Handle the response content...
-    //             console.log(this.response);
-    //             // Ideally, add the new episode to the table
-    //         } else {
-    //             // Handle error case
-    //         }
-    //     };
-    //     xhr.send(formData);
-    // }
-</script>
 </body>
 </html>

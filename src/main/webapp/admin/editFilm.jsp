@@ -22,18 +22,28 @@
 <body>
 <%@include file="adminDecorator/adminHeader.jsp" %>
 <div class="wrapper">
-    <div id="edit-film">
-        <div class="container mt-5">
-            <c:if test="${not empty errorMessage}">
-                <div class="alert alert-danger" role="alert">
-                        ${errorMessage}
-                </div>
-            </c:if>
-            <c:if test="${not empty successMessage}">
-                <div class="alert alert-success" role="alert">
-                        ${successMessage}
-                </div>
-            </c:if>
+    <div class="container mt-5">
+        <c:if test="${not empty errorMessage}">
+            <div class="alert alert-danger" role="alert">
+                    ${errorMessage}
+            </div>
+        </c:if>
+        <c:if test="${not empty successMessage}">
+            <div class="alert alert-success" role="alert">
+                    ${successMessage}
+            </div>
+        </c:if>
+        <ul style="margin-bottom: 20px" class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#tab-1"
+                >Edit Film</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#tab-2"
+                >Add Season</a>
+            </li>
+        </ul>
+        <div class="tab-pane fade show active" id="tab-1">
             <h2>Edit Film</h2>
             <form action="editFilm" method="post" enctype="multipart/form-data">
                 <div class="form-group">
@@ -89,39 +99,21 @@
                         style="color: whitesmoke; text-decoration: none"
                         href="${pageContext.request.contextPath}/adminDashboard">Cancel</a>
                 </button>
-                <button style="float: right;" type="button" class="btn btn-primary" id="switchToAddSeason">Switch to
-                    Add
-                    Season
-                </button>
             </form>
         </div>
-    </div>
-
-    <div id="add-season">
-        <div class="container mt-5">
-            <c:if test="${not empty errorMessage2}">
-                <div class="alert alert-danger" role="alert">
-                        ${errorMessage2}
-                </div>
-            </c:if>
-            <c:if test="${not empty successMessage2}">
-                <div class="alert alert-success" role="alert">
-                        ${successMessage2}
-                </div>
-            </c:if>
+        <div class="tab-pane fade" id="tab-2">
             <h2>Add Season</h2>
-            <form id="addSeasonForm">
+            <form action="addSeason" method="get" id="addSeasonForm">
+                <input type="hidden" name="filmId" value="${film.filmID}"/>
                 <div class="form-group">
                     <label for="seasonName">Season Name:</label>
-                    <input type="text" class="form-control" id="seasonName" placeholder="Enter season name">
-                </div>
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea class="form-control" id="description" rows="3"></textarea>
+                    <input type="text" name="seasonName" class="form-control" id="seasonName"
+                           placeholder="Enter season name">
                 </div>
                 <button type="submit" class="btn btn-primary" id="addSeasonBtn">Add Season</button>
                 <button style="text-decoration: none" type="button" class="btn btn-secondary ml-2" id="cancelBtn">
-                    Cancel
+                    <a style="color: whitesmoke; text-decoration: none"
+                       href="${pageContext.request.contextPath}/adminDashboard">Cancel</a>
                 </button>
             </form>
             <hr>
@@ -146,8 +138,9 @@
                         <td>${season.episodes.size()} episodes</td>
                         <td><a href="uploadEpisode.jsp" class="btn btn-primary">Add</a></td>
                         <td>
-                            <form action="#" method="POST">
-                                <input type="hidden" name="thumbnail" value="${x.thumbnail}">
+                            <form action="deleteSeason" method="POST">
+                                <input type="hidden" name="filmId" value="${film.filmID}">
+                                <input type="hidden" name="seasonId" value="${season.seasonId}">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>
@@ -165,25 +158,32 @@
                 </tr>
                 </tfoot>
             </table>
-            <button type="button" class="btn btn-secondary" id="switchToEditFilm">Switch to Edit Film</button>
         </div>
     </div>
+
 </div>
 <%@include file="adminDecorator/adminFooter.jsp" %>
 
 <script>
-    $(document).ready(function () {
-        $("#switchToAddSeason").click(function () {
-            $("#edit-film").hide();
-            $("#add-season").show();
+    $(document).ready(function() {
+        // Ẩn nội dung của tab-2 ngay khi trang được tải
+        $("#tab-2").hide();
+
+        // Khi một tab được click, hiển thị nội dung tương ứng và ẩn các tab khác
+        $('.nav-tabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            var tabId = $(this).attr('href');
+            $(".tab-pane").not(tabId).css("display", "none");
+            $(tabId).fadeIn();
         });
 
-        $("#switchToEditFilm").click(function () {
-            $("#add-season").hide();
-            $("#edit-film").show();
-        });
+        // Tự động ẩn thông báo sau 2 giây
+        setTimeout(function() {
+            $(".alert").fadeOut("slow");
+        }, 2000);
     });
+
 </script>
 </body>
-
 </html>
