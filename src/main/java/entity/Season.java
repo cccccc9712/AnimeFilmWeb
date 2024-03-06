@@ -19,7 +19,7 @@ public class Season {
         this.seasonName = seasonName;
     }
 
-    public int getSeasonID(int seasonID) {
+    public int getSeasonID() {
         return this.seasonID;
     }
 

@@ -10,7 +10,6 @@ import java.util.List;
 public class newestEpisodeDto extends episodeDtos{
 
     private String seasonName;
-
     private String filmName;
     private String description;
     private String imageLink;

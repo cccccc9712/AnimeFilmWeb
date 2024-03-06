@@ -205,25 +205,25 @@ public class commentDao extends DBContext {
         }
     }
 
-    public boolean deleteComment(int commentID) {
-        String sql = "DELETE FROM Comments WHERE commentID = ?";
+    public boolean deleteCommentAndReplies(int commentID) {
+        String findRepliesSql = "SELECT commentID FROM Comments WHERE parentCommentID = ?";
+        String deleteSql = "DELETE FROM Comments WHERE commentID = ?";
         try {
-            conn = getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, commentID);
-            int affectedRows = ps.executeUpdate();
+            conn = new DBContext().getConnection();
+            PreparedStatement findRepliesStmt = conn.prepareStatement(findRepliesSql);
+            findRepliesStmt.setInt(1, commentID);
+            rs = findRepliesStmt.executeQuery();
+            while (rs.next()) {
+                deleteCommentAndReplies(rs.getInt("commentID"));
+            }
+            PreparedStatement deleteStmt = conn.prepareStatement(deleteSql);
+            deleteStmt.setInt(1, commentID);
+            int affectedRows = deleteStmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
-        return false; // Mặc định trả về false nếu có lỗi xảy ra
+        return false;
     }
 
     public boolean canDeleteComment(int commentID, int userID) {
@@ -273,11 +273,5 @@ public class commentDao extends DBContext {
                 ex.printStackTrace();
             }
         }
-    }
-
-
-    public static void main(String[] args) {
-        commentDao cmd = new commentDao();
-        cmd.deleteComment(2);
     }
 }

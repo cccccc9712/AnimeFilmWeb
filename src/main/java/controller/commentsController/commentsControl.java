@@ -1,4 +1,4 @@
-package controller;
+package controller.commentsController;
 
 import dal.commentDao;
 import entity.User;

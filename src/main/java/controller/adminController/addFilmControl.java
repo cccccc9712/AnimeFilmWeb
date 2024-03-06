@@ -1,4 +1,4 @@
-package controller;
+package controller.adminController;
 
 import dal.categoryDao;
 import dal.filmDao;
@@ -47,11 +47,11 @@ public class addFilmControl extends HttpServlet {
         tagsDao tagsDao = new tagsDao();
         Film film = new Film();
         film.setFilmName(name);
-        film.setFilmTrailerLink(trailerLink);
-        film.setFilmDescription(description);
+        film.setTrailerLink(trailerLink);
+        film.setDescription(description);
         film.setFilmReleaseDate(releaseDate);
-        film.setFilmImgLink(thumbnailPath);
-        film.setFilmViewCount(0L);
+        film.setImageLink(thumbnailPath);
+        film.setViewCount(0L);
 
         // Add film to database
         boolean sucess = dao.addFilm(film);

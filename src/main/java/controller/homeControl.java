@@ -1,5 +1,6 @@
 package controller;
 
+import dal.episodeDao;
 import dal.filmDao;
 import dal.userDao;
 import dtos.filmDtos;
@@ -50,12 +51,13 @@ public class homeControl extends HttpServlet {
         }
 
         filmDao fd = new filmDao();
+        episodeDao ed = new episodeDao();
         List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
         List<filmDtos> newFilms = fd.getNewFilms();
         List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
         if (userId != null) {
             List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
-            List<newestEpisodeDto> watchedEpisodes = fd.getWatchedEpisodesByUserId(userId);
+            List<newestEpisodeDto> watchedEpisodes = ed.getWatchedEpisodesByUserId(userId);
             req.setAttribute("favouriteFilms", favouriteFilms);
             req.setAttribute("watchedEpisodes", watchedEpisodes);
         }

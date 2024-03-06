@@ -26,6 +26,7 @@ public class watchingControl extends HttpServlet {
         Date watchingDate = new Date();
         Time watchingTime = new Time(System.currentTimeMillis());
         filmDao fd = new filmDao();
+        episodeDao episodeDao = new episodeDao();
 
         if (episodeIdStr != null && !episodeIdStr.isEmpty() && filmIdStr != null && !filmIdStr.isEmpty()) {
             int episodeId = Integer.parseInt(episodeIdStr);
@@ -36,7 +37,7 @@ public class watchingControl extends HttpServlet {
 
             if (userId  != null) {
                 try {
-                    fd.saveWatchedHistory(userId, filmId, episodeId, new java.sql.Date(watchingDate.getTime()), watchingTime);
+                    episodeDao.saveWatchedHistory(userId, filmId, episodeId, new java.sql.Date(watchingDate.getTime()), watchingTime);
                 } catch (NumberFormatException e) {
 
                 }

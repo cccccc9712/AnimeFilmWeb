@@ -83,21 +83,13 @@ public class ratingDao extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            close(rs);
-            close(ps);
-        }
-        return null;
-    }
-
-    private void close(AutoCloseable closeable) {
-        if (closeable != null) {
             try {
-                closeable.close();
+                rs.close();
+                ps.close();
             } catch (Exception e) {
-                // Log the exception or handle it
                 e.printStackTrace();
             }
         }
+        return null;
     }
-
 }

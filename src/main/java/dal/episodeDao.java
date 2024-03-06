@@ -1,6 +1,7 @@
 package dal;
 
 import dtos.episodeDtos;
+import dtos.newestEpisodeDto;
 import dtos.seasonDtos;
 import entity.Episode;
 
@@ -8,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class episodeDao extends DBContext {
     PreparedStatement ps = null;
@@ -79,10 +82,10 @@ public class episodeDao extends DBContext {
             ResultSet rsLocal = psLocal.executeQuery();
             while (rsLocal.next()) {
                 seasonDtos season = new seasonDtos();
-                season.setSeasonId(rsLocal.getInt("seasonID"));
+                season.setSeasonID(rsLocal.getInt("seasonID"));
                 season.setSeasonName(rsLocal.getString("seasonName"));
                 season.setFilmId(rsLocal.getInt("filmID"));
-                season.setEpisodes(getEpisodesForSeason(season.getSeasonId()));
+                season.setEpisodes(getEpisodesForSeason(season.getSeasonID()));
                 seasons.add(season);
             }
         } catch (Exception e) {
@@ -102,10 +105,10 @@ public class episodeDao extends DBContext {
             ResultSet rsLocal = psLocal.executeQuery();
             while (rsLocal.next()) {
                 seasonDtos season = new seasonDtos();
-                season.setSeasonId(rsLocal.getInt("seasonID"));
+                season.setSeasonID(rsLocal.getInt("seasonID"));
                 season.setSeasonName(rsLocal.getString("seasonName"));
                 season.setFilmId(rsLocal.getInt("filmID"));
-                season.setEpisodes(getEpisodesForSeason(season.getSeasonId()));
+                season.setEpisodes(getEpisodesForSeason(season.getSeasonID()));
                 seasons.add(season);
             }
         } catch (Exception e) {
@@ -200,6 +203,65 @@ public class episodeDao extends DBContext {
             e.printStackTrace();
             return false;
         }
+    }
+
+    //Lưu các Episodes mà User đã xem
+    public boolean saveWatchedHistory(int userID, int filmID, int episodeID, java.sql.Date watchDate, java.sql.Time watchTime) {
+        String sql = "INSERT INTO WatchHistory (userID, filmID, episodeID, watchDate, watchTime) VALUES (?, ?, ?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userID);
+            ps.setInt(2, filmID);
+            ps.setInt(3, episodeID);
+            ps.setDate(4, watchDate);
+            ps.setTime(5, watchTime);
+
+            int result = ps.executeUpdate();
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //Lấy ra các Episodes mà User đã xem
+    public List<newestEpisodeDto> getWatchedEpisodesByUserId(int userId) {
+        List<newestEpisodeDto> watchedEpisodes = new ArrayList<>();
+        Map<Integer, newestEpisodeDto> episodeMap = new LinkedHashMap<>(); // Sử dụng LinkedHashMap để duy trì thứ tự
+        String sql = "SELECT Top 12 e.episodeID, e.title, e.episodeLink, s.seasonName, f.filmID, f.filmName, f.imageLink, wh.watchDate, wh.watchTime " +
+                "FROM WatchHistory wh " +
+                "JOIN Episode e ON wh.episodeID = e.episodeID " +
+                "JOIN Season s ON e.seasonID = s.seasonID " +
+                "JOIN Film f ON s.filmID = f.filmID " +
+                "WHERE wh.userID = ? " +
+                "ORDER BY wh.watchDate DESC, wh.watchTime DESC;";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int episodeId = rs.getInt("episodeID");
+                if (!episodeMap.containsKey(episodeId)) {
+                    newestEpisodeDto episode = new newestEpisodeDto();
+                    episode.setEpId(episodeId);
+                    episode.setEpTittle(rs.getString("title"));
+                    episode.setEpLink(rs.getString("episodeLink"));
+                    episode.setSeasonName(rs.getString("seasonName"));
+                    episode.setFilmId(rs.getInt("filmID"));
+                    episode.setFilmName(rs.getString("filmName"));
+                    episode.setImageLink(rs.getString("imageLink"));
+                    watchedEpisodes.add(episode);
+                    episodeMap.put(episodeId, episode);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return watchedEpisodes;
     }
 
 

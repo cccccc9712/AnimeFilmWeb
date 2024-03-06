@@ -65,6 +65,14 @@
     </div>
 </div>
 <%@include file="adminDecorator/adminFooter.jsp" %>
+<script>
+    $(document).ready(function() {
+        // Tự động ẩn thông báo sau 2 giây
+        setTimeout(function() {
+            $(".alert").fadeOut("slow");
+        }, 2000);
+    });
+</script>
 </body>
 </html>
 

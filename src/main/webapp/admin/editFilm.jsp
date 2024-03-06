@@ -140,7 +140,7 @@
                         <td>
                             <form action="deleteSeason" method="POST">
                                 <input type="hidden" name="filmId" value="${film.filmID}">
-                                <input type="hidden" name="seasonId" value="${season.seasonId}">
+                                <input type="hidden" name="seasonId" value="${season.seasonID}">
                                 <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </td>

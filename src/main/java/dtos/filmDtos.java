@@ -1,21 +1,13 @@
 package dtos;
 
-import entity.Category;
-import entity.Episode;
-import entity.Season;
-import entity.Tag;
+import entity.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 
-public class filmDtos {
-    private int filmID;
-    private String filmName;
-    private String description;
-    private String imageLink;
-    private String trailerLink;
-    private long viewCount;
-    private float ratingValue;
+public class filmDtos extends Film {
 
+    private float ratingValue;
     private List<Category> categories;
     private List<Tag> tags;
     private List<Season> seasons;
@@ -24,14 +16,9 @@ public class filmDtos {
     public filmDtos() {
     }
 
-    public filmDtos(int filmID, String filmName, String description, String imageLink, String trailerLink, long viewCount, float ratingValue, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
-        this.filmID = filmID;
-        this.filmName = filmName;
-        this.description = description;
-        this.imageLink = imageLink;
-        this.trailerLink = trailerLink;
-        this.viewCount = viewCount;
-        this.ratingValue = ratingValue;
+    public filmDtos(int filmID, String filmName, String filmDescription, Timestamp filmReleaseDate, String filmImgLink, String filmTrailerLink, Long filmViewCount, float rating, List<Category> categories, List<Tag> tags, List<Season> seasons, List<Episode> episodes) {
+        super(filmID, filmName, filmDescription, filmReleaseDate, filmImgLink, filmTrailerLink, filmViewCount);
+        this.ratingValue = rating;
         this.categories = categories;
         this.tags = tags;
         this.seasons = seasons;
@@ -44,54 +31,6 @@ public class filmDtos {
 
     public void setRatingValue(float ratingValue) {
         this.ratingValue = ratingValue;
-    }
-
-    public String getTrailerLink() {
-        return trailerLink;
-    }
-
-    public void setTrailerLink(String trailerLink) {
-        this.trailerLink = trailerLink;
-    }
-
-    public int getFilmID() {
-        return filmID;
-    }
-
-    public void setFilmID(int filmID) {
-        this.filmID = filmID;
-    }
-
-    public String getFilmName() {
-        return filmName;
-    }
-
-    public void setFilmName(String filmName) {
-        this.filmName = filmName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImageLink() {
-        return imageLink;
-    }
-
-    public void setImageLink(String imageLink) {
-        this.imageLink = imageLink;
-    }
-
-    public long getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(long viewCount) {
-        this.viewCount = viewCount;
     }
 
     public List<Category> getCategories() {
@@ -128,14 +67,8 @@ public class filmDtos {
 
     @Override
     public String toString() {
-        return "filmDtos{" +
-                "filmID=" + filmID +
-                ", filmName='" + filmName + '\'' +
-                ", description='" + description + '\'' +
-                ", imageLink='" + imageLink + '\'' +
-                ", trailerLink='" + trailerLink + '\'' +
-                ", viewCount=" + viewCount +
-                ", ratingValue=" + ratingValue +
+        return super.toString() +
+                "rating=" + ratingValue +
                 ", categories=" + categories +
                 ", tags=" + tags +
                 ", seasons=" + seasons +

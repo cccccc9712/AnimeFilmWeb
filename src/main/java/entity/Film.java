@@ -7,23 +7,23 @@ public class Film {
 
     private int filmID;
     private String filmName;
-    private String filmDescription;
+    private String description;
     private Timestamp filmReleaseDate;
-    private String filmImgLink;
-    private String filmTrailerLink;
-    private Long filmViewCount;
+    private String imageLink;
+    private String trailerLink;
+    private Long viewCount;
 
     public Film() {
     }
 
-    public Film(int filmID, String filmName, String filmDescription, Timestamp filmReleaseDate, String filmImgLink, String filmTrailerLink, Long filmViewCount) {
+    public Film(int filmID, String filmName, String description, Timestamp filmReleaseDate, String imageLink, String trailerLink, Long viewCount) {
         this.filmID = filmID;
         this.filmName = filmName;
-        this.filmDescription = filmDescription;
+        this.description = description;
         this.filmReleaseDate = filmReleaseDate;
-        this.filmImgLink = filmImgLink;
-        this.filmTrailerLink = filmTrailerLink;
-        this.filmViewCount = filmViewCount;
+        this.imageLink = imageLink;
+        this.trailerLink = trailerLink;
+        this.viewCount = viewCount;
     }
 
     public int getFilmID() {
@@ -42,13 +42,6 @@ public class Film {
         this.filmName = filmName;
     }
 
-    public String getFilmDescription() {
-        return filmDescription;
-    }
-
-    public void setFilmDescription(String filmDescription) {
-        this.filmDescription = filmDescription;
-    }
 
     public Timestamp getFilmReleaseDate() {
         return filmReleaseDate;
@@ -58,28 +51,36 @@ public class Film {
         this.filmReleaseDate = filmReleaseDate;
     }
 
-    public String getFilmImgLink() {
-        return filmImgLink;
+    public String getDescription() {
+        return description;
     }
 
-    public void setFilmImgLink(String filmImgLink) {
-        this.filmImgLink = filmImgLink;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getFilmTrailerLink() {
-        return filmTrailerLink;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setFilmTrailerLink(String filmTrailerLink) {
-        this.filmTrailerLink = filmTrailerLink;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
-    public Long getFilmViewCount() {
-        return filmViewCount;
+    public String getTrailerLink() {
+        return trailerLink;
     }
 
-    public void setFilmViewCount(Long filmViewCount) {
-        this.filmViewCount = filmViewCount;
+    public void setTrailerLink(String trailerLink) {
+        this.trailerLink = trailerLink;
+    }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
     }
 
     @Override
@@ -87,11 +88,11 @@ public class Film {
         return "Film{" +
                 "filmID=" + filmID +
                 ", filmName='" + filmName + '\'' +
-                ", filmDescription='" + filmDescription + '\'' +
+                ", description='" + description + '\'' +
                 ", filmReleaseDate=" + filmReleaseDate +
-                ", filmImgLink='" + filmImgLink + '\'' +
-                ", filmTrailerLink='" + filmTrailerLink + '\'' +
-                ", filmViewCount='" + filmViewCount + '\'' +
+                ", imageLink='" + imageLink + '\'' +
+                ", trailerLink='" + trailerLink + '\'' +
+                ", viewCount=" + viewCount +
                 '}';
     }
 }

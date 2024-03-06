@@ -1,4 +1,4 @@
-package controller;
+package controller.adminController;
 
 import dal.episodeDao;
 import jakarta.servlet.ServletException;

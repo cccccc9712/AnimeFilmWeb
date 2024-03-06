@@ -46,7 +46,7 @@ public class categoryControl extends HttpServlet {
                         userDao dao = new userDao();
                         User user = dao.getUserByRememberMeToken(rememberMeToken);
                         if (user != null) {
-                            session = req.getSession(true); // Tạo session mới nếu cần
+                            session = req.getSession(true);
                             session.setAttribute("userId", user.getUserId());
                             session.setAttribute("userSession", user);
                         }

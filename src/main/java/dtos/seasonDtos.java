@@ -1,25 +1,26 @@
 package dtos;
 
 import entity.Episode;
+import entity.Season;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class seasonDtos {
+public class seasonDtos extends Season {
 
     private int filmId;
-
-    private int seasonId;
-    private String seasonName;
     private List<Episode> episodes = new ArrayList<>();
 
     public seasonDtos() {
+        super();
+        this.episodes = new ArrayList<>();
     }
 
-    public seasonDtos(int filmId, int seasonId, String seasonName, List<Episode> episodes) {
+    public seasonDtos(int seasonID, String seasonName, int filmId, List<Episode> episodes) {
+        super(seasonName);
+        setSeasonID(seasonID);
         this.filmId = filmId;
-        this.seasonId = seasonId;
-        this.seasonName = seasonName;
         this.episodes = episodes;
     }
 
@@ -29,22 +30,6 @@ public class seasonDtos {
 
     public void setFilmId(int filmId) {
         this.filmId = filmId;
-    }
-
-    public int getSeasonId() {
-        return seasonId;
-    }
-
-    public void setSeasonId(int seasonId) {
-        this.seasonId = seasonId;
-    }
-
-    public String getSeasonName() {
-        return seasonName;
-    }
-
-    public void setSeasonName(String seasonName) {
-        this.seasonName = seasonName;
     }
 
     public List<Episode> getEpisodes() {
@@ -59,8 +44,6 @@ public class seasonDtos {
     public String toString() {
         return "seasonDtos{" +
                 "filmId=" + filmId +
-                ", seasonId=" + seasonId +
-                ", seasonName='" + seasonName + '\'' +
                 ", episodes=" + episodes +
                 '}';
     }

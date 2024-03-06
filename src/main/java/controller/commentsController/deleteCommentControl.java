@@ -1,4 +1,4 @@
-package controller;
+package controller.commentsController;
 
 import dal.commentDao;
 import entity.User;
@@ -26,12 +26,11 @@ public class deleteCommentControl extends HttpServlet {
         commentDao cmd = new commentDao();
         String filmName = req.getParameter("filmName");
 
-            boolean success = cmd.deleteComment(commentID);
+            boolean success = cmd.deleteCommentAndReplies(commentID);
             if (success) {
                 resp.sendRedirect("detail?filmName=" + URLEncoder.encode(filmName, "UTF-8")+ "&page=" + currentPage);
             } else {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to delete comment.");
             }
     }
-
 }
