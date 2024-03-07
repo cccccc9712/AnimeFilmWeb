@@ -36,6 +36,20 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Firebase Admin SDK -->
+        <!-- https://mvnrepository.com/artifact/com.google.firebase/firebase-admin -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.2.0</version>
+        </dependency>
+        <!-- Google Cloud Storage -->
+        <!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-storage -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+            <version>2.34.0</version>
+        </dependency>
     </dependencies>
 
     <build>

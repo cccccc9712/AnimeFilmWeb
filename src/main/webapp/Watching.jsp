@@ -51,18 +51,9 @@
                     <c:otherwise>
                         <video controls crossorigin playsinline poster="" id="player">
                             <!-- Video files -->
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4" size="576">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4" size="720">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" size="1080">
-                            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1440p.mp4" type="video/mp4" size="1440">
-
-                            <!-- Caption files -->
-                            <track kind="captions" label="English" srclang="en" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt"
-                                   default>
-                            <track kind="captions" label="Français" srclang="fr" src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-
+                            <source src="${episode.epLink}" type="video/mp4">
                             <!-- Fallback for browsers that don't support the <video> element -->
-                            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" download>Download</a>
+                            <a href="${episode.epLink}" download>Download</a>
                         </video>
                     </c:otherwise>
                 </c:choose>
@@ -102,42 +93,6 @@
 <%--Script--%>
 <%@include file="decorator/script.jsp" %>
 <script>
-    <%--window.onload = function() {--%>
-    <%--    updateViewCount();--%>
-    <%--};--%>
-
-    <%--// document.addEventListener("DOMContentLoaded", function () {--%>
-    <%--//     var video = document.getElementById('player'); // Thay 'yourVideoElementId' bằng ID thực tế của video player trong trang của bạn--%>
-    <%--//     video.addEventListener('play', function () {--%>
-    <%--//         var hasViewed = sessionStorage.getItem('hasViewed');--%>
-    <%--//         if (!hasViewed) {--%>
-    <%--//             setTimeout(function () {--%>
-    <%--//                 if (!video.paused) {--%>
-    <%--//                     updateViewCount(); // Gọi AJAX để tăng view trong database--%>
-    <%--//                     sessionStorage.setItem('hasViewed', 'true'); // Đánh dấu video đã được xem--%>
-    <%--//                 }--%>
-    <%--//             }, 3000); // 3000 milliseconds = 3 giây--%>
-    <%--//         }--%>
-    <%--//     });--%>
-    <%--// });--%>
-
-    <%--var filmId = <c:out value="${episode.filmId}" />;--%>
-    <%--function updateViewCount() {--%>
-    <%--    fetch('AnimeFilmWeb/updateViewCount', {--%>
-    <%--        method: 'GET',--%>
-    <%--        headers: {'Content-Type': 'application/x-www-form-urlencoded'},--%>
-    <%--        body: 'filmId=' + filmId--%>
-    <%--    })--%>
-    <%--        .then(response => {--%>
-    <%--            if (response.ok) {--%>
-    <%--                return response.text();--%>
-    <%--            } else {--%>
-    <%--                throw new Error('Server responded with a status: ' + response.status);--%>
-    <%--            }--%>
-    <%--        })--%>
-    <%--        .then(data => console.log(data))--%>
-    <%--        .catch(error => console.error('Error updating view count:', error));--%>
-    <%--}--%>
 </script>
 <%--End Script--%>
 </body>

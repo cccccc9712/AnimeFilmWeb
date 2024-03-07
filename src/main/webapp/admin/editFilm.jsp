@@ -136,7 +136,7 @@
                         <td>${film.filmName}</td>
                         <td>${season.seasonName}</td>
                         <td>${season.episodes.size()} episodes</td>
-                        <td><a href="uploadEpisode.jsp" class="btn btn-primary">Add</a></td>
+                        <td><a href="loadEpisodePage?seasonId=${season.seasonID}" class="btn btn-primary">Add</a></td>
                         <td>
                             <form action="deleteSeason" method="POST">
                                 <input type="hidden" name="filmId" value="${film.filmID}">

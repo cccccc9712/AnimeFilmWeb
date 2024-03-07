@@ -20,6 +20,7 @@ public class loadUploadEpisodePageControl extends HttpServlet {
         episodeDao episodeDao = new episodeDao();
         List<Episode> episodes = episodeDao.getEpisodesForSeason(Integer.parseInt(seasonId));
         req.setAttribute("episodes", episodes);
+        req.setAttribute("seasonId", seasonId);
         req.getRequestDispatcher("/admin/uploadEpisode.jsp").forward(req, resp);
     }
 }

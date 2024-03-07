@@ -8,6 +8,7 @@ import entity.Episode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -264,6 +265,25 @@ public class episodeDao extends DBContext {
         return watchedEpisodes;
     }
 
+    public boolean addEpisode(int seasonID, String title, Timestamp releaseDate, boolean isPremium, String episodeLink) {
+        String sql = "INSERT INTO Episode (seasonID, title, releaseDate, isPremium, episodeLink) VALUES (?, ?, ?, ?, ?)";
+        boolean rowUpdated;
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, seasonID);
+            ps.setString(2, title);
+            ps.setTimestamp(3, releaseDate);
+            ps.setBoolean(4, isPremium);
+            ps.setString(5, episodeLink);
+
+            rowUpdated = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rowUpdated = false;
+        }
+        return rowUpdated;
+    }
 
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
