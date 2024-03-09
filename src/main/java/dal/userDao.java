@@ -25,11 +25,12 @@ public class userDao extends DBContext {
                 String storedHash = rs.getString("userPass");
 
                 if (BCrypt.checkpw(pass, storedHash)) {
-                    user = new User(rs.getInt("userID"),
-                            rs.getString("userName"),
-                            storedHash,
-                            rs.getString("gmail"),
-                            rs.getBoolean("isAdmin"));
+                    user = new User();
+                    user.setUserId(rs.getInt("userID"));
+                    user.setUserName(rs.getString("userName"));
+                    user.setUserPass(storedHash);
+                    user.setUserGmail(rs.getString("gmail"));
+                    user.setAdmin(rs.getBoolean("isAdmin"));
                 }
             }
         } catch (Exception e) {
@@ -38,7 +39,7 @@ public class userDao extends DBContext {
         return user;
     }
 
-    public boolean registerUser(userDto user) {
+    public boolean registerUser(User user) {
         String hashedPassword = BCrypt.hashpw(user.getUserPass(), BCrypt.gensalt());
         String sql = "INSERT INTO [User] (userName, userPass, gmail, isAdmin) VALUES (?, ?, ?, ?)";
         try {
@@ -129,7 +130,7 @@ public class userDao extends DBContext {
                     String userPass = rs.getString("userPass");
                     String gmail = rs.getString("gmail");
                     boolean isAdmin = rs.getBoolean("isAdmin");
-                    user = new User(userId, userName, userPass, gmail, isAdmin);
+                    user = new User(userName, userPass, gmail, isAdmin);
                 }
             }
         } catch (Exception e) {
@@ -229,7 +230,7 @@ public class userDao extends DBContext {
         // Đặt ngày hết hạn là một tháng kể từ ngày hiện tại
         // Lưu ý: 30 ngày * 24 giờ * 60 phút * 60 giây * 1000 millis
         Date outOfDate = new Date(millis + (30L * 24 * 60 * 60 * 1000));
-        System.out.println(dao.registerPremium(3, "Premium",registeredDate, outOfDate ));
+        System.out.println(dao.registerPremium(3, "Premium", registeredDate, outOfDate));
     }
 
 }

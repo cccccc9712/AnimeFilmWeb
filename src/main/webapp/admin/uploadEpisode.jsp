@@ -48,18 +48,16 @@
         </tr>
         </thead>
         <tbody id="episodeList">
-        <c:forEach var="episodes" items="${episodes}">
+        <c:forEach var="episode" items="${episodes}">
             <tr>
-                <td>${episodes.epTittle}</td>
-                <td>${episodes.epDate}</td>
-                <td>${episodes.epLink}</td>
+                <td>${episode.epTittle}</td>
+                <td>${episode.epDate}</td>
+                <td>${episode.epLink}</td>
                 <td>
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="premium"
-                                <c:if test="${episodes.getPremium() == true}">
-                                    checked
-                                </c:if>
-                        />
+                        <input class="form-check-input" type="checkbox" name="premium" value="${episode.epId}"
+                            ${episode.getPremium() ? 'checked' : ''}
+                               onchange="updatePremiumStatus(${episode.epId}, this.checked)"/>
                         <label class="form-check-label" for="premiumCheckbox">
                             Premium
                         </label>
@@ -183,14 +181,31 @@
                     $(".alert").fadeOut("slow");
                 }, 2000);
 
-                // Clear the stored message and the flag so it doesn't reappear on future page loads
                 localStorage.removeItem('uploadMessage');
                 localStorage.removeItem('uploadSuccess');
                 localStorage.removeItem('uploadOccurred');
             }
         }
     );
+</script>
+<script>
+    function updatePremiumStatus(episodeId, isChecked) {
+        $.ajax({
+            url: '/AnimeFilmWeb/updatePremium',
+            type: 'POST',
+            data: {
+                episodeId: episodeId,
+                isPremium: isChecked ? 'true' : 'false'
+            },
+            success: function (response) {
+                localStorage.setItem('uploadOccurred', 'true');
+                localStorage.setItem('uploadMessage', response.message);
+                localStorage.setItem('uploadSuccess', response.success);
 
+                window.location.reload();
+            },
+        });
+    }
 </script>
 </body>
 </html>

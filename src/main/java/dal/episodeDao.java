@@ -285,6 +285,22 @@ public class episodeDao extends DBContext {
         return rowUpdated;
     }
 
+    public boolean updatePremium(int episodeId, boolean isPremium) {
+        String sql = "UPDATE Episode SET isPremium = ? WHERE episodeID = ?";
+        boolean rowUpdated;
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setBoolean(1, isPremium);
+            ps.setInt(2, episodeId);
+            rowUpdated = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rowUpdated = false;
+        }
+        return rowUpdated;
+    }
+
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
     }

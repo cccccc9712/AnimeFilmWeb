@@ -29,10 +29,7 @@ public class uploadVideoControl extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String seasonId = req.getParameter("seasonId");
         String episodeName = req.getParameter("episodeName");
-        boolean isPremium = false;
-        if (req.getParameter("isPremium") != null) {
-            isPremium = true;
-        }
+        Boolean isPremium = Boolean.parseBoolean(req.getParameter("isPremium"));
         long currentTimeMillis = System.currentTimeMillis();
         Date currentDate = new Date(currentTimeMillis);
         Timestamp uploadTime = new Timestamp(currentDate.getTime());

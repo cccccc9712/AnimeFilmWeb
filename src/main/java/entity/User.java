@@ -7,8 +7,7 @@ public class User {
     private String userGmail;
     private Boolean isAdmin;
 
-    public User(int userId, String userName, String userPass, String userGmail, Boolean isAdmin) {
-        this.userId = userId;
+    public User(String userName, String userPass, String userGmail, Boolean isAdmin) {
         this.userName = userName;
         this.userPass = userPass;
         this.userGmail = userGmail;

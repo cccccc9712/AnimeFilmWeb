@@ -53,8 +53,15 @@ public class editFilmControl extends HttpServlet {
         }
         if (filePart != null && fileName != null && !fileName.isBlank() && filePart.getSize() > 0) {
             String savePath = getServletContext().getRealPath("/img/thumbnailUpload") + File.separator + fileName;
-            File fileSaveDir = new File(savePath);
-            filePart.write(savePath + File.separator);
+            File file = new File(savePath);
+
+            if (!file.exists()) {
+                filePart.write(savePath); // Ghi file mới
+            } else {
+                //Avoid duplicate files
+                file.delete();
+                filePart.write(savePath);
+            }
             dao.updateFilmThumbnail(filmId, thumbnailPath);
         }
         List<Category> filmCategories = film.getCategories();
@@ -86,7 +93,7 @@ public class editFilmControl extends HttpServlet {
                     tgDao.insertTags(filmId, Integer.parseInt(t));
                 }
             }
-        }else {
+        } else {
             tgDao.removeAllTagsFromFilm(filmId);
         }
 

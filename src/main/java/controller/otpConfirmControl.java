@@ -2,6 +2,7 @@ package controller;
 
 import dal.userDao;
 import dtos.userDto;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,7 +32,7 @@ public class otpConfirmControl  extends HttpServlet {
 
         if (Boolean.TRUE.equals(isRegister)){
             if (userCode != null && userCode.equals(savedCode)) {
-                boolean checked = ud.registerUser(new userDto(generateUsername(gmail), password, gmail, false));
+                boolean checked = ud.registerUser(new User(generateUsername(gmail), password, gmail, false));
                 if (checked) {
                     req.setAttribute("failedLoginMessage", "Sign up successfully!");
                     req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
