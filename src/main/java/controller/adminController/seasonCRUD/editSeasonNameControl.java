@@ -1,4 +1,4 @@
-package controller.adminController;
+package controller.adminController.seasonCRUD;
 
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;

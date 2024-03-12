@@ -7,10 +7,7 @@ import entity.*;
 
 import java.sql.*;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class filmDao extends DBContext {
 
@@ -532,6 +529,7 @@ public class filmDao extends DBContext {
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setRatingValue(getBetterFloat(rs.getFloat("averageRating")));
+                film.setViewCount(rs.getLong("viewCount"));
                 film.setCategories(getCategoriesForFilm(film.getFilmID()));
                 film.setTags(getTagsForFilm(film.getFilmID()));
                 films.add(film);
@@ -805,6 +803,192 @@ public class filmDao extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<filmDtos> searchFilmsBySort(String searchQuery, int page, int filmsPerPage, String sortField, String sortOrder) {
+        List<filmDtos> films = new ArrayList<>();
+        // Validate sortField and sortOrder to prevent SQL injection
+        List<String> validSortFields = Arrays.asList("filmName", "description", "viewCount", "averageRating"); // Add other valid fields
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+
+        String sql = "WITH FilteredFilms AS (\n" +
+                "SELECT f.*, ra.averageRating, ROW_NUMBER() OVER (ORDER BY " + sortField + " " + sortOrder + ") AS RowNum\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN (SELECT filmID, AVG(ratingValue) AS averageRating FROM Ratings GROUP BY filmID) ra ON f.filmID = ra.filmID\n" +
+                "WHERE f.filmName LIKE ? OR f.description LIKE ?\n" +
+                "),\n" +
+                "PagedFilms AS (\n" +
+                "SELECT * FROM FilteredFilms\n" +
+                "WHERE RowNum BETWEEN ? AND ?\n" +
+                ")\n" +
+                "SELECT * FROM PagedFilms;";
+        try {
+            // Prepare connection and statement
+            int startRow = (page - 1) * filmsPerPage + 1;
+            int endRow = startRow + filmsPerPage - 1;
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + searchQuery + "%");
+            ps.setString(2, "%" + searchQuery + "%");
+            ps.setInt(3, startRow);
+            ps.setInt(4, endRow);
+            rs = ps.executeQuery();
+
+            // Process results
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(getBetterFloat(rs.getFloat("averageRating"))); // Ensure this method correctly handles null values
+                film.setCategories(getCategoriesForFilm(film.getFilmID())); // Ensure this method exists and is efficient
+                film.setTags(getTagsForFilm(film.getFilmID())); // Ensure this method exists and is efficient
+                films.add(film);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            // Close resources
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return films;
+    }
+
+    public List<filmDtos> getFilmsPerPageBySort(int currentPage, int filmsPerPage, String sortField, String sortOrder) {
+        List<filmDtos> films = new ArrayList<>();
+
+        // Validate sortField and sortOrder to prevent SQL injection
+        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID"); // Add other fields as needed
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+
+        String sql = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                ")\n" +
+                "SELECT f.*, ra.averageRating\n" +
+                "FROM Film f\n" +
+                "LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "ORDER BY " + sortField + " " + sortOrder + "\n" +
+                "OFFSET ? ROWS\n" +
+                "FETCH NEXT ? ROWS ONLY;";
+
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            // Calculate offset = number of films to skip
+            int offset = (currentPage - 1) * filmsPerPage;
+            ps.setInt(1, offset);
+
+            // fetch next = number of films to retrieve
+            ps.setInt(2, filmsPerPage);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(getBetterFloat(rs.getFloat("averageRating")));
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+                films.add(film);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return films;
+    }
+
+    public List<filmDtos> getFilmsByCategoryBySort(String categoryName, int page, int filmsPerPage, String sortField, String sortOrder) {
+        List<filmDtos> films = new ArrayList<>();
+        // Validate sortField and sortOrder to prevent SQL injection
+        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID"); // Add other fields as needed
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+
+        String query = "WITH RatingAverage AS (\n" +
+                "    SELECT\n" +
+                "        filmID,\n" +
+                "        AVG(ratingValue) AS averageRating\n" +
+                "    FROM\n" +
+                "        Ratings\n" +
+                "    GROUP BY\n" +
+                "        filmID\n" +
+                "), Film_CTE AS (\n" +
+                "    SELECT ROW_NUMBER() OVER (ORDER BY " + sortField + " " + sortOrder + ") AS RowNum, f.*, ra.averageRating\n" +
+                "    FROM Film f\n" +
+                "    JOIN FilmCategory fc ON f.filmID = fc.filmID\n" +
+                "    JOIN Category c ON fc.CategoryID = c.CategoryID\n" +
+                "    LEFT JOIN RatingAverage ra ON f.filmID = ra.filmID\n" +
+                "    WHERE c.CategoryName = ?\n" +
+                ")\n" +
+                "SELECT * FROM Film_CTE\n" +
+                "WHERE RowNum BETWEEN ? AND ?;";
+
+        try {
+            int startRow = (page - 1) * filmsPerPage + 1;
+            int endRow = startRow + filmsPerPage - 1;
+            conn = getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, categoryName);
+            ps.setInt(2, startRow);
+            ps.setInt(3, endRow);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                filmDtos film = new filmDtos();
+                film.setFilmID(rs.getInt("filmID"));
+                film.setFilmName(rs.getString("filmName"));
+                film.setDescription(rs.getString("description"));
+                film.setImageLink(rs.getString("imageLink"));
+                film.setTrailerLink(rs.getString("trailerLink"));
+                film.setViewCount(rs.getLong("viewCount"));
+                film.setRatingValue(getBetterFloat(rs.getFloat("averageRating")));
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
+                film.setSeasons(getSeasonsForFilm(film.getFilmID()));
+                film.setEpisodes(getEpisodesForFilm(film.getFilmID()));
+                films.add(film);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return films;
     }
 
 

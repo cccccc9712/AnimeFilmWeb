@@ -1,4 +1,4 @@
-package controller.adminController;
+package controller.adminController.episodeCRUD;
 
 import com.google.gson.JsonObject;
 import dal.episodeDao;

@@ -24,6 +24,10 @@
         margin-left: auto;
         max-width: 300px;
     }
+
+    a {
+        color: black;
+    }
 </style>
 <body>
 <%@include file="adminDecorator/adminHeader.jsp" %>
@@ -34,14 +38,14 @@
                 <a href="#" class="btn btn-info btn-block">All User</a>
             </div>
             <div class="col-md-3">
-                <a href="#" class="btn btn-success btn-block">Top Category</a>
+                <a href="adminDashboard" class="btn btn-success btn-block">All anime</a>
             </div>
-            <div class="col-md-3">
-                <a href="#" class="btn btn-danger btn-block">Top Anime</a>
-            </div>
-            <div class="col-md-3">
-                <a href="#" class="btn btn-warning btn-block">Recycle Bin</a>
-            </div>
+            <%--            <div class="col-md-3">--%>
+            <%--                <a href="#" class="btn btn-danger btn-block">Top Anime</a>--%>
+            <%--            </div>--%>
+            <%--            <div class="col-md-3">--%>
+            <%--                <a href="#" class="btn btn-warning btn-block">Recycle Bin</a>--%>
+            <%--            </div>--%>
         </div>
 
         <div class="card-header">
@@ -51,7 +55,7 @@
                 <button type="submit" class="btn btn-primary">Add new</button>
             </form>
             <div class="input-group">
-                <form method="get" action="${pageContext.request.contextPath}/adminDashboard">
+                <form method="get" action="adminDashboard">
                     <input type="text" name="searchQuery" class="form-control" placeholder="Search...">
                 </form>
             </div>
@@ -62,13 +66,75 @@
             <thead>
             <tr>
                 <th>Thumbnail</th>
-                <th>Name</th>
+                <th>
+                    <c:url var="sortUrlByFilmName" value="/adminDashboard">
+                        <c:if test="${not empty currentSearch}">
+                            <c:param name="searchQuery" value="${currentSearch}"/>
+                        </c:if>
+                        <c:if test="${not empty param.categoryName}">
+                            <c:param name="categoryName" value="${param.categoryName}"/>
+                        </c:if>
+                        <c:param name="sort" value="filmName"/>
+                        <c:param name="order"
+                                 value="${currentSortField == 'filmName' && currentSortOrder == 'ASC' ? 'DESC' : 'ASC'}"/>
+                    </c:url>
+                    <a style="text-decoration: none"
+                       href="${sortUrlByFilmName}">Name ${currentSortField == 'filmName' ? currentSortOrder == 'ASC' ? '&#9650;' : '&#9660;' : ''}</a>
+                </th>
                 <th>Seasons</th>
                 <th>Episodes</th>
-                <th>Categories</th>
-                <th>Tags</th>
-                <th>Views</th>
-                <th>Rate</th>
+                <th>
+                    <form action="adminDashboard" method="GET">
+                        <select name="categoryName" onchange="this.form.submit()">
+                            <option value="all">All Categories</option>
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.categoryName}"
+                                        <c:if test="${category.categoryName == param.categoryName}">selected</c:if>>${category.categoryName}</option>
+                            </c:forEach>
+                        </select>
+                    </form>
+                </th>
+                <th>
+                    <form action="adminDashboard" method="GET">
+                        <select name="tagName" onchange="this.form.submit()">
+                            <option value="all">All Tags</option>
+                            <c:forEach var="tag" items="${tags}">
+                                <option value="${tag.tagName}"
+                                        <c:if test="${tag.tagName == param.tagName}">selected</c:if>>${tag.tagName}</option>
+                            </c:forEach>
+                        </select>
+                    </form>
+                </th>
+                <th>
+                    <c:url var="sortUrlByViewCount" value="/adminDashboard">
+                        <c:if test="${not empty currentSearch}">
+                            <c:param name="searchQuery" value="${currentSearch}"/>
+                        </c:if>
+                        <c:if test="${not empty param.categoryName}">
+                            <c:param name="categoryName" value="${param.categoryName}"/>
+                        </c:if>
+                        <c:param name="sort" value="viewCount"/>
+                        <c:param name="order"
+                                 value="${currentSortField == 'viewCount' && currentSortOrder == 'ASC' ? 'DESC' : 'ASC'}"/>
+                    </c:url>
+                    <a style="text-decoration: none"
+                       href="${sortUrlByViewCount}">Views ${currentSortField == 'viewCount' ? currentSortOrder == 'ASC' ? '&#9650;' : '&#9660;' : ''}</a>
+                </th>
+                <th>
+                    <c:url var="sortUrlByRating" value="/adminDashboard">
+                        <c:if test="${not empty currentSearch}">
+                            <c:param name="searchQuery" value="${currentSearch}"/>
+                        </c:if>
+                        <c:if test="${not empty param.categoryName}">
+                            <c:param name="categoryName" value="${param.categoryName}"/>
+                        </c:if>
+                        <c:param name="sort" value="averageRating"/>
+                        <c:param name="order"
+                                 value="${currentSortField == 'averageRating' && currentSortOrder == 'ASC' ? 'DESC' : 'ASC'}"/>
+                    </c:url>
+                    <a style="text-decoration: none"
+                       href="${sortUrlByRating}">Rate ${currentSortField == 'averageRating' ? currentSortOrder == 'ASC' ? '&#9650;' : '&#9660;' : ''}</a>
+                </th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -123,44 +189,68 @@
                 <ul class="pagination justify-content-center">
                     <c:if test="${currentPage > 1}">
                         <li class="page-item">
-                            <c:choose>
-                                <c:when test="${not empty currentSearch}">
-                                    <a class="page-link"
-                                       href="adminDashboard?page=${currentPage - 1}&searchQuery=${currentSearch}"
-                                       tabindex="-1">Previous</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="page-link" href="adminDashboard?page=${currentPage - 1}" tabindex="-1">Previous</a>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:set var="previousPage" value="${currentPage - 1}"/>
+                            <c:url value="adminDashboard" var="previousPageURL">
+                                <c:param name="page" value="${previousPage}"/>
+                                <c:if test="${not empty currentSearch}">
+                                    <c:param name="searchQuery" value="${currentSearch}"/>
+                                </c:if>
+                                <c:if test="${not empty param.categoryName}">
+                                    <c:param name="categoryName" value="${param.categoryName}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortField}">
+                                    <c:param name="sort" value="${currentSortField}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortOrder}">
+                                    <c:param name="order" value="${currentSortOrder}"/>
+                                </c:if>
+                            </c:url>
+                            <a class="page-link" href="${previousPageURL}" tabindex="-1">Previous</a>
                         </li>
                     </c:if>
                     <c:forEach begin="${pageStart}" end="${pageEnd}" var="i">
+                        <c:set var="pageNumberURL">
+                            <c:url value="adminDashboard">
+                                <c:param name="page" value="${i}"/>
+                                <c:if test="${not empty currentSearch}">
+                                    <c:param name="searchQuery" value="${currentSearch}"/>
+                                </c:if>
+                                <c:if test="${not empty param.categoryName}">
+                                    <c:param name="categoryName" value="${param.categoryName}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortField}">
+                                    <c:param name="sort" value="${currentSortField}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortOrder}">
+                                    <c:param name="order" value="${currentSortOrder}"/>
+                                </c:if>
+                            </c:url>
+                        </c:set>
                         <li class="page-item ${i == currentPage ? 'active' : ''}">
-                            <c:choose>
-                            <c:when test="${not empty currentSearch}">
-                            <a class="page-link"
-                               href="adminDashboard?page=${i}&searchQuery=${currentSearch}">${i}</a>
-                            </c:when>
-                            <c:otherwise>
-                                <a class="page-link"
-                                   href="adminDashboard?page=${i}">${i}</a>
-                            </c:otherwise>
-                            </c:choose>
+                            <a class="page-link" href="${pageNumberURL}">${i}</a>
                         </li>
                     </c:forEach>
                     <c:if test="${currentPage < totalPages}">
                         <li class="page-item">
-                            <c:choose>
-                                <c:when test="${not empty currentSearch}">
-                                    <a class="page-link"
-                                       href="adminDashboard?page=${currentPage + 1}&searchQuery=${currentSearch}">Next</a>
-                                </c:when>
-                                <c:otherwise>
-                                    <a class="page-link" href="adminDashboard?page=${currentPage + 1}">Next</a>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:set var="nextPage" value="${currentPage + 1}"/>
+                            <c:url value="adminDashboard" var="nextPageURL">
+                                <c:param name="page" value="${nextPage}"/>
+                                <c:if test="${not empty currentSearch}">
+                                    <c:param name="searchQuery" value="${currentSearch}"/>
+                                </c:if>
+                                <c:if test="${not empty param.categoryName}">
+                                    <c:param name="categoryName" value="${param.categoryName}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortField}">
+                                    <c:param name="sort" value="${currentSortField}"/>
+                                </c:if>
+                                <c:if test="${not empty currentSortOrder}">
+                                    <c:param name="order" value="${currentSortOrder}"/>
+                                </c:if>
+                            </c:url>
+                            <a class="page-link" href="${nextPageURL}">Next</a>
                         </li>
+
                     </c:if>
                 </ul>
             </nav>

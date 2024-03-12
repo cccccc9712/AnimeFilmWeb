@@ -1,4 +1,4 @@
-package controller.adminController;
+package controller.adminController.filmCRUD;
 
 import dal.categoryDao;
 import dal.filmDao;

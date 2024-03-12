@@ -6,6 +6,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <%@include file="decorator/head.jsp" %>
+<style>
+</style>
 <body class="body">
 <%--Header--%>
 <%@include file="decorator/header.jsp" %>

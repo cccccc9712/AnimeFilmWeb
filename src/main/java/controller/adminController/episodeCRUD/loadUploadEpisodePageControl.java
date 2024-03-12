@@ -1,4 +1,4 @@
-package controller.adminController;
+package controller.adminController.episodeCRUD;
 
 import dal.episodeDao;
 import dtos.episodeDtos;
