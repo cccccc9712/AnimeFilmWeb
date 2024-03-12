@@ -23,17 +23,7 @@
 <%@include file="adminDecorator/adminHeader.jsp" %>
 <div class="wrapper">
     <div class="container mt-5">
-        <c:if test="${not empty errorMessage}">
-            <div class="alert alert-danger" role="alert">
-                    ${errorMessage}
-            </div>
-        </c:if>
-        <c:if test="${not empty successMessage}">
-            <div class="alert alert-success" role="alert">
-                    ${successMessage}
-            </div>
-        </c:if>
-        <ul style="margin-bottom: 20px" class="nav nav-tabs">
+        <ul id="editform" style="margin-bottom: 20px" class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#tab-1"
                 >Edit Film</a>
@@ -45,7 +35,7 @@
         </ul>
         <div class="tab-pane fade show active" id="tab-1">
             <h2>Edit Film</h2>
-            <form action="editFilm" method="post" enctype="multipart/form-data">
+            <form id="editForm" method="post" action="editFilm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" name="filmName" class="form-control" id="name" placeholder="${film.filmName}">
@@ -103,7 +93,7 @@
         </div>
         <div class="tab-pane fade" id="tab-2">
             <h2>Add Season</h2>
-            <form action="addSeason" method="get" id="addSeasonForm">
+            <form action="addSeason" method="POST" id="addSeasonForm">
                 <input type="hidden" name="filmId" value="${film.filmID}"/>
                 <div class="form-group">
                     <label for="seasonName">Season Name:</label>
@@ -134,11 +124,16 @@
                     <tr>
                         <td><img src="${film.imageLink}" width="50vh" alt="${film.filmName}" srcset=""></td>
                         <td>${film.filmName}</td>
-                        <td>${season.seasonName}</td>
+                        <td>
+                                ${season.seasonName}
+                            <i class="fa fa-edit"
+                               onclick="event.stopPropagation(); editSeasonName('${film.filmID}','${season.seasonID}', '${season.seasonName}');"></i>
+                        </td>
+
                         <td>${season.episodes.size()} episodes</td>
                         <td><a href="loadEpisodePage?seasonId=${season.seasonID}" class="btn btn-primary">Add</a></td>
                         <td>
-                            <form action="deleteSeason" method="POST">
+                            <form action="deleteSeason" method="POST" class="deleteSeasonForm">
                                 <input type="hidden" name="filmId" value="${film.filmID}">
                                 <input type="hidden" name="seasonId" value="${season.seasonID}">
                                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -165,7 +160,7 @@
 <%@include file="adminDecorator/adminFooter.jsp" %>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Ẩn nội dung của tab-2 ngay khi trang được tải
         $("#tab-2").hide();
 
@@ -177,13 +172,155 @@
             $(".tab-pane").not(tabId).css("display", "none");
             $(tabId).fadeIn();
         });
-
-        // Tự động ẩn thông báo sau 2 giây
-        setTimeout(function() {
-            $(".alert").fadeOut("slow");
-        }, 2000);
     });
 
+    //Xử ly tạo form edit season name và gửi ve server
+    function editSeasonName(filmId, seasonId, currentName) {
+        var inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.value = currentName;
+        inputField.className = 'form-control';
+        var td = event.target.parentNode;
+        td.innerHTML = '';
+        td.appendChild(inputField);
+        inputField.focus();
+        inputField.onblur = function () {
+            td.removeChild(inputField);
+            td.innerHTML = currentName + '<i class="fa fa-edit" onclick="event.stopPropagation(); editSeasonName(\'' + filmId + '\', \'' + seasonId + '\', \'' + currentName + '\');"></i>';
+        };
+        inputField.onkeypress = function (e) {
+            if (e.key === 'Enter') {
+                var newName = inputField.value;
+                console.log("newName: " + newName + " seasonId: " + seasonId + " filmId: " + filmId);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/AnimeFilmWeb/editSeasonName", true);
+                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                td.textContent = newName;
+                                td.insertAdjacentHTML('beforeend', '<i class="fa fa-edit" onclick="event.stopPropagation(); editSeasonName(\'' + filmId + '\', \'' + seasonId + '\', \'' + newName + '\');"></i>');
+                                localStorage.setItem('uploadOccurred', 'true');
+                                localStorage.setItem('uploadMessage', response.message);
+                                localStorage.setItem('uploadSuccess', response.success);
+
+                                window.location.reload();
+                            }
+                        } else {
+                            console.error('Đã xảy ra lỗi khi gửi yêu cầu AJAX');
+                        }
+                    }
+                };
+                console.log("filmId=" + filmId + "&seasonId=" + seasonId + "&seasonName=" + newName);
+                xhr.send("filmId=" + filmId + "&seasonId=" + seasonId + "&seasonName=" + newName);
+
+                e.preventDefault();
+            }
+        };
+    }
+
+    //Xu ly thông báo va reload trang
+    document.addEventListener('DOMContentLoaded', (event) => {
+            const uploadOccurred = localStorage.getItem('uploadOccurred') === 'true';
+            const message = localStorage.getItem('uploadMessage');
+            const isSuccess = localStorage.getItem('uploadSuccess') === 'true';
+
+            if (uploadOccurred) {
+                if (isSuccess && message) {
+                    $('#editform').before('<div class="alert alert-success" role="alert">' + message + '</div>');
+                } else if (message) {
+                    $('#editform').before('<div class="alert alert-danger" role="alert">' + message + '</div>');
+                }
+
+                setTimeout(function () {
+                    $(".alert").fadeOut("slow");
+                }, 2000);
+
+                localStorage.removeItem('uploadMessage');
+                localStorage.removeItem('uploadSuccess');
+                localStorage.removeItem('uploadOccurred');
+            }
+        }
+    );
+
+    //Update thông tin của film
+    $(document).ready(function () {
+        $('#editForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                type: "POST",
+                url: $(this).attr('action'),
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        localStorage.setItem('uploadOccurred', 'true');
+                        localStorage.setItem('uploadMessage', response.message);
+                        localStorage.setItem('uploadSuccess', response.success);
+
+                        window.location.reload();
+                    } else {
+                        alert('Có lỗi xảy ra');
+                    }
+                },
+                error: function () {
+                    alert('Lỗi AJAX');
+                }
+            });
+        });
+    });
+
+    //Xu ly add season moi
+    $('#addSeasonForm').submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    localStorage.setItem('uploadOccurred', 'true');
+                    localStorage.setItem('uploadMessage', response.message);
+                    localStorage.setItem('uploadSuccess', response.success);
+
+                    window.location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    });
+
+    //Xu ly xoa season
+    $('.deleteSeasonForm').submit(function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: $(this).attr('action'),
+            data: $(this).serialize(),
+            success: function (response) {
+                if (response.success) {
+                    localStorage.setItem('uploadOccurred', 'true');
+                    localStorage.setItem('uploadMessage', response.message);
+                    localStorage.setItem('uploadSuccess', response.success);
+
+                    window.location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert('Có lỗi xảy ra');
+            }
+        });
+    });
 </script>
 </body>
 </html>

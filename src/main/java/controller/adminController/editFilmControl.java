@@ -6,6 +6,7 @@ import dal.tagsDao;
 import dtos.filmDtos;
 import entity.Category;
 import entity.Tag;
+import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -97,7 +98,12 @@ public class editFilmControl extends HttpServlet {
             tgDao.removeAllTagsFromFilm(filmId);
         }
 
-        resp.sendRedirect("adminDashboard");
+        JsonObject responseObj = new JsonObject();
+        responseObj.addProperty("success", true);
+        responseObj.addProperty("message", "Film updated successfully");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(responseObj.toString());
     }
 
     private boolean contains(String[] array, int value) {

@@ -191,11 +191,25 @@ public class episodeDao extends DBContext {
     }
 
     public boolean deleteSeason(int seasonID) {
-        String sql = "DELETE FROM Season WHERE seasonID = ?";
+        String deleteEpisodesSQL = "DELETE FROM Episode WHERE seasonID = ?";
+        String deleteSeasonSQL = "DELETE FROM Season WHERE seasonID = ?";
+        String deleteWatchHistorySQL = "DELETE FROM WatchHistory WHERE episodeID IN (SELECT episodeID FROM Episode WHERE seasonID = ?)";
 
         try {
             conn = new DBContext().getConnection();
-            ps = conn.prepareStatement(sql);
+
+            // Xóa các bản ghi liên quan trong bảng WatchHistory
+            ps = conn.prepareStatement(deleteWatchHistorySQL);
+            ps.setInt(1, seasonID);
+            ps.executeUpdate();
+
+            // Tiếp theo, xóa các tài liệu trong bảng Episode của mùa đó
+            ps = conn.prepareStatement(deleteEpisodesSQL);
+            ps.setInt(1, seasonID);
+            ps.executeUpdate();
+
+            // Cuối cùng, xóa mùa từ bảng Season
+            ps = conn.prepareStatement(deleteSeasonSQL);
             ps.setInt(1, seasonID);
 
             int rowsDeleted = ps.executeUpdate();
@@ -203,8 +217,21 @@ public class episodeDao extends DBContext {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            // Đảm bảo đóng kết nối sau khi sử dụng
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     //Lưu các Episodes mà User đã xem
     public boolean saveWatchedHistory(int userID, int filmID, int episodeID, java.sql.Date watchDate, java.sql.Time watchTime) {
@@ -301,7 +328,24 @@ public class episodeDao extends DBContext {
         return rowUpdated;
     }
 
+    public boolean updateSeasonName(int seasonId, String seasonName) {
+        String sql = "UPDATE Season SET seasonName = ? WHERE seasonID = ?";
+        boolean rowUpdated;
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, seasonName);
+            ps.setInt(2, seasonId);
+            rowUpdated = ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rowUpdated = false;
+        }
+        return rowUpdated;
+    }
+
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
+        d.updateSeasonName(46, "Season 5");
     }
 }

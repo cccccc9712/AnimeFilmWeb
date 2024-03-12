@@ -1,5 +1,6 @@
 package controller.adminController;
 
+import com.google.gson.JsonObject;
 import dal.episodeDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,13 +18,18 @@ public class deleteSeasonControl extends HttpServlet {
         String filmId = req.getParameter("filmId");
 
         episodeDao dao = new episodeDao();
+        JsonObject responseObj = new JsonObject();
         boolean sucess = dao.deleteSeason(Integer.parseInt(seasonId));
-         if (sucess) {
-            req.setAttribute("successMessage", "Delete season successfully");
+        if (sucess) {
+            responseObj.addProperty("success", true);
+            responseObj.addProperty("message", "Season deleted successfully");
         } else {
-            req.setAttribute("errorMessage", "Delete season failed");
-         }
+            responseObj.addProperty("success", false);
+            responseObj.addProperty("message", "Season deleted unsuccessfully");
+        }
 
-        req.getRequestDispatcher("editFilmPage?filmId=" + filmId).forward(req, resp);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(responseObj.toString());
     }
 }

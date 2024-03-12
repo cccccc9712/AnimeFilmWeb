@@ -123,7 +123,7 @@ public class userDao extends DBContext {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setString(1, rememberMeToken);
-            try (ResultSet rs = ps.executeQuery()) {
+            rs = ps.executeQuery();
                 if (rs.next()) {
                     int userId = rs.getInt("userID");
                     String userName = rs.getString("userName");
@@ -131,8 +131,8 @@ public class userDao extends DBContext {
                     String gmail = rs.getString("gmail");
                     boolean isAdmin = rs.getBoolean("isAdmin");
                     user = new User(userName, userPass, gmail, isAdmin);
+                    user.setUserId(userId);
                 }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -225,12 +225,7 @@ public class userDao extends DBContext {
 
     public static void main(String[] args) {
         userDao dao = new userDao();
-        long millis = System.currentTimeMillis();
-        Date registeredDate = new Date(millis);
-        // Đặt ngày hết hạn là một tháng kể từ ngày hiện tại
-        // Lưu ý: 30 ngày * 24 giờ * 60 phút * 60 giây * 1000 millis
-        Date outOfDate = new Date(millis + (30L * 24 * 60 * 60 * 1000));
-        System.out.println(dao.registerPremium(3, "Premium", registeredDate, outOfDate));
+        System.out.println(dao.getUserByRememberMeToken("0b8f24a8-c659-4a8d-b58a-4eb4d756bad0").toString());
     }
 
 }
