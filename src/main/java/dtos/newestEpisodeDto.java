@@ -1,8 +1,8 @@
 package dtos;
 
-import model.Category;
-import model.Season;
-import model.Tag;
+import entity.Category;
+import entity.Season;
+import entity.Tag;
 
 import java.sql.Date;
 import java.util.List;

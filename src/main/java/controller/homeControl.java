@@ -5,7 +5,7 @@ import dal.filmDao;
 import dal.userDao;
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
-import model.User;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;

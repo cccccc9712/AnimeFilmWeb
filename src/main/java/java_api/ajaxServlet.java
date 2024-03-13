@@ -8,7 +8,7 @@ package java_api;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dal.userDao;
-import model.User;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

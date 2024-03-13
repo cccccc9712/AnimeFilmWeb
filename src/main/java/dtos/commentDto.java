@@ -1,6 +1,6 @@
 package dtos;
 
-import model.Comment;
+import entity.Comment;
 
 import java.sql.Timestamp;
 import java.util.List;

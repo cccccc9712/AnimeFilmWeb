@@ -3,7 +3,7 @@ package controller.adminController.filmCRUD;
 import dal.categoryDao;
 import dal.filmDao;
 import dal.tagsDao;
-import model.Film;
+import entity.Film;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;

@@ -1,7 +1,7 @@
 package controller;
 
 import dal.userDao;
-import model.User;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
