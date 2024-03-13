@@ -5,14 +5,12 @@ import dal.filmDao;
 import dal.userDao;
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
-import entity.Episode;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "homeControl", urlPatterns = "/home")

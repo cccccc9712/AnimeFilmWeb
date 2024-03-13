@@ -1,8 +1,7 @@
 package controller.adminController.episodeCRUD;
 
 import dal.episodeDao;
-import dtos.episodeDtos;
-import entity.Episode;
+import model.Episode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

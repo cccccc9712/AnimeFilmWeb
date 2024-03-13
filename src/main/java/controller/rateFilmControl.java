@@ -1,7 +1,7 @@
 package controller;
 
 import dal.ratingDao;
-import entity.Rating;
+import model.Rating;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

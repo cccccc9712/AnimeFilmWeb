@@ -1,8 +1,7 @@
 package controller;
 
 import dal.userDao;
-import dtos.userDto;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java_api.gmailVerify_api;
 
 import java.io.IOException;
-import java.util.Random;
 
 @WebServlet(name = "registerControl", urlPatterns = "/signup")
 public class registerControl extends HttpServlet {

@@ -3,7 +3,7 @@ package dal;
 import dtos.episodeDtos;
 import dtos.newestEpisodeDto;
 import dtos.seasonDtos;
-import entity.Episode;
+import model.Episode;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -1,7 +1,6 @@
 package dal;
 
 import dtos.commentDto;
-import entity.Comment;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

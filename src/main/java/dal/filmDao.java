@@ -2,11 +2,9 @@ package dal;
 
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
-import dtos.seasonDtos;
-import entity.*;
+import model.*;
 
 import java.sql.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class filmDao extends DBContext {

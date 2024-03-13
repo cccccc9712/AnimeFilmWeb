@@ -4,8 +4,8 @@ import dal.categoryDao;
 import dal.filmDao;
 import dal.tagsDao;
 import dtos.filmDtos;
-import entity.Category;
-import entity.Tag;
+import model.Category;
+import model.Tag;
 import com.google.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -17,7 +17,6 @@ import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.awt.geom.Path2D.contains;

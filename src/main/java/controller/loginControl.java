@@ -1,13 +1,12 @@
 package controller;
 
 import dal.userDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.UUID;
 
 @WebServlet(name = "loginControl", urlPatterns = {"/login"})

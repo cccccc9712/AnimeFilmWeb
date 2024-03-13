@@ -4,13 +4,12 @@ import dal.*;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "filmDetailedControl", urlPatterns = "/detail")

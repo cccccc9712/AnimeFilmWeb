@@ -3,9 +3,7 @@ package controller.adminController.filmCRUD;
 import dal.categoryDao;
 import dal.filmDao;
 import dal.tagsDao;
-import entity.Category;
-import entity.Film;
-import entity.Tag;
+import model.Film;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,11 +14,8 @@ import jakarta.servlet.http.Part;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 @WebServlet(name = "addFilmControl", urlPatterns = {"/addFilm"})
 @MultipartConfig(location = "C:\\Users\\tmtmt\\IdeaProjects\\AnimeFilmWeb\\src\\main\\webapp\\img\\thumbnailUpload")
