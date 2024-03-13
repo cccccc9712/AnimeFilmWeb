@@ -371,7 +371,7 @@ public class filmDao extends DBContext {
                 "ORDER BY f.filmID DESC\n" +
                 "OFFSET ? ROWS\n" +
                 "FETCH NEXT ? ROWS ONLY;";
-                //"ONLY" có hay không không quan trọng
+        //"ONLY" có hay không không quan trọng
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
@@ -807,10 +807,9 @@ public class filmDao extends DBContext {
 
     public List<filmDtos> searchFilmsBySort(String searchQuery, int page, int filmsPerPage, String sortField, String sortOrder) {
         List<filmDtos> films = new ArrayList<>();
-        // Validate sortField and sortOrder to prevent SQL injection
-        List<String> validSortFields = Arrays.asList("filmName", "description", "viewCount", "averageRating"); // Add other valid fields
-        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
-        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+        List<String> validSortFields = Arrays.asList("filmName", "description", "viewCount", "averageRating");
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID";
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC";
 
         String sql = "WITH FilteredFilms AS (\n" +
                 "SELECT f.*, ra.averageRating, ROW_NUMBER() OVER (ORDER BY " + sortField + " " + sortOrder + ") AS RowNum\n" +
@@ -824,7 +823,6 @@ public class filmDao extends DBContext {
                 ")\n" +
                 "SELECT * FROM PagedFilms;";
         try {
-            // Prepare connection and statement
             int startRow = (page - 1) * filmsPerPage + 1;
             int endRow = startRow + filmsPerPage - 1;
             conn = new DBContext().getConnection();
@@ -834,8 +832,6 @@ public class filmDao extends DBContext {
             ps.setInt(3, startRow);
             ps.setInt(4, endRow);
             rs = ps.executeQuery();
-
-            // Process results
             while (rs.next()) {
                 filmDtos film = new filmDtos();
                 film.setFilmID(rs.getInt("filmID"));
@@ -844,15 +840,14 @@ public class filmDao extends DBContext {
                 film.setImageLink(rs.getString("imageLink"));
                 film.setTrailerLink(rs.getString("trailerLink"));
                 film.setViewCount(rs.getLong("viewCount"));
-                film.setRatingValue(getBetterFloat(rs.getFloat("averageRating"))); // Ensure this method correctly handles null values
-                film.setCategories(getCategoriesForFilm(film.getFilmID())); // Ensure this method exists and is efficient
-                film.setTags(getTagsForFilm(film.getFilmID())); // Ensure this method exists and is efficient
+                film.setRatingValue(getBetterFloat(rs.getFloat("averageRating")));
+                film.setCategories(getCategoriesForFilm(film.getFilmID()));
+                film.setTags(getTagsForFilm(film.getFilmID()));
                 films.add(film);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Close resources
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
@@ -867,10 +862,9 @@ public class filmDao extends DBContext {
     public List<filmDtos> getFilmsPerPageBySort(int currentPage, int filmsPerPage, String sortField, String sortOrder) {
         List<filmDtos> films = new ArrayList<>();
 
-        // Validate sortField and sortOrder to prevent SQL injection
-        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID"); // Add other fields as needed
-        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
-        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID");
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID";
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC";
 
         String sql = "WITH RatingAverage AS (\n" +
                 "    SELECT\n" +
@@ -891,11 +885,8 @@ public class filmDao extends DBContext {
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            // Calculate offset = number of films to skip
             int offset = (currentPage - 1) * filmsPerPage;
             ps.setInt(1, offset);
-
-            // fetch next = number of films to retrieve
             ps.setInt(2, filmsPerPage);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -929,10 +920,9 @@ public class filmDao extends DBContext {
 
     public List<filmDtos> getFilmsByCategoryBySort(String categoryName, int page, int filmsPerPage, String sortField, String sortOrder) {
         List<filmDtos> films = new ArrayList<>();
-        // Validate sortField and sortOrder to prevent SQL injection
-        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID"); // Add other fields as needed
-        sortField = validSortFields.contains(sortField) ? sortField : "filmID"; // Default sort field if invalid
-        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC"; // Default to ASC if invalid
+        List<String> validSortFields = Arrays.asList("filmName", "viewCount", "averageRating", "filmID");
+        sortField = validSortFields.contains(sortField) ? sortField : "filmID";
+        sortOrder = "DESC".equalsIgnoreCase(sortOrder) ? "DESC" : "ASC";
 
         String query = "WITH RatingAverage AS (\n" +
                 "    SELECT\n" +
@@ -991,6 +981,35 @@ public class filmDao extends DBContext {
         return films;
     }
 
+    public List<newestEpisodeDto> getPremiumEpisodes() {
+        List<newestEpisodeDto> episodes = new ArrayList<>();
+        String sql = "SELECT e.episodeID, e.title, e.episodeLink, e.releaseDate, f.filmID, f.filmName, f.description, f.imageLink, f.trailerLink, f.viewCount, s.seasonName "
+                + "FROM Episode e "
+                + "JOIN Season s ON e.seasonID = s.seasonID "
+                + "JOIN Film f ON s.filmID = f.filmID "
+                + "WHERE e.isPremium = 1 "
+                + "ORDER BY e.releaseDate DESC";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                newestEpisodeDto episode = new newestEpisodeDto();
+                episode.setEpId(rs.getInt("episodeID"));
+                episode.setEpTittle(rs.getString("title"));
+                episode.setEpLink(rs.getString("episodeLink"));
+                episode.setFilmId(rs.getInt("filmID"));
+                episode.setSeasonName(rs.getString("seasonName"));
+                episode.setFilmName(rs.getString("filmName"));
+                episode.setImageLink(rs.getString("imageLink"));
+                episodes.add(episode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return episodes;
+    }
+
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();
@@ -998,6 +1017,6 @@ public class filmDao extends DBContext {
         for (filmDtos film : films) {
             System.out.println(film.toString());
         }
-        }
+    }
 
 }

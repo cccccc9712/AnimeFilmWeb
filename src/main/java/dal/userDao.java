@@ -4,10 +4,9 @@ import dtos.userDto;
 import entity.User;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class userDao extends DBContext {
     PreparedStatement ps = null;
@@ -124,15 +123,15 @@ public class userDao extends DBContext {
             ps = conn.prepareStatement(sql);
             ps.setString(1, rememberMeToken);
             rs = ps.executeQuery();
-                if (rs.next()) {
-                    int userId = rs.getInt("userID");
-                    String userName = rs.getString("userName");
-                    String userPass = rs.getString("userPass");
-                    String gmail = rs.getString("gmail");
-                    boolean isAdmin = rs.getBoolean("isAdmin");
-                    user = new User(userName, userPass, gmail, isAdmin);
-                    user.setUserId(userId);
-                }
+            if (rs.next()) {
+                int userId = rs.getInt("userID");
+                String userName = rs.getString("userName");
+                String userPass = rs.getString("userPass");
+                String gmail = rs.getString("gmail");
+                boolean isAdmin = rs.getBoolean("isAdmin");
+                user = new User(userName, userPass, gmail, isAdmin);
+                user.setUserId(userId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -171,28 +170,32 @@ public class userDao extends DBContext {
 
     public boolean checkUserPremiumStatus(int userID) {
         boolean isPremium = false;
+        Connection localConn = null;
+        PreparedStatement localPs = null;
+        ResultSet localRs = null;
         try {
-            conn = new DBContext().getConnection();
+            localConn = new DBContext().getConnection();
             String sql = "SELECT * FROM PremiumStatus WHERE userID = ? AND outOfDate > GETDATE() AND [status] = 'active'";
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, userID);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                isPremium = true; // User has an active premium status that has not expired
+            localPs = localConn.prepareStatement(sql);
+            localPs.setInt(1, userID);
+            localRs = localPs.executeQuery();
+            if (localRs.next()) {
+                isPremium = true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null) rs.close();
-                if (ps != null) ps.close();
-                if (conn != null) conn.close();
+                if (localRs != null) localRs.close();
+                if (localPs != null) localPs.close();
+                if (localConn != null) localConn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         return isPremium;
     }
+
 
     public boolean registerPremium(int userId, String premiumName, Date registeredDate, Date outOfDate) {
         boolean registeredSuccessfully = false;
@@ -223,9 +226,67 @@ public class userDao extends DBContext {
         return registeredSuccessfully;
     }
 
+    public boolean checkUserIsAdmin(int userID) {
+        boolean isAdmin = false;
+        try {
+            conn = new DBContext().getConnection();
+            String sql = "SELECT * FROM [User] WHERE userID = ? AND isAdmin = 1";
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, userID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                isAdmin = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return isAdmin;
+    }
+
+    public List<userDto> getAllUsersWithPremiumStatus() {
+        String query = "select * from [User]";
+        List<userDto> listUser = new ArrayList<>();
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                userDto user = new userDto();
+                user.setUserId(rs.getInt("userID"));
+                user.setUserName(rs.getString("userName"));
+                user.setUserGmail(rs.getString("gmail"));
+                user.setAdmin(rs.getBoolean("isAdmin"));
+                user.setPremium(checkUserPremiumStatus(rs.getInt("userID")));
+                listUser.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return listUser;
+    }
+
+
     public static void main(String[] args) {
         userDao dao = new userDao();
-        System.out.println(dao.getUserByRememberMeToken("0b8f24a8-c659-4a8d-b58a-4eb4d756bad0").toString());
+        List<userDto> listUser = dao.getAllUsersWithPremiumStatus();
+        for (userDto user : listUser) {
+            System.out.println(user.toString());
+        }
     }
 
 }

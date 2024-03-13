@@ -33,21 +33,7 @@
 <%@include file="adminDecorator/adminHeader.jsp" %>
 <div class="wrapper">
     <div class="container mt-5">
-        <div class="row mb-3">
-            <div class="col-md-3">
-                <a href="#" class="btn btn-info btn-block">All User</a>
-            </div>
-            <div class="col-md-3">
-                <a href="adminDashboard" class="btn btn-success btn-block">All anime</a>
-            </div>
-            <%--            <div class="col-md-3">--%>
-            <%--                <a href="#" class="btn btn-danger btn-block">Top Anime</a>--%>
-            <%--            </div>--%>
-            <%--            <div class="col-md-3">--%>
-            <%--                <a href="#" class="btn btn-warning btn-block">Recycle Bin</a>--%>
-            <%--            </div>--%>
-        </div>
-
+        <%@include file="adminDecorator/adminCard.jsp" %>
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
             <a style="margin: 0 5px;">All Anime</a>
@@ -95,15 +81,16 @@
                     </form>
                 </th>
                 <th>
-                    <form action="adminDashboard" method="GET">
-                        <select name="tagName" onchange="this.form.submit()">
-                            <option value="all">All Tags</option>
-                            <c:forEach var="tag" items="${tags}">
-                                <option value="${tag.tagName}"
-                                        <c:if test="${tag.tagName == param.tagName}">selected</c:if>>${tag.tagName}</option>
-                            </c:forEach>
-                        </select>
-                    </form>
+<%--                    <form action="adminDashboard" method="GET">--%>
+<%--                        <select name="tagName" onchange="this.form.submit()">--%>
+<%--                            <option value="all">All Tags</option>--%>
+<%--                            <c:forEach var="tag" items="${tags}">--%>
+<%--                                <option value="${tag.tagName}"--%>
+<%--                                        <c:if test="${tag.tagName == param.tagName}">selected</c:if>>${tag.tagName}</option>--%>
+<%--                            </c:forEach>--%>
+<%--                        </select>--%>
+<%--                    </form>--%>
+                    tags
                 </th>
                 <th>
                     <c:url var="sortUrlByViewCount" value="/adminDashboard">
@@ -259,7 +246,5 @@
     </div>
 </div>
 <%@include file="adminDecorator/adminFooter.jsp" %>
-
 </body>
-
 </html>

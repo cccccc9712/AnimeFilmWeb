@@ -55,6 +55,7 @@ public class homeControl extends HttpServlet {
         List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
         List<filmDtos> newFilms = fd.getNewFilms();
         List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
+        List<newestEpisodeDto> premiumEpisodes = fd.getPremiumEpisodes();
         if (userId != null) {
             List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
             List<newestEpisodeDto> watchedEpisodes = ed.getWatchedEpisodesByUserId(userId);
@@ -63,6 +64,7 @@ public class homeControl extends HttpServlet {
         }
 
         req.setAttribute("latestEpisodes", latestEpisodes);
+        req.setAttribute("premiumEpisodes", premiumEpisodes);
         req.setAttribute("films", trendingFilms);
         req.setAttribute("newFilms", newFilms);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
