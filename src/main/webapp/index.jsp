@@ -339,24 +339,24 @@
 
             <!-- card -->
             <c:forEach items="${premiumEpisodes}" var="premiumEp">
-            <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
-                <div class="card">
-                    <div class="card__cover">
-                        <img src="${premiumEp.imageLink}" alt="${premiumEp.filmName}">
-                        <a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}" class="card__play">
-                            <i class="icon ion-ios-play"></i>
-                        </a>
-                    </div>
-                    <div class="card__content">
-                        <h3 class="card__title"><a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}">${premiumEp.filmName}</a></h3>
-                        <span class="card__category">
+                <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                    <div class="card">
+                        <div class="card__cover">
+                            <img src="${premiumEp.imageLink}" alt="${premiumEp.filmName}">
+                            <a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}" class="card__play">
+                                <i class="icon ion-ios-play"></i>
+                            </a>
+                        </div>
+                        <div class="card__content">
+                            <h3 class="card__title"><a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}">${premiumEp.filmName}</a></h3>
+                            <span class="card__category">
                                     <a>${premiumEp.epTittle}</a>
                                     <a>${premiumEp.seasonName}</a>
                                 </span>
-                        <span class="card__rate"><i class="fas fa-crown"></i></span>
+                            <span class="card__rate"><i class="fas fa-crown"></i></span>
+                        </div>
                     </div>
                 </div>
-            </div>
             </c:forEach>
             <!-- end card -->
         </div>

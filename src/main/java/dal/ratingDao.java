@@ -1,6 +1,6 @@
 package dal;
 
-import model.Rating;
+import entity.Rating;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

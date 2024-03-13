@@ -1,6 +1,6 @@
 package java_api;
 
-import model.User;
+import entity.User;
 
 import javax.mail.*;
 import java.util.Properties;

@@ -4,7 +4,7 @@ import dal.*;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
-import model.User;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;

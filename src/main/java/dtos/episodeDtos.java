@@ -1,6 +1,6 @@
 package dtos;
 
-import model.Episode;
+import entity.Episode;
 
 import java.util.Date;
 

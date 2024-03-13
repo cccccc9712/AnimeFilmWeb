@@ -1,6 +1,6 @@
 package dtos;
 
-import model.*;
+import entity.*;
 
 import java.sql.Timestamp;
 import java.util.List;

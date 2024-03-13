@@ -81,15 +81,15 @@
                     </form>
                 </th>
                 <th>
-<%--                    <form action="adminDashboard" method="GET">--%>
-<%--                        <select name="tagName" onchange="this.form.submit()">--%>
-<%--                            <option value="all">All Tags</option>--%>
-<%--                            <c:forEach var="tag" items="${tags}">--%>
-<%--                                <option value="${tag.tagName}"--%>
-<%--                                        <c:if test="${tag.tagName == param.tagName}">selected</c:if>>${tag.tagName}</option>--%>
-<%--                            </c:forEach>--%>
-<%--                        </select>--%>
-<%--                    </form>--%>
+                    <%--                    <form action="adminDashboard" method="GET">--%>
+                    <%--                        <select name="tagName" onchange="this.form.submit()">--%>
+                    <%--                            <option value="all">All Tags</option>--%>
+                    <%--                            <c:forEach var="tag" items="${tags}">--%>
+                    <%--                                <option value="${tag.tagName}"--%>
+                    <%--                                        <c:if test="${tag.tagName == param.tagName}">selected</c:if>>${tag.tagName}</option>--%>
+                    <%--                            </c:forEach>--%>
+                    <%--                        </select>--%>
+                    <%--                    </form>--%>
                     tags
                 </th>
                 <th>

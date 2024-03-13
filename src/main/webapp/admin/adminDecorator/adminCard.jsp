@@ -13,10 +13,4 @@
     <div class="col-md-3">
         <a href="adminDashboard" class="btn btn-success btn-block">All anime</a>
     </div>
-    <%--            <div class="col-md-3">--%>
-    <%--                <a href="#" class="btn btn-danger btn-block">Top Anime</a>--%>
-    <%--            </div>--%>
-    <%--            <div class="col-md-3">--%>
-    <%--                <a href="#" class="btn btn-warning btn-block">Recycle Bin</a>--%>
-    <%--            </div>--%>
 </div>

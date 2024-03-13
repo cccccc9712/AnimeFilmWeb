@@ -1,7 +1,7 @@
 package dal;
 
 import dtos.userDto;
-import model.User;
+import entity.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
