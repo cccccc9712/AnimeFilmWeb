@@ -31,24 +31,34 @@ public class addFilmControl extends HttpServlet {
         String fileName = filePart.getSubmittedFileName();
         Timestamp releaseDate = new Timestamp(new Date().getTime());
 
-        String savePath = getServletContext().getRealPath("/img/thumbnailUpload") + File.separator + fileName;
-        File fileSaveDir = new File(savePath);
-        filePart.write(savePath + File.separator);
-
-        String thumbnailPath = "img/thumbnailUpload/" + fileName;
-
         filmDao dao = new filmDao();
         categoryDao categoryDao = new categoryDao();
         tagsDao tagsDao = new tagsDao();
         Film film = new Film();
+
+        if (name.isBlank() || trailerLink.isBlank() || description.isBlank()) {
+            req.setAttribute("errorMessage", "Please input to continue!");
+            req.getRequestDispatcher("newFilmPage").forward(req, resp);
+            return;
+        }
+
+        if (fileName != null && !fileName.isBlank() && filePart.getSize() > 0) {
+            String savePath = getServletContext().getRealPath("/img/thumbnailUpload") + File.separator + fileName;
+            filePart.write(savePath + File.separator);
+            String thumbnailPath = "img/thumbnailUpload/" + fileName;
+            film.setImageLink(thumbnailPath);
+        }else{
+            req.setAttribute("errorMessage", "Please input to continue!");
+            req.getRequestDispatcher("newFilmPage").forward(req, resp);
+            return;
+        }
+
         film.setFilmName(name);
         film.setTrailerLink(trailerLink);
         film.setDescription(description);
         film.setFilmReleaseDate(releaseDate);
-        film.setImageLink(thumbnailPath);
         film.setViewCount(0L);
 
-        // Add film to database
         boolean sucess = dao.addFilm(film);
         int filmId = film.getFilmID();
         if (sucess) {

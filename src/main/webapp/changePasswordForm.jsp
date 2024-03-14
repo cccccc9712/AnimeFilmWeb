@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <%--head--%>
 <%@include file="decorator/head.jsp"%>
@@ -14,16 +13,20 @@
             <div class="col-12">
                 <div class="sign__content">
                     <!-- authorization form -->
-                    <form action="changepassword" method="post" class="sign__form">
+                    <form action="changePassword" method="post" class="sign__form">
                         <a class="sign__logo">
                             <img style="width: auto;" src="img/LOgo%20(1).png" alt="">
                         </a>
                         <div class="sign__group">
-                            <input type="password" name="password" class="sign__input" placeholder="New Password">
+                            <label>
+                                <input type="password" name="password" class="sign__input" placeholder="New Password" />
+                            </label>
                         </div>
 
                         <div class="sign__group">
-                            <input type="password" name="confirmPassword" class="sign__input" placeholder="Confirm New Password">
+                            <label>
+                                <input type="password" name="confirmPassword" class="sign__input" placeholder="Confirm New Password">
+                            </label>
                         </div>
 
                         <div style="color: #fc4357">${errorMessage}</div>

@@ -153,15 +153,15 @@ public class userDao extends DBContext {
     }
 
     public boolean changePassword(String email, String newPassword) {
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
         String sql = "UPDATE [User] SET userPass = ? WHERE gmail = ?";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            ps.setString(1, newPassword); // Thay đổi mật khẩu mới
-            ps.setString(2, email); // Định dạng email của người dùng cần thay đổi mật khẩu
-
+            ps.setString(1, hashedPassword);
+            ps.setString(2, email);
             int affectedRows = ps.executeUpdate();
-            return affectedRows > 0; // Trả về true nếu cập nhật thành công
+            return affectedRows > 0;
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
@@ -283,10 +283,7 @@ public class userDao extends DBContext {
 
     public static void main(String[] args) {
         userDao dao = new userDao();
-        List<userDto> listUser = dao.getAllUsersWithPremiumStatus();
-        for (userDto user : listUser) {
-            System.out.println(user.toString());
-        }
+        System.out.println(dao.checkUserIsAdmin(5));
     }
 
 }

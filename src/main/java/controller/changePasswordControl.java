@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name = "changePasswordControl", urlPatterns = "/changepassword")
+@WebServlet(name = "changePasswordControl", urlPatterns = "/changePassword")
 public class changePasswordControl extends HttpServlet {
 
     @Override
@@ -30,33 +30,25 @@ public class changePasswordControl extends HttpServlet {
             return;
         }
 
-        if(password != null && password.equals(cfPassword)) {
-            // Nếu trùng khớp, gọi DAO để thay đổi mật khẩu
+        if(password.equals(cfPassword)) {
             try {
-                // Giả sử bạn có một class DAO với phương thức để thay đổi mật khẩu
                 userDao userDao = new userDao();
                 boolean success = userDao.changePassword(gmail, password);
                 if (success) {
-                    // Chuyển hướng người dùng đến trang đăng nhập hoặc thông báo thành công
                     req.setAttribute("failedLoginMessage", "Reset Password Successfully");
                     req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
                 } else {
                     req.setAttribute("errorMessage", "An error occurred. Please try again.");
                     req.getRequestDispatcher("changePasswordForm.jsp").forward(req, resp);
-                    return;
                 }
             } catch (Exception e) {
-                // Xử lý lỗi, ví dụ: ghi log, gửi thông báo lỗi
                 e.printStackTrace();
                 req.setAttribute("errorMessage", "An error occurred. Please try again.");
                 req.getRequestDispatcher("changePasswordForm.jsp").forward(req, resp);
-                return;
             }
         } else {
-            // Nếu không trùng khớp, gửi lại thông báo lỗi
             req.setAttribute("errorMessage", "Passwords do not match. Please try again.");
             req.getRequestDispatcher("changePasswordForm.jsp").forward(req, resp);
-            return;
         }
 
     }
@@ -66,9 +58,6 @@ public class changePasswordControl extends HttpServlet {
             return false;
         }
         char firstChar = password.charAt(0);
-        if (!Character.isUpperCase(firstChar)) {
-            return false;
-        }
-        return true;
+        return Character.isUpperCase(firstChar);
     }
 }

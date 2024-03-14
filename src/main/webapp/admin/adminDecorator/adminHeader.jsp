@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <style>
     .navbar-brand {
         padding-top: 0;
@@ -21,7 +20,7 @@
 <nav class="navbar navbar-expand-lg navbar-light navbar-custom">
     <div class="container">
         <a class="navbar-brand" href="${pageContext.request.contextPath}/home">
-            <img src="${pageContext.request.contextPath}/img/LOgo%20(1).png" height="30" alt="Logo">
+            <img src="${pageContext.request.contextPath}/img/LOgo%20(1).png" height="391" alt="Logo">
         </a>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item dropdown">
@@ -32,7 +31,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="adminDashboard">Dashboard</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Logout</a>
+                    <a class="dropdown-item" href="logout">Logout</a>
                 </div>
             </li>
         </ul>

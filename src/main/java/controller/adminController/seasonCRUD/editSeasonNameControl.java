@@ -16,15 +16,10 @@ public class editSeasonNameControl extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String seasonIdStr = req.getParameter("seasonId");
-        String filmId = req.getParameter("filmId");
         String seasonName = req.getParameter("seasonName");
         if (seasonIdStr == null || seasonName == null) {
             return;
         }
-
-        System.out.println("seasonId: " + seasonIdStr);
-        System.out.println("seasonName: " + seasonName);
-        System.out.println("filmId: " + filmId);
 
         episodeDao ed = new episodeDao();
         int seasonId = Integer.parseInt(seasonIdStr);

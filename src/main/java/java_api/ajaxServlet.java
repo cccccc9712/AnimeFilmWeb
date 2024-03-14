@@ -37,10 +37,6 @@ public class ajaxServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("userSession");
-        userDao ud = new userDao();
-
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";

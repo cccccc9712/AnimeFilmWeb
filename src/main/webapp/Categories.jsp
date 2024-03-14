@@ -4,13 +4,10 @@
        value="${(currentPage - (maxPagesToShow div 2)) > 0 ? (currentPage - (maxPagesToShow div 2)) : 1}"/>
 <c:set var="pageEnd"
        value="${(pageStart + (maxPagesToShow - 1)) < noOfPages ? (pageStart + (maxPagesToShow - 1)) : noOfPages}"/>
-
 <!-- Điều chỉnh nếu số lượng trang không đủ -->
 <c:if test="${pageEnd - pageStart < maxPagesToShow - 1}">
     <c:set var="pageStart" value="${(pageEnd - (maxPagesToShow - 1)) > 0 ? (pageEnd - (maxPagesToShow - 1)) : 1}"/>
 </c:if>
-
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <%@include file="decorator/head.jsp" %>

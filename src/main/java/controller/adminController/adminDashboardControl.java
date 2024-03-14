@@ -2,13 +2,16 @@ package controller.adminController;
 
 import dal.categoryDao;
 import dal.filmDao;
+import dal.userDao;
 import dtos.filmDtos;
 import entity.Category;
+import entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +22,14 @@ public class adminDashboardControl extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         filmDao fd = new filmDao();
         categoryDao ctDao = new categoryDao();
+        userDao userDao = new userDao();
+
+        HttpSession session = req.getSession();
+        User user = (User) session.getAttribute("userSession");
+        if (user == null || !userDao.checkUserIsAdmin(user.getUserId())) {
+            resp.sendRedirect("home");
+            return;
+        }
 
         String pageStr = req.getParameter("page");
         String searchQuery = req.getParameter("searchQuery");

@@ -12,24 +12,91 @@
         <servlet-name>ajaxServlet</servlet-name>
         <servlet-class>java_api.ajaxServlet</servlet-class>
     </servlet>
+
+    <filter>
+        <filter-name>filterServlet</filter-name>
+        <filter-class>controller.filterServlet</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>filterServlet</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
-        <servlet-name>vnpayQuery</servlet-name>
-        <servlet-class>com.vnpay.common.vnpayQuery</servlet-class>
+        <servlet-name>pricingServlet</servlet-name>
+        <jsp-file>/pricing.jsp</jsp-file>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>pricingServlet</servlet-name>
+        <url-pattern>/pricing</url-pattern>
+    </servlet-mapping>
     <servlet>
-        <servlet-name>vnpayRefund</servlet-name>
-        <servlet-class>com.vnpay.common.vnpayRefund</servlet-class>
+        <servlet-name>aboutServlet</servlet-name>
+        <jsp-file>/about.jsp</jsp-file>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>aboutServlet</servlet-name>
+        <url-pattern>/about</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <jsp-file>/SignIn.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/SignIn</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SignUpServlet</servlet-name>
+        <jsp-file>/SignUp.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignUpServlet</servlet-name>
+        <url-pattern>/SignUp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>gmailVerifyServlet</servlet-name>
+        <jsp-file>/gmailVerifyForm.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>gmailVerifyServlet</servlet-name>
+        <url-pattern>/changePasswordForm</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>otpConfirmFormServlet</servlet-name>
+        <jsp-file>/otpConfirmForm.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>otpConfirmFormServlet</servlet-name>
+        <url-pattern>/otpConfirmForm</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>notFoundServlet</servlet-name>
+        <jsp-file>/404.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>notFoundServlet</servlet-name>
+        <url-pattern>/404</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404</location>
+    </error-page>
+
+    <servlet>
+        <servlet-name>changePassServlet</servlet-name>
+        <jsp-file>/changePasswordForm.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>changePassServlet</servlet-name>
+        <url-pattern>/gmailVerifyForm</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ajaxServlet</servlet-name>
         <url-pattern>/vnpayajax/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>vnpayQuery</servlet-name>
-        <url-pattern>/vnpayquery/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>vnpayRefund</servlet-name>
-        <url-pattern>/vnpayrefund/*</url-pattern>
-    </servlet-mapping>
+
 </web-app>
