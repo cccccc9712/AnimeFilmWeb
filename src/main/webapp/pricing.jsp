@@ -82,7 +82,7 @@
                         <c:when test="${sessionScope.userSession != null}">
                             <c:choose>
                                 <c:when test="${not isPremiumOrAdmin}">
-                                    <a href="#" class="price__btn" id="registerButton">Register</a>
+                                    <a href="vnpay_pay.jsp" class="price__btn" id="registerButton">Register</a>
                                 </c:when>
                                 <c:otherwise>
                                     <a style="color: #FFD700" href="home" class="price__btn">You are already in premium <i style="margin: 5px;" class="fas fa-crown"></i></a>
@@ -199,35 +199,35 @@
 
 </body>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var registerButton = document.getElementById("registerButton");
-
-        registerButton.addEventListener("click", function (event) {
-            event.preventDefault(); // Ngăn chặn hành động mặc định của nút "Register"
-            // Tạo đối tượng XMLHttpRequest
-            var xhr = new XMLHttpRequest();
-
-            // Xác định phương thức và URL của servlet ajaxServlet
-            xhr.open("POST", "/AnimeFilmWeb/vnpayajax", true);
-
-            // Thiết lập tiêu đề của yêu cầu
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            // Xử lý khi nhận được phản hồi từ servlet
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    if (response.code === "00") {
-                        window.location.href = response.data;
-                    } else {
-                        alert("Error: " + response.message);
-                    }
-                }
-            };
-
-            xhr.send();
-        });
-    });
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     var registerButton = document.getElementById("registerButton");
+    //
+    //     registerButton.addEventListener("click", function (event) {
+    //         event.preventDefault(); // Ngăn chặn hành động mặc định của nút "Register"
+    //         // Tạo đối tượng XMLHttpRequest
+    //         var xhr = new XMLHttpRequest();
+    //
+    //         // Xác định phương thức và URL của servlet ajaxServlet
+    //         xhr.open("POST", "/AnimeFilmWeb/vnpayajax", true);
+    //
+    //         // Thiết lập tiêu đề của yêu cầu
+    //         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //
+    //         // Xử lý khi nhận được phản hồi từ servlet
+    //         xhr.onreadystatechange = function () {
+    //             if (xhr.readyState === 4 && xhr.status === 200) {
+    //                 var response = JSON.parse(xhr.responseText);
+    //                 if (response.code === "00") {
+    //                     window.location.href = response.data;
+    //                 } else {
+    //                     alert("Error: " + response.message);
+    //                 }
+    //             }
+    //         };
+    //
+    //         xhr.send();
+    //     });
+    // });
 </script>
 
 </html>

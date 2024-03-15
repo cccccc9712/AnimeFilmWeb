@@ -125,19 +125,32 @@
     if (paymentSuccess) {
 %>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.ajax({
             url: "RegisterPremium",
             type: "POST",
             data: {},
-            success: function(response) {
+            success: function (response) {
                 alert("Đăng ký Premium thành công!");
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert("Có lỗi xảy ra: " + error);
             }
         });
     });
+</script>
+<%
+} else {
+%>
+<script>
+    $(document).ready(function () {
+        alert("Đăng ký Premium không thành công!");
+    });
+</script>
+<%
+    }
+%>
+<script>
 
     document.addEventListener("DOMContentLoaded", function () {
         var home = document.getElementById("registerButton");
@@ -150,7 +163,4 @@
         });
     });
 </script>
-<%
-    }
-%>
 </html>

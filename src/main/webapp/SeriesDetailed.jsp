@@ -489,10 +489,10 @@
                                                         </li>
                                                     </c:forEach>
                                                     <c:if test="${fn:length(comment.replies) > 2}">
-                                                        <button class="show-more fas fa-angle-down"
-                                                                data-comment-id="${comment.commentID}"></button>
-                                                        <button class="show-less fas fa-angle-up" style="display:none;"
-                                                                data-comment-id="${comment.commentID}"></button>
+                                                        <button class="show-more" style="font-size: medium"
+                                                                data-comment-id="${comment.commentID}"><a>Show more</a></button>
+                                                        <button class="show-less" style="display:none; font-size: medium"
+                                                                data-comment-id="${comment.commentID}"><a>Show less</a></button>
                                                     </c:if>
                                                 </ul>
                                             </li>

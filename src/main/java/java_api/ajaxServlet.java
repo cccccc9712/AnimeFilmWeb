@@ -41,7 +41,7 @@ public class ajaxServlet extends HttpServlet {
         String vnp_Command = "pay";
         String orderType = "other";
         long amount = 20000*100;
-        String bankCode = "NCB";
+        String bankCode = req.getParameter("bankCode");
 
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_IpAddr = Config.getIpAddress(req);

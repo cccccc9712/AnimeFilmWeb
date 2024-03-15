@@ -64,6 +64,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>vnpayServlet</servlet-name>
+        <jsp-file>/vnpay_pay.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>vnpayServlet</servlet-name>
+        <url-pattern>/vnpay_pay</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>vnpayReturnServlet</servlet-name>
+        <jsp-file>/vnpay_return.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>vnpayReturnServlet</servlet-name>
+        <url-pattern>/vnpay_return</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>otpConfirmFormServlet</servlet-name>
         <jsp-file>/otpConfirmForm.jsp</jsp-file>
     </servlet>
