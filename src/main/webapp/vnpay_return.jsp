@@ -130,7 +130,7 @@
             url: "RegisterPremium",
             type: "POST",
             data: {},
-            success: function (response) {
+            success: functDion (response) {
                 alert("Đăng ký Premium thành công!");
             },
             error: function (xhr, status, error) {

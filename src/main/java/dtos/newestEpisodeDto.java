@@ -1,13 +1,15 @@
 package dtos;
 
 import entity.Category;
+import entity.Episode;
 import entity.Season;
 import entity.Tag;
 
 import java.sql.Date;
 import java.util.List;
 
-public class newestEpisodeDto extends episodeDtos{
+public class newestEpisodeDto extends Episode {
+    private int filmId;
 
     private String seasonName;
     private String filmName;
@@ -22,12 +24,9 @@ public class newestEpisodeDto extends episodeDtos{
     public newestEpisodeDto() {
     }
 
-    public newestEpisodeDto(int epId, String epTittle, String epLink, Date epDate, int filmId) {
-        super(epId, epTittle, epLink, epDate, filmId);
-    }
-
-    public newestEpisodeDto(int epId, String epTittle, String epLink, Date epDate, int filmId, String seasonName, String filmName, String description, String imageLink, String trailerLink, long viewCount, List<Category> categories, List<Tag> tags, List<Season> seasons) {
-        super(epId, epTittle, epLink, epDate, filmId);
+    public newestEpisodeDto(int epId, String epTittle, String epLink, java.util.Date epDate, int filmId, String seasonName, String filmName, String description, String imageLink, String trailerLink, long viewCount, List<Category> categories, List<Tag> tags, List<Season> seasons) {
+        super(epId, epTittle, epLink, epDate);
+        this.filmId = filmId;
         this.seasonName = seasonName;
         this.filmName = filmName;
         this.description = description;
@@ -37,6 +36,14 @@ public class newestEpisodeDto extends episodeDtos{
         this.categories = categories;
         this.tags = tags;
         this.seasons = seasons;
+    }
+
+    public int getFilmId() {
+        return filmId;
+    }
+
+    public void setFilmId(int filmId) {
+        this.filmId = filmId;
     }
 
     public String getSeasonName() {

@@ -50,21 +50,56 @@ public class homeControl extends HttpServlet {
 
         filmDao fd = new filmDao();
         episodeDao ed = new episodeDao();
-        List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
-        List<filmDtos> newFilms = fd.getNewFilms();
-        List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes();
-        List<newestEpisodeDto> premiumEpisodes = fd.getPremiumEpisodes();
-        if (userId != null) {
-            List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
-            List<newestEpisodeDto> watchedEpisodes = ed.getWatchedEpisodesByUserId(userId);
-            req.setAttribute("favouriteFilms", favouriteFilms);
-            req.setAttribute("watchedEpisodes", watchedEpisodes);
+
+        int limit = 12;
+        String numEpisodesParam = req.getParameter("numEpisodesToShow");
+        if (numEpisodesParam != null) {
+            try {
+                limit = Integer.parseInt(numEpisodesParam) + 12;
+            } catch (NumberFormatException e) {
+                limit = 12;
+            }
         }
 
-        req.setAttribute("latestEpisodes", latestEpisodes);
-        req.setAttribute("premiumEpisodes", premiumEpisodes);
-        req.setAttribute("films", trendingFilms);
-        req.setAttribute("newFilms", newFilms);
-        req.getRequestDispatcher("index.jsp").forward(req, resp);
+        int premiumLimit = 6;
+        String numPremiumEpisodesParam = req.getParameter("numPremiumEpisodesToShow");
+        if (numPremiumEpisodesParam != null) {
+            try {
+                premiumLimit = Integer.parseInt(numPremiumEpisodesParam) + 6;
+            } catch (NumberFormatException e) {
+                premiumLimit = 6;
+            }
+        }
+            req.setAttribute("numPremiumEpisodesToShow", premiumLimit);
+
+            List<newestEpisodeDto> premiumEpisodes = ed.getPremiumEpisodesLimited(premiumLimit);
+            req.setAttribute("premiumEpisodes", premiumEpisodes);
+            int totalPremiumEpisodes = ed.countTotalPremiumEpisodes();
+        // Kiểm tra xem có cần hiển thị nút "Show more" không
+            boolean showMorePremium = premiumLimit < totalPremiumEpisodes;
+            req.setAttribute("showMorePremium", showMorePremium);
+
+
+            int totalEpisodes = fd.countTotalEpisodes();
+            // Kiểm tra xem có cần hiển thị nút "Show more" không
+            boolean showMore = limit < totalEpisodes;
+            req.setAttribute("showMore", showMore);
+            req.setAttribute("numEpisodesToShow", limit);
+
+            List<filmDtos> trendingFilms = fd.getFilmWithHighestViewCount();
+            List<filmDtos> newFilms = fd.getNewFilms();
+            List<newestEpisodeDto> latestEpisodes = fd.getLatestEpisodes(limit);
+            if (userId != null) {
+                List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
+                List<newestEpisodeDto> watchedEpisodes = ed.getWatchedEpisodesByUserId(userId);
+                req.setAttribute("favouriteFilms", favouriteFilms);
+                req.setAttribute("watchedEpisodes", watchedEpisodes);
+            }
+
+
+            req.setAttribute("latestEpisodes", latestEpisodes);
+            req.setAttribute("films", trendingFilms);
+            req.setAttribute("newFilms", newFilms);
+            req.getRequestDispatcher("index.jsp").forward(req, resp);
+        }
     }
-}

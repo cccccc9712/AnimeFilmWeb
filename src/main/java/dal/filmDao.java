@@ -547,9 +547,9 @@ public class filmDao extends DBContext {
     }
 
     //Lấy các episodes mới được upload
-    public List<newestEpisodeDto> getLatestEpisodes() {
+    public List<newestEpisodeDto> getLatestEpisodes(int limit) {
         List<newestEpisodeDto> episodes = new ArrayList<>();
-        String sql = "SELECT TOP 12 e.episodeID, e.title, e.episodeLink, e.releaseDate, f.filmID, f.filmName, f.description, f.imageLink, f.trailerLink, f.viewCount, s.seasonName "
+        String sql = "SELECT TOP (?) e.episodeID, e.title, e.episodeLink, e.releaseDate, f.filmID, f.filmName, f.imageLink, s.seasonName, e.isPremium "
                 + "FROM Episode e "
                 + "JOIN Season s ON e.seasonID = s.seasonID "
                 + "JOIN Film f ON s.filmID = f.filmID "
@@ -557,7 +557,8 @@ public class filmDao extends DBContext {
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+            ps.setInt(1, limit);
+            rs = ps.executeQuery();
             while (rs.next()) {
                 newestEpisodeDto episode = new newestEpisodeDto();
                 episode.setEpId(rs.getInt("episodeID"));
@@ -567,6 +568,7 @@ public class filmDao extends DBContext {
                 episode.setSeasonName(rs.getString("seasonName"));
                 episode.setFilmName(rs.getString("filmName"));
                 episode.setImageLink(rs.getString("imageLink"));
+                episode.setPremium(rs.getBoolean("isPremium"));
                 episodes.add(episode);
             }
         } catch (Exception e) {
@@ -574,6 +576,32 @@ public class filmDao extends DBContext {
         }
         return episodes;
     }
+
+    //Lấy số luượng episodes premium mới được upload
+    public int countTotalEpisodes() {
+        int totalEpisodes = 0;
+        String sql = "SELECT COUNT(*) AS total FROM Episode";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                totalEpisodes = rs.getInt("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return totalEpisodes;
+    }
+
 
     // Lấy ngẫu nhiên 6 film
     public List<filmDtos> getRandom6FilmsWithFullDetails() {
@@ -986,11 +1014,11 @@ public class filmDao extends DBContext {
                 + "JOIN Season s ON e.seasonID = s.seasonID "
                 + "JOIN Film f ON s.filmID = f.filmID "
                 + "WHERE e.isPremium = 1 "
-                + "ORDER BY e.releaseDate DESC";
+                + "ORDER BY e.episodeID ASC ";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             while (rs.next()) {
                 newestEpisodeDto episode = new newestEpisodeDto();
                 episode.setEpId(rs.getInt("episodeID"));
@@ -1011,10 +1039,7 @@ public class filmDao extends DBContext {
 
     public static void main(String[] args) {
         filmDao fd = new filmDao();
-        List<filmDtos> films = fd.getNewFilms();
-        for (filmDtos film : films) {
-            System.out.println(film.toString());
-        }
+        System.out.println(fd.countTotalEpisodes());
     }
 
 }

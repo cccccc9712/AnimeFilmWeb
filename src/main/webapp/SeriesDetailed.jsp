@@ -366,6 +366,11 @@
                                                         </div>
                                                     </div>
 
+                                                    <c:if test="${comment.isEdited()}">
+                                                        <button>(Edited)
+                                                        </button>
+                                                    </c:if>
+
                                                     <c:choose>
                                                         <c:when test="${not empty sessionScope.userSession}">
                                                             <button type="button"
@@ -421,8 +426,10 @@
                                                                   required>${reply.commentText}</textarea>
                                                                     <input type="hidden" name="commentID"
                                                                            value="${reply.commentID}"/>
-                                                                    <input type="hidden" name="filmName" value="${film.filmName}"/>
-                                                                    <input type="hidden" name="page" value="${currentPage}"/>
+                                                                    <input type="hidden" name="filmName"
+                                                                           value="${film.filmName}"/>
+                                                                    <input type="hidden" name="page"
+                                                                           value="${currentPage}"/>
                                                                     <button type="submit" style="color: whitesmoke">
                                                                         Update
                                                                     </button>
@@ -452,7 +459,10 @@
                                                                         </c:if>
                                                                     </div>
                                                                 </div>
-
+                                                                <c:if test="${reply.isEdited()}">
+                                                                    <button>(Edited)
+                                                                    </button>
+                                                                </c:if>
                                                                 <c:choose>
                                                                     <c:when test="${not empty sessionScope.userSession}">
                                                                         <button type="button"
@@ -490,9 +500,12 @@
                                                     </c:forEach>
                                                     <c:if test="${fn:length(comment.replies) > 2}">
                                                         <button class="show-more" style="font-size: medium"
-                                                                data-comment-id="${comment.commentID}"><a>Show more</a></button>
-                                                        <button class="show-less" style="display:none; font-size: medium"
-                                                                data-comment-id="${comment.commentID}"><a>Show less</a></button>
+                                                                data-comment-id="${comment.commentID}"><a>Show more</a>
+                                                        </button>
+                                                        <button class="show-less"
+                                                                style="display:none; font-size: medium"
+                                                                data-comment-id="${comment.commentID}"><a>Show less</a>
+                                                        </button>
                                                     </c:if>
                                                 </ul>
                                             </li>

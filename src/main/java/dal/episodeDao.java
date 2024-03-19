@@ -344,8 +344,54 @@ public class episodeDao extends DBContext {
         return rowUpdated;
     }
 
+    public List<newestEpisodeDto> getPremiumEpisodesLimited(int limit) {
+        List<newestEpisodeDto> episodes = new ArrayList<>();
+        String query = "SELECT TOP (?) e.episodeID, e.title, e.releaseDate, e.isPremium, e.episodeLink, f.filmID, f.filmName, f.imageLink, s.seasonID, s.seasonName FROM Episode e JOIN Season s ON e.seasonID = s.seasonID JOIN Film f ON s.filmID = f.filmID WHERE e.isPremium = 1 ORDER BY e.episodeID ASC ;";
+
+        try {
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, limit);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                newestEpisodeDto episode = new newestEpisodeDto();
+                episode.setEpId(rs.getInt("episodeID"));
+                episode.setEpTittle(rs.getString("title"));
+                episode.setEpLink(rs.getString("episodeLink"));
+                episode.setFilmId(rs.getInt("filmID"));
+                episode.setSeasonName(rs.getString("seasonName"));
+                episode.setFilmName(rs.getString("filmName"));
+                episode.setImageLink(rs.getString("imageLink"));
+                episodes.add(episode);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return episodes;
+    }
+    public int countTotalPremiumEpisodes() {
+        int total = 0;
+        String query = "SELECT COUNT(*) AS total FROM Episode WHERE isPremium = 1;";
+
+        try {
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+
+
     public static void main(String[] args) {
         episodeDao d = new episodeDao();
-        d.updateSeasonName(46, "Season 5");
+       List<newestEpisodeDto> ep = d.getPremiumEpisodesLimited(6);
+        for (newestEpisodeDto e : ep) {
+            System.out.println(e.getEpTittle());
+        }
     }
 }

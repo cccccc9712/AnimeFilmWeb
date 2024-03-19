@@ -116,7 +116,8 @@
                                                         aria-selected="false">Trending</a></li>
 
                                 <li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3"
-                                                        role="tab" aria-controls="tab-3" aria-selected="false">Favourite</a></li>
+                                                        role="tab" aria-controls="tab-3"
+                                                        aria-selected="false">Favourite</a></li>
 
                                 <li class="nav-item"><a class="nav-link" id="4-tab" data-toggle="tab" href="#tab-4"
                                                         role="tab" aria-controls="tab-4"
@@ -153,6 +154,9 @@
                                     <span class="card__category">
                                     <a>${latestFilm.epTittle}</a>
                                     <a>${latestFilm.seasonName}</a>
+                                        <c:if test="${latestFilm.getPremium()}">
+                                            <span class="card__rate"><i style="font-size: small"
+                                                                        class="fas fa-crown"></i></span></c:if>
                                 </span>
                                 </div>
                             </div>
@@ -160,9 +164,13 @@
                     </c:forEach>
                     <!-- end card -->
                 </div>
-                <div class="col-12">
-                    <a href="category" class="section__btn">Show more</a>
-                </div>
+
+                <%--Nếu số limit hiện tại nhỏ hơn số lượng tất cả các tập thì mới hiện nút show more--%>
+                <c:if test="${showMore}">
+                    <div class="col-12">
+                        <a href="home?numEpisodesToShow=${numEpisodesToShow}" class="section__btn">Show more</a>
+                    </div>
+                </c:if>
             </div>
 
             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab-tab">
@@ -187,10 +195,10 @@
                                                     href="detail?filmName=${film.filmName}">${film.filmName}</a></h3>
 
                                             <span class="card__category">
-                            <c:forEach items="${film.categories}" var="category">
-                                <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
-                            </c:forEach>
-                        </span>
+                                                <c:forEach items="${film.categories}" var="category">
+                                                    <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
+                                                </c:forEach>
+                                            </span>
                                             <div class="card__wrap">
                                                 <span class="card__rate">
                                                      <i class="icon ion-ios-star"></i>${film.ratingValue}
@@ -230,20 +238,26 @@
                                         <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
                                             <div class="card">
                                                 <div class="card__cover">
-                                                    <img src="${favouriteFilm.imageLink}" alt="${favouriteFilm.filmName}">
-                                                    <a href="detail?filmName=${favouriteFilm.filmName}" class="card__play">
+                                                    <img src="${favouriteFilm.imageLink}"
+                                                         alt="${favouriteFilm.filmName}">
+                                                    <a href="detail?filmName=${favouriteFilm.filmName}"
+                                                       class="card__play">
                                                         <i class="icon ion-ios-play"></i>
                                                     </a>
                                                 </div>
                                                 <div class="card__content">
-                                                    <h3 class="card__title"><a href="detail?filmName=${favouriteFilm.filmName}">${favouriteFilm.filmName}</a></h3>
+                                                    <h3 class="card__title"><a
+                                                            href="detail?filmName=${favouriteFilm.filmName}">${favouriteFilm.filmName}</a>
+                                                    </h3>
                                                     <span class="card__category">
-                                            <c:forEach items="${favouriteFilm.categories}" var="category">
-                                                <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
-                                            </c:forEach>
-                                        </span>
-                                                    <span class="card__rate"><i class="icon ion-ios-star"></i>${favouriteFilm.ratingValue}</span>
-                                                    <span style="margin-left: 5px" class="card__rate"><i class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
+                                                        <c:forEach items="${favouriteFilm.categories}" var="category">
+                                                            <a href="category?categoryName=${category.categoryName}">${category.categoryName}</a>
+                                                        </c:forEach>
+                                                    </span>
+                                                    <span class="card__rate"><i
+                                                            class="icon ion-ios-star"></i>${favouriteFilm.ratingValue}</span>
+                                                    <span style="margin-left: 5px" class="card__rate"><i
+                                                            class="icon ion-ios-eye"></i>${favouriteFilm.viewCount}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,23 +357,32 @@
                     <div class="card">
                         <div class="card__cover">
                             <img src="${premiumEp.imageLink}" alt="${premiumEp.filmName}">
-                            <a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}" class="card__play">
+                            <a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}"
+                               class="card__play">
                                 <i class="icon ion-ios-play"></i>
                             </a>
                         </div>
                         <div class="card__content">
-                            <h3 class="card__title"><a href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}">${premiumEp.filmName}</a></h3>
+                            <h3 class="card__title"><a
+                                    href="CheckPremium?episodeId=${premiumEp.epId}&filmId=${premiumEp.filmId}">${premiumEp.filmName}</a>
+                            </h3>
                             <span class="card__category">
                                     <a>${premiumEp.epTittle}</a>
                                     <a>${premiumEp.seasonName}</a>
                                 </span>
-                            <span class="card__rate"><i class="fas fa-crown"></i></span>
+                            <span class="card__rate"><i style="font-size: small" class="fas fa-crown"></i></span>
                         </div>
                     </div>
                 </div>
             </c:forEach>
             <!-- end card -->
         </div>
+        <c:if test="${showMorePremium}">
+            <div class="col-12">
+                <a href="home?numPremiumEpisodesToShow=${numPremiumEpisodesToShow}" class="section__btn">Show more premium</a>
+            </div>
+        </c:if>
+
     </div>
 </section>
 <!-- end expected premiere -->
