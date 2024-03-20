@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="dtos.filmDtos" %>
-<%@ page import="entity.User" %>
+<%@ page import="model.User" %>
 <%@ page import="java.util.List" %>
 <%
     filmDtos film = (filmDtos) request.getAttribute("film");

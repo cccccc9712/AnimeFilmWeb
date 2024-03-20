@@ -1,7 +1,7 @@
 package controller;
 
 import dal.userDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,17 +17,23 @@ public class otpConfirmControl  extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         userDao ud = new userDao();
+
+        //input code of user from client
         String userCode = req.getParameter("code");
         String gmail = (String) req.getSession().getAttribute("userEmail");
         String password = (String)req.getSession().getAttribute("password");
+
+        //code from session sent to user's email
         String savedCode = (String) req.getSession().getAttribute("verificationCode");
         Boolean isRegister = (Boolean) req.getSession().getAttribute("isRegister");
 
+        //check input is not empty
         if (userCode.isBlank()) {
             req.setAttribute("errorMessage", "Please input to continue!");
             req.getRequestDispatcher("otpConfirmForm.jsp").forward(req, resp);
             return;
         }
+
 
         if (Boolean.TRUE.equals(isRegister)){
             if (userCode != null && userCode.equals(savedCode)) {

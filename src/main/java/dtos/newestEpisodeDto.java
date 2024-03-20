@@ -1,11 +1,10 @@
 package dtos;
 
-import entity.Category;
-import entity.Episode;
-import entity.Season;
-import entity.Tag;
+import model.Category;
+import model.Episode;
+import model.Season;
+import model.Tag;
 
-import java.sql.Date;
 import java.util.List;
 
 public class newestEpisodeDto extends Episode {

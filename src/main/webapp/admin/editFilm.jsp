@@ -1,7 +1,7 @@
 <%@ page import="dtos.filmDtos" %>
-<%@ page import="entity.Category" %>
+<%@ page import="model.Category" %>
 <%@ page import="java.util.List" %>
-<%@ page import="entity.Tag" %>
+<%@ page import="model.Tag" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
@@ -98,7 +98,7 @@
                 <div class="form-group">
                     <label for="seasonName">Season Name:</label>
                     <input type="text" name="seasonName" class="form-control" id="seasonName"
-                           placeholder="Enter season name">
+                           placeholder="Enter season name" required>
                 </div>
                 <button type="submit" class="btn btn-primary" id="addSeasonBtn">Add Season</button>
                 <button style="text-decoration: none" type="button" class="btn btn-secondary ml-2" id="cancelBtn">

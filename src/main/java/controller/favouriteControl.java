@@ -2,7 +2,7 @@ package controller;
 
 import dal.favouriteDao;
 import dal.filmDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,8 +23,9 @@ public class favouriteControl extends HttpServlet {
         PrintWriter out = new PrintWriter(System.out);
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("userSession");
+
+        //If user has not logged in, redirect to the login page
         if (user == null) {
-            //Chưa đăng nhập
             resp.sendRedirect("SignIn.jsp");
             return;
         }
@@ -37,11 +38,11 @@ public class favouriteControl extends HttpServlet {
         try {
             favouriteDao fad = new favouriteDao();
             if (!fd.isFavouriteExists(userId,filmId)) {
-                //Phim chua ton tai trong DB
+                //If the film is not in the favourite of that user in Database => add to favourite of that user
                 fad.addToFavorites(userId, filmId, addedDate);
                 resp.sendRedirect("detail?filmName=" + filmName);
             } else {
-                //Phim da ton tai => chuc nang bo favourite
+                //If the film is in the favourite of that user in Database => remove from favourite of that user
                 fad.removeFavouriteFilm(userId, filmId);
                 resp.sendRedirect("detail?filmName=" + filmName);
             }

@@ -2,7 +2,7 @@ package dal;
 
 import dtos.filmDtos;
 import dtos.newestEpisodeDto;
-import entity.*;
+import model.*;
 
 import java.sql.*;
 import java.util.*;

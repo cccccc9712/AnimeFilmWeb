@@ -1,6 +1,6 @@
 package dal;
 
-import entity.Category;
+import model.Category;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

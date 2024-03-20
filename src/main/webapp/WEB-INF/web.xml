@@ -60,7 +60,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>gmailVerifyServlet</servlet-name>
-        <url-pattern>/changePasswordForm</url-pattern>
+        <url-pattern>/gmailVerifyForm</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -109,7 +109,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>changePassServlet</servlet-name>
-        <url-pattern>/gmailVerifyForm</url-pattern>
+        <url-pattern>/changePasswordForm</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

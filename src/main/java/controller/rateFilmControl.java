@@ -1,7 +1,7 @@
 package controller;
 
 import dal.ratingDao;
-import entity.Rating;
+import model.Rating;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -36,12 +36,10 @@ public class rateFilmControl extends HttpServlet {
             // Update existing rating
             existingRating.setRatingValue(ratingValue);
             rd.updateRating(existingRating);
-            req.setAttribute("mess", "Your rating has been submitted successfully!");
         } else {
             // Insert new rating
             Rating newRating = new Rating(0, filmId, userId, ratingValue);
             rd.rate(newRating);
-            req.setAttribute("mess", "Your rating has been submitted successfully!");
         }
 
         resp.sendRedirect("detail?filmName=" + filmName);

@@ -19,7 +19,7 @@ public class watchingControl extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
+        HttpSession session = req.getSession(false);
         String episodeIdStr = req.getParameter("episodeId");
         String filmIdStr = req.getParameter("filmId");
         Integer userId = (Integer) session.getAttribute("userId");
@@ -33,6 +33,7 @@ public class watchingControl extends HttpServlet {
             int filmId = Integer.parseInt(filmIdStr);
             episodeDao ed = new episodeDao();
             episodeDtos episode = ed.getEpisodeById(episodeId);
+
             ed.increaseViewCount(filmId);
 
             if (userId  != null) {
@@ -45,6 +46,8 @@ public class watchingControl extends HttpServlet {
 
             req.setAttribute("episode", episode);
             req.getRequestDispatcher("Watching.jsp").forward(req, resp);
+        }else {
+            resp.sendRedirect("404.jsp");
         }
     }
 

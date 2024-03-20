@@ -1,6 +1,6 @@
 package controller;
 
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -44,7 +44,6 @@ public class verifyGmailControl extends HttpServlet {
         } else {
             req.setAttribute("errorMessage", "Failed to send verification email. Please try again.");
             req.getRequestDispatcher("gmailVerifyForm.jsp").forward(req, resp);
-            return;
         }
     }
 

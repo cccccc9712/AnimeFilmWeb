@@ -1,7 +1,7 @@
 package dtos;
 
-import entity.Episode;
-import entity.Season;
+import model.Episode;
+import model.Season;
 
 import java.util.ArrayList;
 import java.util.List;

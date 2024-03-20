@@ -1,7 +1,7 @@
 package controller;
 
 import dal.userDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,7 +25,7 @@ public class premiumRegisterControl extends HttpServlet {
             long currentTime = System.currentTimeMillis();
             Date registeredDate = new Date(currentTime);
             Date outOfDate = new Date(currentTime + (30L * 24 * 60 * 60 * 1000)); // Thêm 30 ngày
-            boolean registeredSuccessfully = ud.registerPremium(user.getUserId(), "Premium", registeredDate, outOfDate);
+            ud.registerPremium(user.getUserId(), "Premium", registeredDate, outOfDate);
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("message", "System error occurred. Please contact support.");

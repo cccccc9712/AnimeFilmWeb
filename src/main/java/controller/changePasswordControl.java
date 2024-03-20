@@ -25,7 +25,7 @@ public class changePasswordControl extends HttpServlet {
         }
 
         if (!validatePassword(password)){
-            req.setAttribute("errorMessage", "Password must contain 8 characters with the first letters uppercase.");
+            req.setAttribute("errorMessage", "Password must contain 8 characters with \nthe first letters uppercase.");
             req.getRequestDispatcher("changePasswordForm.jsp").forward(req, resp);
             return;
         }

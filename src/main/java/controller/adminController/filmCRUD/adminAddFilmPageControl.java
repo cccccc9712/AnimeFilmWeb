@@ -2,8 +2,8 @@ package controller.adminController.filmCRUD;
 
 import dal.categoryDao;
 import dal.tagsDao;
-import entity.Category;
-import entity.Tag;
+import model.Category;
+import model.Tag;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

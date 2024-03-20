@@ -1,7 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--Number of pages to show on paginator--%>
 <c:set var="maxPagesToShow" value="4"/>
+<%--If current Page = 1 -> value = 1-2= -1 < 0 -> page start at 1--%>
+<%--If current page = 2 -> value = 2-2 = 0 = 0 -> page start at 1--%>
+<%--If current page = 3 -> value = 3-2 = 1 -> page start at 1--%>
+<%--If current page = 4 -> value = 4-2 = 1 -> page start at 2--%>
+<%--Number of pages = 7 - > current page = 7 -> value = 7-2 = 5 -> page start at 5--%>
 <c:set var="pageStart"
        value="${(currentPage - (maxPagesToShow div 2)) > 0 ? (currentPage - (maxPagesToShow div 2)) : 1}"/>
+<%--If current page = 1 -> value = 1 + 3 = 4 < 7 -> page end with 4--%>
+<%--If current page = 2 -> value = 2 + 3 = 5 < 7 -> page end with 5--%>
+<%--If current page = 3 -> value = 3 + 3 = 6 < 7 -> page end with 6--%>
+<%--If current page = 4 -> value = 4 + 3 = 7 = 7 -> page end with 7--%>
+<%--If current page = 7 -> value = 7 + 3 = 10 > 7 -> page end with 7--%>
 <c:set var="pageEnd"
        value="${(pageStart + (maxPagesToShow - 1)) < noOfPages ? (pageStart + (maxPagesToShow - 1)) : noOfPages}"/>
 <!-- Điều chỉnh nếu số lượng trang không đủ -->
@@ -20,7 +31,7 @@
             <div class="col-12">
                 <div class="section__wrap">
                     <!-- section title -->
-                    <h2 class="section__title">All films</h2>
+                    <h2 class="section__title">Category</h2>
                     <!-- end section title -->
 
                     <!-- breadcrumb -->

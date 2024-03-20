@@ -3,7 +3,7 @@ package dal;
 import dtos.episodeDtos;
 import dtos.newestEpisodeDto;
 import dtos.seasonDtos;
-import entity.Episode;
+import model.Episode;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +21,6 @@ public class episodeDao extends DBContext {
 
     public episodeDtos getEpisodeById(int episodeId) {
         episodeDtos episode = null;
-        // Giả sử có quan hệ: Episode -> Season -> Film
         String sql = "SELECT e.*, s.seasonID, s.filmID FROM Episode e " +
                 "INNER JOIN Season s ON e.seasonID = s.seasonID " +
                 "WHERE e.episodeID = ?";
@@ -36,12 +35,11 @@ public class episodeDao extends DBContext {
                 episode.setEpTittle(rs.getString("title"));
                 episode.setEpDate(rs.getDate("releaseDate"));
                 episode.setEpLink(rs.getString("episodeLink"));
-                episode.setFilmId(rs.getInt("filmID")); // Lấy filmID từ kết quả truy vấn
+                episode.setFilmId(rs.getInt("filmID"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            // Đóng kết nối, ps, và rs
             try {
                 if (rs != null) rs.close();
                 if (ps != null) ps.close();
@@ -384,8 +382,6 @@ public class episodeDao extends DBContext {
         }
         return total;
     }
-
-
 
     public static void main(String[] args) {
         episodeDao d = new episodeDao();

@@ -1,4 +1,4 @@
-<%@ page import="entity.User" %>
+<%@ page import="model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- header -->
 <style>
@@ -84,7 +84,6 @@
                                         <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownUser">
                                             <c:choose>
                                                 <c:when test="${not isAdmin}">
-                                                    <li><a href="#">View profile</a></li>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <li><a href="adminDashboard">Dashboard</a></li>

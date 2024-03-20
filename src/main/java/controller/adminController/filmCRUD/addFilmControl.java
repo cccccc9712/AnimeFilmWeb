@@ -3,7 +3,7 @@ package controller.adminController.filmCRUD;
 import dal.categoryDao;
 import dal.filmDao;
 import dal.tagsDao;
-import entity.Film;
+import model.Film;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -59,9 +59,9 @@ public class addFilmControl extends HttpServlet {
         film.setFilmReleaseDate(releaseDate);
         film.setViewCount(0L);
 
-        boolean sucess = dao.addFilm(film);
+        boolean success = dao.addFilm(film);
         int filmId = film.getFilmID();
-        if (sucess) {
+        if (success) {
             if (categories != null) {
                 for (String categoryId : categories) {
                     categoryDao.insertCategory(filmId, Integer.parseInt(categoryId));

@@ -1,6 +1,6 @@
 package dal;
 
-import entity.Rating;
+import model.Rating;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,7 +35,7 @@ public class ratingDao extends DBContext {
 
     public void updateRating(Rating rating) {
         String sql = "UPDATE Ratings SET ratingValue = ?, ratingDate = GETDATE() WHERE ratingID = ?";
-        try  {
+        try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql);
             ps.setFloat(1, rating.getRatingValue());
@@ -43,13 +43,21 @@ public class ratingDao extends DBContext {
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     public void rate(Rating rating) {
         String sql = "INSERT INTO Ratings (filmID, userID, ratingValue, ratingDate) VALUES (?, ?, ?, ?)";
         try {
-            conn = this.getConnection();
+            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, rating.getFilmId());
             ps.setInt(2, rating.getUserId());

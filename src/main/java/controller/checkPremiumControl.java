@@ -2,7 +2,7 @@ package controller;
 
 import dal.episodeDao;
 import dal.userDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,22 +25,24 @@ public class checkPremiumControl extends HttpServlet {
         episodeDao ed = new episodeDao();
         boolean isEpisodePremium = ed.checkEpisodeIsPremium(episodeId);
 
-        // Nếu tập phim không phải là premium, chuyển hướng người dùng đến trang xem phim
+        //If the episode is not premium, redirect to the watching page
         if (!isEpisodePremium) {
             resp.sendRedirect("watching?episodeId=" + episodeId + "&filmId=" + filmId);
         } else {
+            //If user has not logged in, redirect to the login page
             if (user == null) {
                 req.setAttribute("failedLoginMessage", "Login to watch premium movies.");
                 req.getRequestDispatcher("SignIn.jsp").forward(req, resp);
                 return;
             } else {
+                //If user is an admin or a premium user, redirect to the watching page
                 userDao ud = new userDao();
                 boolean isAdmin = user.getAdmin();
                 boolean userPremium = ud.checkUserPremiumStatus(user.getUserId());
                 if (userPremium || isAdmin) {
                     resp.sendRedirect("watching?episodeId=" + episodeId + "&filmId=" + filmId);
                 } else {
-                    // Nếu người dùng không có premium, chuyển hướng họ đến trang giới thiệu gói premium
+                    //If user is not an admin or a premium user, redirect to the pricing page to register for premium
                     resp.sendRedirect("pricing.jsp");
                 }
             }

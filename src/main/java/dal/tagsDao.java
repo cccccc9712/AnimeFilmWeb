@@ -1,6 +1,6 @@
 package dal;
 
-import entity.Tag;
+import model.Tag;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

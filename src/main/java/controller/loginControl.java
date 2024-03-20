@@ -1,7 +1,7 @@
 package controller;
 
 import dal.userDao;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -30,7 +30,6 @@ public class loginControl extends HttpServlet {
             return;
         }
 
-
         userDao dao = new userDao();
         User user = dao.login(mail, password);
         if (user == null) {
@@ -55,6 +54,7 @@ public class loginControl extends HttpServlet {
 
 
     public static boolean validateEmail(String email) {
+        //Regex for email: example.email1@example.co.uk; user.name+tag@example.com; first.last@example.com.vn
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         return email != null && email.matches(emailRegex);
     }

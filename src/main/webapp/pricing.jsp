@@ -1,4 +1,4 @@
-<%@ page import="entity.User" %>
+<%@ page import="model.User" %>
 <%@ page import="dal.userDao" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>

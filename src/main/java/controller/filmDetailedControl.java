@@ -4,7 +4,7 @@ import dal.*;
 import dtos.commentDto;
 import dtos.filmDtos;
 import dtos.seasonDtos;
-import entity.User;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -40,7 +40,7 @@ public class filmDetailedControl extends HttpServlet {
                     userDao dao = new userDao();
                     User user = dao.getUserByRememberMeToken(rememberMeToken);
                     if (user != null) {
-                        session = req.getSession(true); // Tạo session mới nếu cần
+                        session = req.getSession(true);
                         session.setAttribute("userId", user.getUserId());
                         session.setAttribute("userSession", user);
                         userId = user.getUserId();
@@ -60,6 +60,7 @@ public class filmDetailedControl extends HttpServlet {
         List<seasonDtos> seasonList = ed.getSeasonsForFilm(filmName);
         List<filmDtos> listFilmMayLike = fd.getRandom6FilmsWithFullDetails();
 
+        //If user log in, get favourite films and user rating for film
         if (userId  != null) {
             List<filmDtos> favouriteFilms = fd.getFavouriteFilmsByUserId(userId);
             Float userRating = rd.getUserRatingForFilm(userId, filmId);
@@ -67,10 +68,12 @@ public class filmDetailedControl extends HttpServlet {
             req.setAttribute("favouriteFilms", favouriteFilms);
         }
 
+        //get film per page using offset and limit to get comments with paginator
         List<commentDto> comments = cmd.getCommentsPerPage(filmId, currentPage, commentsPerPage);
         int totalComments = cmd.getTotalCommentsForFilm(filmId);
         int totalPages = (int) Math.ceil(totalComments * 1.0 / commentsPerPage);
 
+        //get replies for each comment
         for (commentDto comment : comments) {
             List<commentDto> replies = cmd.getRepliesByCommentId(comment.getCommentID());
             comment.setReplies(replies);

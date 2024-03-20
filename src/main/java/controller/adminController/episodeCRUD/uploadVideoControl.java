@@ -45,11 +45,9 @@ public class uploadVideoControl extends HttpServlet {
             responseObj.addProperty("message", "Episode uploaded unsuccessfully");
         }
 
-        // Setting up the response type to JSON
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        // Sending the response back to the client
         resp.getWriter().write(responseObj.toString());
     }
 }

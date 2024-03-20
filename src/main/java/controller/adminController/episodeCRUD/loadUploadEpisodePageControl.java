@@ -2,8 +2,8 @@ package controller.adminController.episodeCRUD;
 
 import dal.episodeDao;
 import dal.userDao;
-import entity.Episode;
-import entity.User;
+import model.Episode;
+import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

@@ -119,18 +119,16 @@
     </footer>
 </div>
 </body>
-
-
-<%
-    if (paymentSuccess) {
-%>
 <script>
+    <%
+        if (paymentSuccess) {
+    %>
     $(document).ready(function () {
         $.ajax({
             url: "RegisterPremium",
             type: "POST",
             data: {},
-            success: functDion (response) {
+            success: function (response) {
                 alert("Đăng ký Premium thành công!");
             },
             error: function (xhr, status, error) {
@@ -138,20 +136,9 @@
             }
         });
     });
-</script>
-<%
-} else {
-%>
-<script>
-    $(document).ready(function () {
-        alert("Đăng ký Premium không thành công!");
-    });
-</script>
-<%
-    }
-%>
-<script>
-
+    <%
+        }
+    %>
     document.addEventListener("DOMContentLoaded", function () {
         var home = document.getElementById("registerButton");
 

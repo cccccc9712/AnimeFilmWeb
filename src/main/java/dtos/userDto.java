@@ -1,6 +1,6 @@
 package dtos;
 
-import entity.User;
+import model.User;
 
 public class userDto extends User {
     private String remember_Token;
