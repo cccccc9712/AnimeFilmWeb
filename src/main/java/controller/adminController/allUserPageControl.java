@@ -2,13 +2,11 @@ package controller.adminController;
 
 import dal.userDao;
 import dtos.userDto;
-import model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,13 +18,6 @@ public class allUserPageControl extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         userDao userDao = new userDao();
         List<userDto> allUsers = userDao.getAllUsersWithPremiumStatus();
-
-        HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("userSession");
-        if (user == null || !userDao.checkUserIsAdmin(user.getUserId())) {
-            resp.sendRedirect("home");
-            return;
-        }
 
         req.setAttribute("allUsers", allUsers);
         req.getRequestDispatcher("admin/allUsersAdminDashboard.jsp").forward(req, resp);

@@ -1,5 +1,6 @@
 package controller;
 
+import dal.userDao;
 import model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,10 +21,19 @@ public class filterServlet implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String path = httpRequest.getServletPath();
         HttpSession session = httpRequest.getSession();
+        userDao userDao = new userDao();
         User user = (User) session.getAttribute("userSession");
         if (path.matches(".*(vnpay_pay).*")) {
             if (user == null) {
                 httpResponse.sendRedirect(httpRequest.getContextPath() + "/home");
+                return;
+            }
+        }
+
+        if (path.matches(".*(editSeasonName|deleteSeason|addSeason|adminDashboard|allUserPageControl|loadEpisodePage|updatePremium|uploadVideo|addFilm|newFilmPage|deleteFilm|editFilm|editFilmPage).*")) {
+            if (user == null || !userDao.checkUserIsAdmin(user.getUserId())) {
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/home");
+                return;
             }
         }
 
