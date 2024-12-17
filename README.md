@@ -13,6 +13,7 @@ Admin Features:
 - Statistics and Reporting: Admins can view detailed reports on uploaded films, including view counts, comments, and other relevant data to help manage the platform effectively.
 
 Technologies Used:
+- JSP, Java Servlet
 - VNPAY API: The website integrates the VNPAY API for premium account registration, offering paid services to users.
 - Firebase: Firebase is used for secure and efficient video storage and management. All video uploads and views are handled via Firebase Cloud Storage.
 
