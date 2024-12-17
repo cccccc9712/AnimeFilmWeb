@@ -1,4 +1,3 @@
-This is an anime watching website project for my subject PRJ391 at my school.
 This project is an anime watching website developed for the PRJ391 course at my school. It includes comprehensive features and functions typical of a real-world film streaming platform. The website not only serves the purpose of watching anime but also offers a range of interactive and management functions for users and administrators. 
 My project was graded 9.1 out of 10 by my teacher.
 
